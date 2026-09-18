@@ -19,6 +19,18 @@ Press Ctrl+C to release the requests and stop. For a two-hour limit:
 python .\keep-awake.py --seconds 7200
 ```
 
+To record a one-minute process heartbeat, start `monitor-helper.py` with the
+keep-awake process ID:
+
+```powershell
+python .\monitor-helper.py TEST-PID --interval 60 --log .\keep-awake.monitor.log
+```
+
+The monitor follows the original process handle, records `OK` once per
+interval, records `STOPPED` when the helper exits, and then exits itself.
+It confirms that the helper process remains alive; it does not independently
+query Windows for the state of each power request.
+
 No Teams meeting is required. No registry settings, power plans, input
 simulation, or persistent startup entries are involved.
 
@@ -40,6 +52,7 @@ as a working runtime for this machine.
 | Path | Purpose |
 |---|---|
 | `keep-awake.py` | Current lightweight helper; no third-party Python dependencies. |
+| `monitor-helper.py` | Optional heartbeat logger for a running helper process. |
 | `docs/research-2026-09-19.md` | Copied investigation: machine findings, installer failure, extraction, launch rejection, Teams-free API tests and sources. |
 | `docs/consolidation.md` | Original locations, upstream revision, and copy verification. |
 | `docs/runtime-inventory.csv` | SHA-256 and sizes of every locally copied runtime artifact. |

@@ -66,6 +66,13 @@ SHA-256 comparison against the original folders completed successfully:
 - New documentation and helper files passed Git whitespace checks. Existing
   whitespace in the unmodified upstream snapshot was retained.
 
+## 19 September 2026: documentation review
+
+The [adversarial review](adversarial-review-2026-09-19.md) checked the inventory structure, file count, and total size.
+The inventory and local runtime each contained 3,271 files totaling 2,319,009,392 bytes.
+This check did not repeat the original source-to-copy SHA-256 comparison or every individual artifact hash.
+The copy-verification results above remain the historical consolidation record.
+
 ## Research scope
 
 The copied research records both successful API calls and unsuccessful

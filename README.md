@@ -51,12 +51,23 @@ The extracted official PowerToys Awake executable was blocked by this
 computer's application policy. It is retained as research, not presented
 as a working runtime for this machine.
 
+The proposed [stay-watch plan](docs/stay-watch-plan.md) now includes the
+[documentation review](docs/adversarial-review-2026-09-19.md).
+It separates AC and battery results, defines observation-loss handling, and
+requires verified observer content for screenshot evidence.
+The [feasibility notes](docs/stay-watch-feasibility.md) record the current
+machine limits.
+The utility is not implemented. Capture feasibility and runtime checks remain pending.
+
 ## Contents
 
 | Path | Purpose |
 |---|---|
 | `keep-awake.py` | Current lightweight helper; no third-party Python dependencies. |
 | `monitor-helper.py` | Optional heartbeat logger for a running helper process. |
+| `docs/stay-watch-plan.md` | [Proposed Rust tracker and explicitly invoked screenshot tests](docs/stay-watch-plan.md). |
+| `docs/adversarial-review-2026-09-19.md` | [Review findings, design corrections, and pending feasibility checks](docs/adversarial-review-2026-09-19.md). |
+| `docs/stay-watch-feasibility.md` | Current feasibility results and implementation limits. |
 | `docs/research-2026-09-19.md` | Copied investigation: machine findings, installer failure, extraction, launch rejection, Teams-free API tests and sources. |
 | `docs/consolidation.md` | Original locations, upstream revision, and copy verification. |
 | `docs/runtime-inventory.csv` | SHA-256 and sizes of every locally copied runtime artifact. |

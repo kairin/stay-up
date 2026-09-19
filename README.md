@@ -38,6 +38,10 @@ simulation, or persistent startup entries are involved.
 
 On the inspected Windows computer, both requests were accepted without
 elevation and released on timed exit. A short run used about 18 MiB RAM.
+On 19 September 2026, the user reported no recalled need to log in again
+during a session in which the helper had run for about 1 hour 57 minutes.
+The observation and planned reboot review are recorded in the
+[validation notes](docs/validation.md).
 An idle test with Teams closed beyond the ten-minute screen-saver timeout
 is still pending. API success is not proof that every device policy permits
 the requested behavior. Modern Standby battery operation and manual sleep

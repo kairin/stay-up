@@ -1,11 +1,11 @@
 # stay-watch plan
 
-Status: design proposal, before implementation or task decomposition.
-Updated: 19 September 2026.
+Status: design proposal. Task decomposition is on the stay-up board. Implementation and runtime checks remain pending.
+Updated: 20 September 2026.
 
-The [adversarial review](adversarial-review-2026-09-19.md) identified two specification gaps and one capture feasibility risk.
-This revision adds the design rules and acceptance checks below.
-Implementation and runtime checks remain pending.
+This plan contains the design rules, including power-source intervals, observation-loss handling, and observer-visibility checks.
+Unexecuted time-based fixtures are in [stay-watch-acceptance.md](stay-watch-acceptance.md).
+Current machine results are in [stay-watch-feasibility.md](stay-watch-feasibility.md).
 
 The proposed utility is a separate Rust application named `stay-watch`.
 It tracks input inactivity, Windows display and session states, and an optional stay-awake helper process.
@@ -19,7 +19,7 @@ An hour of keyboard activity does not establish that the helper prevents an idle
 The existing [keep-awake.py](../keep-awake.py) requests that Windows keep the system and display awake.
 The existing [monitor-helper.py](../monitor-helper.py) checks whether its selected process remains alive.
 This plan adds a separate observer and leaves both implementations unchanged.
-The [validation notes](validation.md) explain the limits of the existing observations.
+The [observation log](observations.md) explains the limits of the existing observations.
 
 The current session uses Windows Terminal, with PowerShell inside it.
 A process-tree check on 19 September 2026 established this relationship.

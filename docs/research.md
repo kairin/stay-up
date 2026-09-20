@@ -289,5 +289,6 @@ This follows the different power-request limits described above.
 
 The plan also defines observation-loss handling and requires verified observer content for screenshot evidence.
 The first stay-watch launcher is in `stay-watch/`.
-The later observer for capture, lock, and sleep is not implemented.
-Current probe results and remaining open checks are in [stay-watch-feasibility.md](stay-watch-feasibility.md).
+The [visual-refresh plan](visual-refresh-plan.md) now controls current work and removes screenshot logging from scope.
+The later lock and sleep observer is not implemented.
+Historical probe results and remaining unknowns are in [stay-watch-feasibility.md](stay-watch-feasibility.md).

@@ -106,4 +106,4 @@ Each verification record must state:
 - Exit status and observed success markers, or the exact failed stage.
 - What remains untested.
 
-Store actual results in [validation notes](validation.md) and keep the current [feasibility status](stay-watch-feasibility.md) consistent. The wider input, screenshot, lock, suspend, power-segmentation, observation-loss, and helper comparisons remain separate checks. Prepared [acceptance vectors](prerequisites-2026-09-20.md) are not executed tests.
+Store actual results in the [observation log](observations.md) and keep the current [feasibility status](stay-watch-feasibility.md) consistent. The wider input, screenshot, lock, suspend, power-segmentation, observation-loss, and helper comparisons remain separate checks. Prepared [acceptance vectors](stay-watch-acceptance.md) are not executed tests.

@@ -1,6 +1,13 @@
-# stay-watch plan
+# Historical stay-watch observer proposal
 
-Status: first launcher exists. The later observer is not implemented.
+> **Superseded scope:** the [visual-refresh plan](visual-refresh-plan.md) controls current work.
+> Preserve the working launcher and both Python helpers. Improve the Rust window without changing their behavior.
+> Screenshot logging is removed, including explicit-test captures, PNG storage, image queues, and capture feasibility gates.
+> The screenshot instructions and terminal-first layout below are historical, not implementation requirements.
+> Other observer features remain deferred. This document is retained to explain earlier probes and decisions.
+> The quoted implementation prompt at the end is also historical and must not be used as a current task instruction.
+
+Status at the time of this proposal: first launcher exists. The later observer is not implemented.
 Native feasibility probes from 20 September 2026 are in [stay-watch-feasibility.md](stay-watch-feasibility.md).
 Remaining open checks are listed there.
 Updated: 20 September 2026.

@@ -1,5 +1,10 @@
 # Visual refresh plan and adversarial review
 
+Current extension: the user approved [native output panes](native-output-panes.md)
+and console suppression within the existing Rust window. That implementation
+contract supersedes the placeholder-only and deferred-console recommendations
+below. Preserve both Python scripts and the existing heartbeat behavior.
+
 Status: the user-approved dashboard reference is implemented as a Rust presentation change.
 Baseline: `e9c8fad` on `main`.
 

@@ -5,6 +5,56 @@ Runs with the installed Python standard library, without an installer or
 administrator password. Holds Windows SYSTEM and DISPLAY power requests
 while its process runs.
 
+## Visual refresh
+
+The application works for the user. The current task is a visual refresh, not a replacement of the working helper system.
+The [visual plan and adversarial review](docs/visual-refresh-plan.md) recommends a compact Rust status card.
+Keep both Python processes. Two visible terminals are not required by the application logic.
+Console suppression and optional window placement need separate checks before implementation.
+Screenshot logging is removed from the active plan. Application logging remains record-only.
+No application behavior changed during this planning task.
+
+## User-submitted images and videos
+
+From [issue #6](https://github.com/project-owner/stay-up/issues/6): the current Rust window and two mostly blank terminal windows.
+This is the visual baseline, not the proposed design.
+
+![Current stay-watch window with idle timer and two terminal windows](https://example.invalid/removed-media)
+
+<details>
+<summary>More application photos from issue #6</summary>
+
+Timer reading `00:03:43`:
+
+![Current Rust status window showing idle 00:03:43](https://example.invalid/removed-media)
+
+Timer reading `00:10:38`:
+
+![Current Rust status window showing idle 00:10:38 beside terminal windows](https://example.invalid/removed-media)
+
+</details>
+
+<details>
+<summary>Sign-in context from issue #6, not proof of helper behavior</summary>
+
+The issue also contains this sign-in photograph.
+Its timing and relationship to the helper are not established.
+
+![User-submitted photograph of a Windows sign-in screen](https://example.invalid/removed-media)
+
+</details>
+
+Videos from **both issues**, linked to the original attachments:
+
+- Issue #6: [video 1, about 20 seconds](https://example.invalid/removed-media).
+- Issue #6: [video 2, about 8 seconds](https://example.invalid/removed-media).
+- Issue #7: [video 1, about 9 seconds](https://example.invalid/removed-media).
+- Issue #7: [video 2, about 8 seconds](https://example.invalid/removed-media).
+
+These are user-submitted observations, not controlled test results.
+Attachments can require GitHub access. Inline video playback depends on the viewer.
+See the [media record](docs/issue-media.md) for inspection limits, source details, and the incomplete upload in issue #6.
+
 ## Run
 
 From PowerShell in this repository:
@@ -46,6 +96,12 @@ interval, records `STOPPED` when the helper exits, and then exits itself.
 It confirms that the helper process remains alive; it does not independently
 query Windows for the state of each power request.
 
+The Rust launcher selects `local/stay-watch/keep-awake.monitor.log`.
+The monitor appends timestamped UTF-8 records across runs, about once every 60 seconds.
+It records process liveness, not idle time, lock state, or screenshots.
+The Rust Stop path kills the monitor before the helper, so a final `STOPPED` record is not guaranteed.
+See [logging behavior and limits](docs/visual-refresh-plan.md#4-what-does-logging-do-now).
+
 No Teams meeting is required. No registry settings, power plans, input
 simulation, or persistent startup entries are involved.
 
@@ -66,14 +122,13 @@ The extracted official PowerToys Awake executable was blocked by this
 computer's application policy. It is retained as research, not presented
 as a working runtime for this machine.
 
-The proposed [stay-watch plan](docs/stay-watch-plan.md) separates AC and battery results.
-It defines observation-loss handling.
-It requires verified observer content for screenshot evidence.
-Unexecuted fixtures are in [stay-watch-acceptance.md](docs/stay-watch-acceptance.md).
 The first stay-watch launcher is in `stay-watch/`.
-The later observer for capture, lock, and sleep is not implemented.
+The [visual-refresh plan](docs/visual-refresh-plan.md) controls current work and excludes screenshot logging.
+The older [observer proposal](docs/stay-watch-plan.md) and [acceptance vectors](docs/stay-watch-acceptance.md) remain historical design references.
+Their screenshot requirements are withdrawn, not completed.
+The later lock and sleep observer is not implemented.
 Native capture and state probes ran on 20 September 2026.
-The [feasibility notes](docs/stay-watch-feasibility.md) record passed checks and remaining open checks.
+The [feasibility notes](docs/stay-watch-feasibility.md) retain those historical results and their limits.
 
 ## Kanban board
 
@@ -107,8 +162,10 @@ hermes kanban --board stay-up show t_cc724421
 Always specify `--board stay-up` in task commands. The selected default board can change between sessions.
 In Hermes Desktop or the dashboard, open Kanban and select `stay-up implementation` (`stay-up`).
 
-The [plan](docs/stay-watch-plan.md) defines scope. The board records current task status.
-The [feasibility record](docs/stay-watch-feasibility.md) lists completed probe checks and remaining open checks.
+The [visual-refresh plan](docs/visual-refresh-plan.md) defines the current scope.
+The board records task status and was not changed during this planning task.
+Older screenshot tasks do not override the new scope.
+The [feasibility record](docs/stay-watch-feasibility.md) retains completed probe checks and remaining unknowns.
 Keep changing task counts on the board, not in this README.
 
 ## Development verification
@@ -143,7 +200,9 @@ Pass when the command prints `OK` and exit status is zero.
 | `tools/capture-feasibility-probe.py` | Explicit Windows Terminal capture test. |
 | `tools/rust-state-probe.rs` | Read-only Rust Win32 state probe. |
 | `tools/test_feasibility_probes.py` | Agent-runnable checks of recorded probe evidence. |
-| `docs/stay-watch-plan.md` | Design rules for the proposed Rust observer. |
+| `docs/visual-refresh-plan.md` | Current visual scope, layout proposal, and adversarial review. |
+| `docs/issue-media.md` | Image and video sources from issues #6 and #7, with evidence limits. |
+| `docs/stay-watch-plan.md` | Historical Rust observer proposal. Screenshot requirements are withdrawn. |
 | `docs/stay-watch-acceptance.md` | Unexecuted stay-watch acceptance vectors. |
 | `docs/stay-watch-feasibility.md` | Current feasibility results and implementation limits. |
 | `docs/rust-environment-verification.md` | Required Rust installation and probe procedure. |

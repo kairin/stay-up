@@ -1,8 +1,14 @@
 # stay-watch acceptance vectors
 
-These are proposed fixtures, not executed tests.
+These are historical proposed fixtures, not executed tests.
 
-Design rules stay in [stay-watch-plan.md](stay-watch-plan.md).
+The [visual-refresh plan](visual-refresh-plan.md) controls current work.
+Screenshot requirements are withdrawn, not passed.
+V6 branch A, V7, and the capture-specific parts of V8 are retired.
+Other observer fixtures remain deferred, not acceptance gates for the visual-only phase.
+Retain their text below as design history. No application capture is planned.
+
+Historical design rules stay in [stay-watch-plan.md](stay-watch-plan.md).
 Current machine results stay in [stay-watch-feasibility.md](stay-watch-feasibility.md).
 
 Unless a row says otherwise, time starts at `t=0`.

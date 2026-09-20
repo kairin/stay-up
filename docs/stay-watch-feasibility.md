@@ -12,6 +12,14 @@ Other observer runtime checks remain separate from the working launcher.
 The board was not updated during this planning task. Historical gate statements below are not a fresh board-status check.
 The launcher now has an owned-child path. Its broader cleanup guarantees remain unverified by these historical probes.
 
+The later [agent build check](observations.md#20-september-2026-cargo-build-access-from-an-agent) separates working Rust builds from Codex sandbox file access.
+Repeated builds in a stable approved directory passed outside the sandbox. The same directory did not pass sandbox access checks.
+This result does not change the historical observer results below.
+
+The later [root-launch checks](observations.md#20-september-2026-root-launch-command-and-owned-process-checks) passed for the current application.
+They cover startup, concurrent commands, timed exit, and the existing Stop action with owned-process cleanup.
+They do not complete the historical observer, input-device, lock, or sleep checks.
+
 ## Historical probe record
 
 ## Completed

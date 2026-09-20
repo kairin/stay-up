@@ -1,25 +1,50 @@
 # stay-watch feasibility gate
 
-Checked: 2026-09-20 06:58:28 +0800.
+Checked: 2026-09-20 (Asia/Singapore). Current results below separate verified changes from prior static observations.
 
 ## Results
 
 | Check | Result | Evidence and limit |
 |---|---|---|
-| Rust toolchain | FAIL | `rustc` and `cargo` are not installed. Rust implementation cannot start on this machine until the toolchain is available. |
-| Windows input APIs | PASS | `RegisterRawInputDevices`, `GetRawInputData`, and `GetLastInputInfo` are present. Registration and device coverage remain untested. |
-| Windows state APIs | PASS | `RegisterPowerSettingNotification`, `GetConsoleWindow`, `PowerCreateRequest`, and `PowerSetRequest` are present. A Rust event loop remains untested. |
-| Modern Standby | PASS | `powercfg /a` reports S0 low power idle with network connection and hibernate. Runtime behavior remains untested. |
-| Raw Input device coverage | UNKNOWN | No observer exists to register devices. Keyboard, external mouse, and touchpad coverage needs a test application. |
-| Capture target | FAIL | `GetConsoleWindow` returned handle `0`. The current session uses a pseudoconsole, so it has no visible console target. |
-| Observer visibility | UNKNOWN | A visible Windows Terminal session is necessary. The current session cannot establish observer visibility. |
-| Capture backend | UNKNOWN | No backend was tested. Test Windows Graphics Capture and a visible screen-region method in a visible terminal session. |
-| Owned-child cleanup | UNKNOWN | No Rust observer or owned-child path exists. Test console signal routing and cleanup after the Rust foundation exists. |
+| Rustup installation | PASS | Removed the previous `.cargo` and `.rustup` directories and reinstalled Rustup 1.29.1 under `C:\Users\W106036\AppData\Local\Programs\Rust`. The active toolchain is `stable-x86_64-pc-windows-gnu`. User environment settings and PATH are configured as listed below. |
+| Rust compilation/execution | PASS | `rustc 1.98.1` and `cargo 1.98.1` run. An offline Cargo build executed its build script and compiled the [Win32 probe](../tools/rust-execution-probe.rs). The executable ran from `AppData\Local\Rust\target\debug` and printed `RUST_EXECUTION_PROBE_OK`. |
+| Terminal target discovery | CANDIDATE FOUND | A normal-user `EnumWindows` probe found visible, non-minimized, uncloaked `WindowsTerminal.exe`: HWND 591284, PID 15928, rect `[148,0,1236,678]`. These are ephemeral observations, never fixed settings. See [tools/terminal-target-probe.py](../tools/terminal-target-probe.py). |
+| Capture target / observer visibility | UNKNOWN | Discovery is viable, but active-tab ownership, observer visibility, freshness, and capture support remain untested. Earlier `GetConsoleWindow`/`MainWindowHandle` failures were launch-context evidence, not proof that no visible target existed. See [GetConsoleWindow documentation](https://learn.microsoft.com/en-us/windows/console/getconsolewindow). |
+| Capture backend | UNKNOWN | No screenshot or capture session was run. Test [Windows Graphics Capture CreateForWindow](https://learn.microsoft.com/en-us/windows/win32/api/windows.graphics.capture.interop/nf-windows-graphics-capture-interop-igraphicscaptureiteminterop-createforwindow) with a verified marker, freshness check, and initial-image rejection. |
+| Windows input/state APIs | PRIOR STATIC OBSERVATION | Earlier API-presence checks recorded `RegisterRawInputDevices`, `GetRawInputData`, `GetLastInputInfo`, `RegisterPowerSettingNotification`, `PowerCreateRequest`, and `PowerSetRequest`; registration, device coverage, and a Rust event loop were not retested today. |
+| Modern Standby | PRIOR STATIC OBSERVATION | Earlier `powercfg /a` output reported S0 low power idle with network connection and hibernate; runtime behavior was not retested today. |
+| Raw Input device coverage | UNKNOWN | Keyboard, external mouse, and touchpad coverage still require an observer and real-device validation. |
+| Owned-child cleanup | UNKNOWN / LATER | No Rust observer or owned-child path exists. Keep this later than baseline/manual-helper validation. See [tools/rust-execution-probe.rs](../tools/rust-execution-probe.rs) for the separate compile proof source. |
 
 ## Decision
 
-The feasibility gate is incomplete.
+The Rust installation, compilation, build-script execution, and native executable checks pass. The broader feasibility gate is still incomplete: capture, observer visibility, and runtime observations remain untested. This installation check alone does not complete `t_cc724421`.
 
-The next allowed milestone is blocked by the missing Rust toolchain. The capture checks also need a visible Windows Terminal session. Do not start Rust implementation or screenshot implementation until these two limits have an approved path.
+## Rust paths and verification
 
-After these limits are resolved, repeat the input, capture, visibility, touchpad, and child-cleanup checks. Then move the tracking-foundation task forward.
+The earlier AppLocker check identified an allow rule named `%OSDRIVE%\Users\*\AppData\Local\*`. The old Rust installation was outside that location. The corrected installation and its generated executables run without a policy change.
+
+| User setting | Value |
+|---|---|
+| `CARGO_HOME` | `C:\Users\W106036\AppData\Local\Programs\Rust\cargo` |
+| `RUSTUP_HOME` | `C:\Users\W106036\AppData\Local\Programs\Rust\rustup` |
+| `CARGO_TARGET_DIR` | `C:\Users\W106036\AppData\Local\Rust\target` |
+| User PATH entry | `C:\Users\W106036\AppData\Local\Programs\Rust\cargo\bin` |
+
+These [Cargo settings](https://doc.rust-lang.org/cargo/reference/environment-variables.html) and [Rustup setting](https://rust-lang.github.io/rustup/environment-variables.html) are saved in the user environment. Cargo's output directory is a user-wide default. Restart existing terminals to load the new settings.
+
+The first installation check used an ignored local fixture. The reusable [repository fixture](../tools/rust-install-check/Cargo.toml) now uses the same [Win32 source](../tools/rust-execution-probe.rs). Follow the [required verification procedure](rust-environment-verification.md) for a fresh output directory and complete pass criteria:
+
+```powershell
+cargo run --offline --locked --manifest-path .\tools\rust-install-check\Cargo.toml
+```
+
+It printed `RUST_BUILD_SCRIPT_EXECUTION_OK` during the build and `RUST_EXECUTION_PROBE_OK` when the program ran. The output executable is `C:\Users\W106036\AppData\Local\Rust\target\debug\stay-up-rust-install-check.exe`.
+
+Final checks confirmed that the previous `C:\Users\W106036\.cargo` and `C:\Users\W106036\.rustup` directories are absent, the saved environment values match the new locations, and the new Cargo bin directory occurs once in user PATH.
+
+## Next actions
+
+1. Use small native observer probes to validate input, lock, suspend, and power observations.
+2. Run `python -B tools\terminal-target-probe.py` in a normal visible Windows Terminal, then a separately invoked capture feasibility test against the live target. Verify observer content and freshness, including initial-image rejection. No screenshot test has run here.
+3. Keep owned-child launching and cleanup for the later milestone after baseline/manual-helper validation.

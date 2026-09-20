@@ -83,6 +83,8 @@ const DEFAULT_PITCH: u32 = 0;
 const ODT_BUTTON: u32 = 4;
 const ODS_SELECTED: u32 = 0x0001;
 const ODS_FOCUS: u32 = 0x0010;
+const ODS_HOTLIGHT: u32 = 0x0040;
+const BS_NOTIFY: u32 = 0x0000_4000;
 const COLORREF_WHITE: u32 = 0x00FF_FFFF;
 const ICC_BAR_CLASSES: u32 = 0x0000_0004;
 
@@ -178,8 +180,7 @@ struct WNDCLASSW {
 struct DashboardLayout {
     helper_card: RECT,
     monitor_card: RECT,
-    activity_card: RECT,
-    controls_card: RECT,
+    activity_header: RECT,
     stop_button: RECT,
     idle_panel: RECT,
     helper_output: RECT,
@@ -243,6 +244,8 @@ extern "system" {
     fn SetWindowLongPtrW(hwnd: HWND, index: i32, value: isize) -> isize;
     fn GetWindowLongPtrW(hwnd: HWND, index: i32) -> isize;
     fn GetClientRect(hwnd: HWND, rect: *mut RECT) -> i32;
+    fn GetCursorPos(point: *mut POINT) -> i32;
+    fn GetWindowRect(hwnd: HWND, rect: *mut RECT) -> i32;
     fn MoveWindow(hwnd: HWND, x: i32, y: i32, width: i32, height: i32, repaint: i32) -> i32;
     fn GetScrollInfo(hwnd: HWND, bar: i32, info: *mut SCROLLINFO) -> i32;
     fn GetLastInputInfo(info: *mut LASTINPUTINFO) -> i32;
@@ -322,15 +325,13 @@ fn rect(left: i32, top: i32, right: i32, bottom: i32) -> RECT {
 }
 
 fn dashboard_layout(client: RECT, split_percent: i32) -> DashboardLayout {
-    let margin = 16;
-    let gap = 8;
-    let content_top = 82;
-    let content_bottom = (client.bottom - margin).max(content_top + 160);
+    let margin = 8;
+    let gap = 4;
+    let content_top = 72;
+    let content_bottom = (client.bottom - margin).max(content_top + 220);
     let content_width = (client.right - margin * 2).max(2);
-    let lower_height = 156;
-    let lower_top = (content_bottom - lower_height - gap).max(content_top + 170);
-    let pane_bottom = (lower_top - gap).max(content_top + 120);
-    let splitter_width = 20;
+    let pane_bottom = content_bottom;
+    let splitter_width = 16;
     let pane_width = (content_width - splitter_width).max(2);
     let split = split_percent.clamp(25, 75);
     let left_width = (pane_width * split / 100).max(1);
@@ -341,32 +342,17 @@ fn dashboard_layout(client: RECT, split_percent: i32) -> DashboardLayout {
     let second_right = client.right - margin;
     let helper_card = rect(left, content_top, right, pane_bottom);
     let monitor_card = rect(second_left, content_top, second_right, pane_bottom);
-    let lower_column_width = (content_width - gap) / 2;
-    let lower_left = margin;
-    let lower_right = lower_left + lower_column_width;
-    let lower_second_left = lower_right + gap;
-    let activity_card = rect(lower_left, lower_top, lower_right, content_bottom);
-    let controls_card = rect(lower_second_left, lower_top, second_right, content_bottom);
-    let stop_button = rect(
-        controls_card.left + 16,
-        controls_card.top + 82,
-        controls_card.right - 16,
-        controls_card.bottom - 16,
-    );
-    let idle_panel = rect(
-        controls_card.left + 16,
-        controls_card.top + 16,
-        controls_card.right - 16,
-        controls_card.top + 66,
-    );
-    let helper_output = rect(helper_card.left + 12, helper_card.top + 60, helper_card.right - 12, helper_card.bottom - 54);
-    let monitor_output = rect(monitor_card.left + 12, monitor_card.top + 60, monitor_card.right - 12, monitor_card.bottom - 54);
+    let stop_button = rect(client.right - margin - 108, 16, client.right - margin, 48);
+    let idle_right = stop_button.left - gap;
+    let idle_panel = rect(idle_right - 170, 16, idle_right, 48);
+    let activity_header = rect(66, 30, idle_panel.left - gap, 58);
+    let helper_output = rect(helper_card.left + 6, helper_card.top + 50, helper_card.right - 6, helper_card.bottom - 40);
+    let monitor_output = rect(monitor_card.left + 6, monitor_card.top + 50, monitor_card.right - 6, monitor_card.bottom - 40);
     let splitter = rect(splitter_left, content_top, second_left, pane_bottom);
     DashboardLayout {
         helper_card,
         monitor_card,
-        activity_card,
-        controls_card,
+        activity_header,
         stop_button,
         idle_panel,
         helper_output,
@@ -459,8 +445,8 @@ fn draw_text(hdc: HDC, text: &str, area: &RECT, color: u32, size: i32, weight: i
 }
 
 fn draw_card_shell(hdc: HDC, area: &RECT) {
-    rounded_box(hdc, area, rgb(255, 255, 255), rgb(194, 218, 242), 12);
-    let header = rect(area.left + 1, area.top + 1, area.right - 1, area.top + 58);
+    rounded_box(hdc, area, rgb(255, 255, 255), rgb(194, 218, 242), 8);
+    let header = rect(area.left + 1, area.top + 1, area.right - 1, area.top + 48);
     fill_rect(hdc, &header, rgb(237, 246, 253));
 }
 
@@ -469,9 +455,9 @@ fn draw_process_card(hdc: HDC, area: &RECT, title: &str, pid: u32) {
     draw_text(
         hdc,
         title,
-        &rect(area.left + 16, area.top + 10, area.right - 16, area.top + 49),
+        &rect(area.left + 10, area.top + 7, area.right - 10, area.top + 40),
         rgb(14, 42, 91),
-        23,
+        18,
         FW_BOLD,
         DT_LEFT | DT_SINGLELINE | DT_VCENTER,
     );
@@ -479,41 +465,32 @@ fn draw_process_card(hdc: HDC, area: &RECT, title: &str, pid: u32) {
     draw_text(
         hdc,
         "PID:",
-        &rect(area.left + 16, area.bottom - 46, area.left + 70, area.bottom - 18),
+        &rect(area.left + 10, area.bottom - 34, area.left + 52, area.bottom - 12),
         rgb(106, 123, 147),
-        18,
+        14,
         FW_SEMIBOLD,
         DT_LEFT | DT_SINGLELINE | DT_VCENTER,
     );
     draw_text(
         hdc,
         &pid.to_string(),
-        &rect(area.left + 72, area.bottom - 46, area.right - 16, area.bottom - 18),
+        &rect(area.left + 54, area.bottom - 34, area.right - 10, area.bottom - 12),
         rgb(14, 35, 74),
-        18,
+        14,
         FW_SEMIBOLD,
         DT_LEFT | DT_SINGLELINE | DT_VCENTER,
     );
 }
 
-fn draw_activity_card(hdc: HDC, area: &RECT) {
-    draw_card_shell(hdc, area);
-    draw_text(
-        hdc,
-        "Activity sources",
-        &rect(area.left + 16, area.top + 8, area.right - 16, area.top + 44),
-        rgb(14, 42, 91),
-        20,
-        FW_BOLD,
-        DT_LEFT | DT_SINGLELINE | DT_VCENTER,
-    );
-    for (index, label) in ["keyboard", "mouse", "touchpad"].iter().enumerate() {
-        let top = area.top + 54 + index as i32 * 28;
+fn draw_header_activity(hdc: HDC, area: &RECT) {
+    let mut left = area.left;
+    for (label, width) in [("keyboard", 58), ("mouse", 48), ("touchpad", 62)] {
+        let center = (area.top + area.bottom) / 2;
         unsafe {
             let brush = CreateSolidBrush(rgb(42, 139, 232));
             if !brush.is_null() {
                 let old = SelectObject(hdc, brush as HGDIOBJ);
-                Ellipse(hdc, area.left + 20, top + 5, area.left + 34, top + 19);
+                Ellipse(hdc, left, center - 3, left + 6, center + 3);
                 SelectObject(hdc, old);
                 DeleteObject(brush as HGDIOBJ);
             }
@@ -521,35 +498,35 @@ fn draw_activity_card(hdc: HDC, area: &RECT) {
         draw_text(
             hdc,
             label,
-            &rect(area.left + 48, top, area.right - 16, top + 26),
+            &rect(left + 10, area.top, left + width, area.bottom),
             rgb(14, 35, 74),
-            18,
+            9,
             FW_NORMAL,
             DT_LEFT | DT_SINGLELINE | DT_VCENTER,
         );
+        left += width + 4;
     }
 }
 
-fn draw_controls_card(hdc: HDC, area: &RECT, idle_panel: &RECT, idle: &str) {
-    rounded_box(hdc, area, rgb(255, 255, 255), rgb(194, 218, 242), 12);
+fn draw_header_idle(hdc: HDC, idle_panel: &RECT, idle: &str) {
     rounded_box(
         hdc,
         &idle_panel,
         rgb(239, 247, 255),
         rgb(207, 229, 250),
-        12,
+        6,
     );
     draw_text(
         hdc,
         "IDLE:",
         &rect(
-            idle_panel.left + 12,
-            idle_panel.top + 6,
-            idle_panel.left + 106,
-            idle_panel.bottom - 6,
+            idle_panel.left + 6,
+            idle_panel.top + 3,
+            idle_panel.left + 44,
+            idle_panel.bottom - 3,
         ),
         rgb(77, 94, 118),
-        20,
+        10,
         FW_SEMIBOLD,
         DT_RIGHT | DT_SINGLELINE | DT_VCENTER,
     );
@@ -557,19 +534,19 @@ fn draw_controls_card(hdc: HDC, area: &RECT, idle_panel: &RECT, idle: &str) {
         hdc,
         idle,
         &rect(
-            idle_panel.left + 116,
-            idle_panel.top + 3,
-            idle_panel.right - 10,
-            idle_panel.bottom - 3,
+            idle_panel.left + 50,
+            idle_panel.top + 1,
+            idle_panel.right - 6,
+            idle_panel.bottom - 1,
         ),
         rgb(20, 95, 190),
-        30,
+        18,
         FW_BOLD,
         DT_LEFT | DT_SINGLELINE | DT_VCENTER,
     );
 }
 
-fn draw_header(hdc: HDC, client: RECT) {
+fn draw_header(hdc: HDC, client: RECT, layout: &DashboardLayout, idle: &str) {
     fill_rect(hdc, &rect(0, 0, client.right, 64), rgb(246, 250, 254));
     fill_rect(
         hdc,
@@ -585,18 +562,28 @@ fn draw_header(hdc: HDC, client: RECT) {
     );
     draw_text(
         hdc,
-        "stay-watch - RUNNING",
-        &rect(66, 10, client.right - 16, 55),
+        "stay-up is",
+        &rect(66, 4, 154, 30),
         rgb(14, 35, 74),
-        24,
+        15,
         FW_BOLD,
         DT_LEFT | DT_SINGLELINE | DT_VCENTER,
     );
+    draw_text(
+        hdc,
+        "RUNNING",
+        &rect(156, 4, 246, 30),
+        rgb(14, 181, 137),
+        15,
+        FW_BOLD,
+        DT_LEFT | DT_SINGLELINE | DT_VCENTER,
+    );
+    draw_header_activity(hdc, &layout.activity_header);
+    draw_header_idle(hdc, &layout.idle_panel, idle);
 }
 
 fn paint_dashboard(hwnd: HWND, hdc: HDC, client: RECT) {
     fill_rect(hdc, &client, rgb(250, 252, 255));
-    draw_header(hdc, client);
     let (helper_pid, monitor_pid, elapsed, split_percent) = unsafe {
         let raw = GetWindowLongPtrW(hwnd, GWLP_USERDATA);
         if raw == 0 {
@@ -612,6 +599,7 @@ fn paint_dashboard(hwnd: HWND, hdc: HDC, client: RECT) {
         }
     };
     let layout = dashboard_layout(client, split_percent);
+    draw_header(hdc, client, &layout, &elapsed);
     draw_process_card(hdc, &layout.helper_card, "keep-awake.py", helper_pid);
     draw_process_card(hdc, &layout.monitor_card, "monitor-helper.py", monitor_pid);
     fill_rect(hdc, &layout.splitter, rgb(234, 241, 248));
@@ -624,8 +612,6 @@ fn paint_dashboard(hwnd: HWND, hdc: HDC, client: RECT) {
         FW_SEMIBOLD,
         DT_CENTER | DT_SINGLELINE | DT_VCENTER,
     );
-    draw_activity_card(hdc, &layout.activity_card);
-    draw_controls_card(hdc, &layout.controls_card, &layout.idle_panel, &elapsed);
 }
 
 fn scroll_at_bottom(hwnd: HWND) -> bool {
@@ -762,39 +748,58 @@ fn layout_controls(hwnd: HWND) {
     }
 }
 
+fn stop_button_hovered(item: &DRAWITEMSTRUCT) -> bool {
+    unsafe {
+        let mut point = POINT { x: 0, y: 0 };
+        let mut area: RECT = mem::zeroed();
+        if GetCursorPos(&mut point) == 0 || GetWindowRect(item.hwnd_item, &mut area) == 0 {
+            return false;
+        }
+        point.x >= area.left
+            && point.x < area.right
+            && point.y >= area.top
+            && point.y < area.bottom
+    }
+}
+
 fn draw_stop_button(item: &DRAWITEMSTRUCT) {
     let selected = item.item_state & ODS_SELECTED != 0;
     let fill = if selected {
-        rgb(24, 105, 190)
+        rgb(170, 35, 35)
     } else {
-        rgb(42, 133, 222)
+        rgb(211, 47, 47)
     };
-    rounded_box(item.hdc, &item.rc_item, fill, fill, 12);
+    rounded_box(item.hdc, &item.rc_item, fill, fill, 6);
     let center_y = (item.rc_item.top + item.rc_item.bottom) / 2;
-    let icon_left = (item.rc_item.left + item.rc_item.right) / 2 - 58;
-    let icon_top = center_y - 10;
+    let icon_left = (item.rc_item.left + item.rc_item.right) / 2 - 38;
+    let icon_top = center_y - 7;
     unsafe {
         let brush = CreateSolidBrush(COLORREF_WHITE);
         if !brush.is_null() {
             FillRect(
                 item.hdc,
-                &rect(icon_left, icon_top, icon_left + 20, icon_top + 20),
+                &rect(icon_left, icon_top, icon_left + 14, icon_top + 14),
                 brush,
             );
             DeleteObject(brush as HGDIOBJ);
         }
     }
+    let text_color = if item.item_state & ODS_HOTLIGHT != 0 || stop_button_hovered(item) {
+        rgb(0, 0, 0)
+    } else {
+        COLORREF_WHITE
+    };
     draw_text(
         item.hdc,
         "Stop",
         &rect(
-            icon_left + 34,
+            icon_left + 22,
             item.rc_item.top,
-            item.rc_item.right - 26,
+            item.rc_item.right - 8,
             item.rc_item.bottom,
         ),
-        COLORREF_WHITE,
-        25,
+        text_color,
+        18,
         FW_SEMIBOLD,
         DT_LEFT | DT_SINGLELINE | DT_VCENTER,
     );
@@ -805,10 +810,10 @@ fn draw_stop_button(item: &DRAWITEMSTRUCT) {
                 FrameRect(
                     item.hdc,
                     &rect(
-                        item.rc_item.left + 4,
-                        item.rc_item.top + 4,
-                        item.rc_item.right - 4,
-                        item.rc_item.bottom - 4,
+                        item.rc_item.left + 2,
+                        item.rc_item.top + 2,
+                        item.rc_item.right - 2,
+                        item.rc_item.bottom - 2,
                     ),
                     brush,
                 );
@@ -824,7 +829,7 @@ extern "system" fn wnd_proc(hwnd: HWND, msg: u32, wparam: usize, lparam: isize) 
             WM_GETMINMAXINFO => {
                 let info = &mut *(lparam as *mut MINMAXINFO);
                 info.pt_min_track_size.x = 800;
-                info.pt_min_track_size.y = 640;
+                info.pt_min_track_size.y = 340;
                 0
             }
             WM_PAINT => {
@@ -845,6 +850,10 @@ extern "system" fn wnd_proc(hwnd: HWND, msg: u32, wparam: usize, lparam: isize) 
             WM_TIMER => {
                 let quit = update_or_quit(hwnd);
                 refresh_outputs(hwnd);
+                let raw = GetWindowLongPtrW(hwnd, GWLP_USERDATA);
+                if raw != 0 {
+                    InvalidateRect((*(raw as *const AppState)).stop_button, ptr::null(), 0);
+                }
                 InvalidateRect(hwnd, ptr::null(), 0);
                 if quit {
                     DestroyWindow(hwnd);
@@ -946,7 +955,7 @@ fn drop_state(hwnd: HWND) {
 pub fn run(mut keep: Child, mut monitor: Child, helper_pid: u32, views: Views) -> Result<(), String> {
     let monitor_pid = monitor.id();
     let class = wide("StayWatchStatusWindow");
-    let title = wide("stay-watch - RUNNING");
+    let title = wide("stay-up is RUNNING");
     unsafe {
         let common_controls = INITCOMMONCONTROLSEX {
             size: mem::size_of::<INITCOMMONCONTROLSEX>() as u32,
@@ -974,8 +983,8 @@ pub fn run(mut keep: Child, mut monitor: Child, helper_pid: u32, views: Views) -
             WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_VISIBLE,
             CW_USEDEFAULT,
             CW_USEDEFAULT,
-            960,
-            720,
+            800,
+            340,
             ptr::null_mut(),
             ptr::null_mut(),
             instance,
@@ -993,7 +1002,7 @@ pub fn run(mut keep: Child, mut monitor: Child, helper_pid: u32, views: Views) -
             0,
             btn_class.as_ptr(),
             btn_text.as_ptr(),
-            WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_OWNERDRAW,
+            WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_OWNERDRAW | BS_NOTIFY,
             0,
             0,
             10,
@@ -1153,9 +1162,9 @@ mod tests {
             let layout = dashboard_layout(client, split);
             assert!(inside(layout.helper_card, client));
             assert!(inside(layout.monitor_card, client));
-            assert!(inside(layout.activity_card, client));
-            assert!(inside(layout.controls_card, client));
+            assert!(inside(layout.activity_header, client));
             assert!(inside(layout.stop_button, client));
+            assert!(inside(layout.idle_panel, client));
             assert!(inside(layout.helper_output, layout.helper_card));
             assert!(inside(layout.monitor_output, layout.monitor_card));
         }
@@ -1163,12 +1172,32 @@ mod tests {
 
     #[test]
     fn dashboard_split_is_clamped_to_readable_columns() {
-        let client = rect(0, 0, 800, 640);
+        let client = rect(0, 0, 784, 300);
         let narrow = dashboard_layout(client, -100);
         let wide = dashboard_layout(client, 1000);
         assert!(narrow.helper_card.right - narrow.helper_card.left >= 180);
         assert!(narrow.monitor_card.right - narrow.monitor_card.left >= 180);
         assert!(wide.helper_card.right - wide.helper_card.left >= 180);
         assert!(wide.monitor_card.right - wide.monitor_card.left >= 180);
+    }
+
+    #[test]
+    fn compact_minimum_client_keeps_all_elements_visible() {
+        let client = rect(0, 0, 784, 300);
+        let layout = dashboard_layout(client, 50);
+        assert!(inside(layout.helper_card, client));
+        assert!(inside(layout.monitor_card, client));
+        assert!(inside(layout.activity_header, client));
+        assert!(inside(layout.idle_panel, client));
+        assert!(inside(layout.stop_button, client));
+        assert!(inside(layout.splitter, client));
+        assert!(inside(layout.helper_output, layout.helper_card));
+        assert!(inside(layout.monitor_output, layout.monitor_card));
+        assert!(layout.helper_output.right > layout.helper_output.left);
+        assert!(layout.helper_output.bottom > layout.helper_output.top);
+        assert!(layout.monitor_output.right > layout.monitor_output.left);
+        assert!(layout.monitor_output.bottom > layout.monitor_output.top);
+        assert!(layout.idle_panel.right < layout.stop_button.left);
+        assert!(layout.activity_header.right < layout.idle_panel.left);
     }
 }

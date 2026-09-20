@@ -5,6 +5,12 @@ Runs with the installed Python standard library, without an installer or
 administrator password. Holds Windows SYSTEM and DISPLAY power requests
 while its process runs.
 
+## Current dashboard
+
+The banner shows the compact dashboard after more than three minutes.
+
+![Compact stay-up dashboard after more than three minutes](docs/assets/stay-up-dashboard-banner.png)
+
 ## Visual refresh
 
 The application works for the user. The current task is a visual refresh, not a replacement of the working helper system.

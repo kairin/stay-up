@@ -189,6 +189,10 @@ Use a neutral background and one accent color. Pair every status color with text
 Keep Stop visible, keyboard-accessible, and separate from passive details.
 Retain the exact existing X and Stop semantics.
 
+The [current UI layout reference](ui-layout-reference.md) records the implementation
+positions, sizes, inner rectangles, shape radii, and text areas. The Rust source remains
+the final source of truth.
+
 Details can contain the full log path and current explanatory text.
 An Open log action is optional and needs a missing-file error state.
 Do not add green “Protected,” “Unlocked,” or “Logging healthy” badges without the corresponding evidence.

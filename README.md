@@ -1,258 +1,118 @@
 # stay-up
 
-A small Windows keep-awake helper and the research that led to it.
-Runs with the installed Python standard library, without an installer or
-administrator password. Holds Windows SYSTEM and DISPLAY power requests
-while its process runs.
-
-## Current dashboard
-
-The banner shows the compact dashboard after more than three minutes.
+`stay-up` is a small Windows keep-awake helper. It asks Windows to keep the
+system and display awake while the helper runs. It needs no installer,
+administrator access or third-party Python packages. The dashboard also needs
+Python and the documented Rust toolchain.
 
 ![Compact stay-up dashboard after more than three minutes](docs/assets/stay-up-dashboard-banner.png)
 
-## Visual refresh
-
-The application works for the user. The current task is a visual refresh, not a replacement of the working helper system.
-The [visual plan](docs/visual-refresh-plan.md) now includes the approved
-[native output panes](docs/native-output-panes.md): one Rust window with status,
-helper output, and a read-only view of the shared heartbeat log.
-The two Python scripts retain their existing behavior. The UI owns pane sizing;
-interactive terminals and Git Bash are not required.
-Screenshot logging is removed from the active plan. Application logging remains record-only.
-Launch presentation and shutdown checks are recorded separately in the observation log.
-
-## User-submitted images and videos
-
-From [issue #6](https://github.com/project-owner/stay-up/issues/6): the current Rust window and two mostly blank terminal windows.
-This is the visual baseline, not the proposed design.
-
-![Current stay-watch window with idle timer and two terminal windows](https://example.invalid/removed-media)
-
-<details>
-<summary>More application photos from issue #6</summary>
-
-Timer reading `00:03:43`:
-
-![Current Rust status window showing idle 00:03:43](https://example.invalid/removed-media)
-
-Timer reading `00:10:38`:
-
-![Current Rust status window showing idle 00:10:38 beside terminal windows](https://example.invalid/removed-media)
-
-</details>
-
-<details>
-<summary>Sign-in context from issue #6, not proof of helper behavior</summary>
-
-The issue also contains this sign-in photograph.
-Its timing and relationship to the helper are not established.
-
-![User-submitted photograph of a Windows sign-in screen](https://example.invalid/removed-media)
-
-</details>
-
-Videos from **both issues**, linked to the original attachments:
-
-- Issue #6: [video 1, about 20 seconds](https://example.invalid/removed-media).
-- Issue #6: [video 2, about 8 seconds](https://example.invalid/removed-media).
-- Issue #7: [video 1, about 9 seconds](https://example.invalid/removed-media).
-- Issue #7: [video 2, about 8 seconds](https://example.invalid/removed-media).
-
-These are user-submitted observations, not controlled test results.
-Attachments can require GitHub access. Inline video playback depends on the viewer.
-See the [media record](docs/issue-media.md) for inspection limits, source details, and the incomplete upload in issue #6.
-
 ## Run
 
-From PowerShell in this repository, build and start the Rust application with:
+Run the Rust application from PowerShell in `D:\Apps\stay-up`:
 
 ```powershell
 python .\launch.py
 ```
 
-The command builds with the approved Cargo setup and uses the stable output path.
-It starts only the Rust executable and returns a JSON startup result.
-The result includes the status, process ID, executable path, and window handle.
-The launcher checks the Rust process and its `StayWatchStatusWindow` only.
-
-For a three-second test, pass the existing option through the launcher:
+For a timed test, add `--seconds N`:
 
 ```powershell
 python .\launch.py --seconds 3
 ```
 
-The launcher reports an existing stable-path instance. It does not start a second session.
-The requested arguments do not change an existing session. Use Stop before a new timed test.
+The launcher checks the documented Rust paths and active toolchain. It builds to `%LOCALAPPDATA%\Rust\target\stay-up`. It starts only
+the Rust executable. Its JSON result gives the status, process ID, executable
+path, and window handle.
 
-The supported source location is `D:\Apps\stay-up`.
-The stable build output is `%LOCALAPPDATA%\Rust\target\stay-up`.
-The launcher checks the documented Rust paths and active toolchain before the build.
+The application starts `keep-awake.py` and `monitor-helper.py`. Its window
+shows their process IDs, output, the shared heartbeat log, and input idle time.
+Use the Split slider to size the panes. Use Stop to end all three processes.
+The X button minimizes the window.
 
-An agent still needs permission to write to the stable build output.
-If the sandbox denies access, request the required terminal authorization and repeat the same command.
-The launcher does not disable the sandbox, change ACLs, or select a new timestamped directory.
-See the [build-access evidence](docs/observations.md#20-september-2026-cargo-build-access-from-an-agent).
+If a stable-path instance already runs, the launcher reports it and does not
+apply new arguments. Use Stop before you start a new timed test. The launcher
+checks only the Rust process and its owned `StayWatchStatusWindow`.
 
-To run the helper alone, use:
+An agent needs permission to write to the stable output path. If the sandbox
+denies access, authorize the same launch command. Do not change access-control
+lists or select a different output directory.
+
+Run the helper by itself when you do not need the dashboard:
 
 ```powershell
 python .\keep-awake.py
-```
-
-Press Ctrl+C to release the requests and stop. For a two-hour limit:
-
-```powershell
 python .\keep-awake.py --seconds 7200
 ```
 
-The root command starts Rust. Rust starts both helpers and an idle timer.
-A Rust dashboard shows the PIDs, idle time, helper output, and the shared heartbeat log.
-The two native text panes are read-only and support selection, copying, and scrolling.
-Use the central Split slider to adjust their widths; Tab moves between controls.
-Python console windows are suppressed. The heartbeat pane includes records from other runs.
-Keyboard, mouse, or trackpad input in this session resets idle to `00:00:00`.
-The X button minimizes. Use Stop to end the launcher and the two Python processes.
+Press Ctrl+C to stop the helper and release its power requests.
 
-To record a one-minute process heartbeat, start `monitor-helper.py` with the
-keep-awake process ID:
+## Behavior and limits
 
-```powershell
-python .\monitor-helper.py TEST-PID --interval 60 --log .\keep-awake.monitor.log
-```
+- The helper requests `SYSTEM` and `DISPLAY` availability.
+- It does not change the registry, power plan, lock settings, or startup settings.
+- It does not simulate keyboard, mouse, or touch input.
+- Input in the current session resets the idle timer.
+- The monitor records process liveness about once each minute.
+- The heartbeat does not prove the state of each Windows power request.
+- The heartbeat does not record lock, display, sleep, idle, image, or video data.
+- A final `STOPPED` record is not guaranteed after the Rust Stop action.
 
-The monitor follows the original process handle, records `OK` once per
-interval, records `STOPPED` when the helper exits, and then exits itself.
-It confirms that the helper process remains alive; it does not independently
-query Windows for the state of each power request.
-
-The Rust launcher selects `local/stay-watch/keep-awake.monitor.log`.
-The monitor appends timestamped UTF-8 records across runs, about once every 60 seconds.
-It records process liveness, not idle time, lock state, or screenshots.
-The Rust Stop path kills the monitor before the helper, so a final `STOPPED` record is not guaranteed.
-See [logging behavior and limits](docs/visual-refresh-plan.md#4-what-does-logging-do-now).
-
-No Teams meeting is required. No registry settings, power plans, input
-simulation, or persistent startup entries are involved.
-
-## Validation and limits
-
-On the inspected Windows computer, both requests were accepted without
-elevation and released on timed exit. A short run used about 18 MiB RAM.
-On 19 September 2026, the user reported no recalled need to log in again
-during a session in which the helper had run for about 1 hour 57 minutes.
-The observation and planned reboot review are recorded in the
+Windows accepted both power requests during the recorded tests. A short helper
+run used about 18 MiB of memory. Device policy can still limit the result. The
+pending idle, sleep, and lock checks are in the
 [observation log](docs/observations.md).
-An idle test with Teams closed beyond the ten-minute screen-saver timeout
-is still pending. API success is not proof that every device policy permits
-the requested behavior. Modern Standby battery operation and manual sleep
-have additional limits described in the research notes.
 
-The extracted official PowerToys Awake executable was blocked by this
-computer's application policy. It is retained as research, not presented
-as a working runtime for this machine.
+The visual refresh preserves the accepted native output panes from commit
+`fed8eb5`. Screenshot logging and capture tests are outside the current scope.
+See the [visual plan](docs/visual-refresh-plan.md) and
+[baseline contract](docs/native-output-panes.md#accepted-working-baseline).
 
-The first stay-watch launcher is in `stay-watch/`.
-The [visual-refresh plan](docs/visual-refresh-plan.md) controls current work and excludes screenshot logging.
-The older [observer proposal](docs/stay-watch-plan.md) and [acceptance vectors](docs/stay-watch-acceptance.md) remain historical design references.
-Their screenshot requirements are withdrawn, not completed.
-The later lock and sleep observer is not implemented.
-Native capture and state probes ran on 20 September 2026.
-The [feasibility notes](docs/stay-watch-feasibility.md) retain those historical results and their limits.
+## Privacy
 
-## Kanban board
+The repository contains no user desktop captures, sign-in images, or personal
+media. The dashboard preview above is a repository asset created for this
+project. Historical issue attachments are not linked from the public
+documentation.
 
-The project uses the local Hermes Kanban board `stay-up`.
-Its display name is `stay-up implementation`.
-The code workspace is `D:\Apps\stay-up`.
+### Runtime data and portability
 
-On this Windows machine, Hermes stores the board database here:
+The application does not read names, emails, credentials, account files, or
+network data. It uses Windows power APIs, process IDs, window handles, idle
+ticks, timestamps, and local log files.
 
-```text
-C:\Users\test-user\AppData\Local\hermes\kanban\boards\stay-up\kanban.db
-```
+The launcher requires the checkout at `D:\Apps\stay-up`. It also requires
+`%LOCALAPPDATA%` and the documented Rust environment variables. These values
+are machine configuration, not personal identity data.
 
-The board is outside this Git repository. A Git clone, pull, or push does not transfer its tasks.
-This is a local Hermes board, not a GitHub Projects board.
-Use the Hermes CLI, Kanban tools, or user interface. Do not edit the SQLite database directly.
+The launcher reports an absolute executable path in its JSON result. On
+Windows, that path can contain the account name from the profile path. The
+path is diagnostic output and is not an input to the application.
 
-List boards and read the current task states:
+The optional probes in `tools/` can inspect device names or window content.
+They are not part of the application launch path.
 
-```powershell
-hermes kanban boards list
-hermes kanban --board stay-up list --json
-```
+## Development
 
-Inspect the remaining feasibility work:
+Read the [Rust environment procedure](docs/rust-environment-verification.md)
+before you install, move, or troubleshoot Rust. Installation and version output
+do not prove that the environment can build and run this project.
 
-```powershell
-hermes kanban --board stay-up show t_cc724421
-```
+The repeatable probe is in `tools/rust-install-check/`. Record new machine
+results in [docs/observations.md](docs/observations.md). Documentation-only
+changes do not require a new machine test.
 
-Always specify `--board stay-up` in task commands. The selected default board can change between sessions.
-In Hermes Desktop or the dashboard, open Kanban and select `stay-up implementation` (`stay-up`).
-
-The [visual-refresh plan](docs/visual-refresh-plan.md) defines the current scope.
-The board records task status and was not changed during this planning task.
-Older screenshot tasks do not override the new scope.
-The [feasibility record](docs/stay-watch-feasibility.md) retains completed probe checks and remaining unknowns.
-Keep changing task counts on the board, not in this README.
-
-## Development verification
-
-Before declaring the Rust environment ready, follow the [required verification procedure](docs/rust-environment-verification.md). It checks approved installation and build-output paths, saved user settings, command resolution, a fresh Cargo build, build-script execution, and the resulting Win32 executable. The [repository instructions](AGENTS.md) define when these checks are required.
-
-The repeatable probe is in `tools/rust-install-check/`.
-It is separate from the proposed stay-watch implementation.
-Installation success does not pass lock, sleep, live input-event, or helper checks.
-Capture-probe results are in the [feasibility record](docs/stay-watch-feasibility.md).
-Record results in the [observation log](docs/observations.md).
-
-To re-check recorded probe evidence without a new capture window:
-
-```powershell
-python -B -m unittest tools.test_feasibility_probes -v
-```
-
-Pass when the command prints `OK` and exit status is zero.
-
-## Contents
-
-| Path | Purpose |
+| Document | Purpose |
 |---|---|
-| `AGENTS.md` | Agent workflow for this repository. |
-| `keep-awake.py` | Current lightweight helper; no third-party Python dependencies. |
-| `monitor-helper.py` | Optional heartbeat logger for a running helper process. |
-| `stay-watch/` | First Rust launcher: starts both helpers and shows idle time. |
-| `tools/task-ranker/` | [Advisory TypeSafe scores for local Kanban tasks](tools/task-ranker/README.md). |
-| `tools/terminal-target-probe.py` | Read-only Windows Terminal window enumeration. |
-| `tools/windows-state-probe.py` | Read-only input, session, display, and power observations. |
-| `tools/capture-feasibility-probe.py` | Explicit Windows Terminal capture test. |
-| `tools/rust-state-probe.rs` | Read-only Rust Win32 state probe. |
-| `tools/test_feasibility_probes.py` | Agent-runnable checks of recorded probe evidence. |
-| `docs/visual-refresh-plan.md` | Current visual scope, layout proposal, and adversarial review. |
-| `docs/issue-media.md` | Image and video sources from issues #6 and #7, with evidence limits. |
-| `docs/stay-watch-plan.md` | Historical Rust observer proposal. Screenshot requirements are withdrawn. |
-| `docs/stay-watch-acceptance.md` | Unexecuted stay-watch acceptance vectors. |
-| `docs/stay-watch-feasibility.md` | Current feasibility results and implementation limits. |
-| `docs/rust-environment-verification.md` | Required Rust installation and probe procedure. |
-| `docs/observations.md` | Dated helper, install, and review observations. |
-| `docs/research.md` | Provenance, copy verification, and historical investigation. |
-| `docs/runtime-inventory.csv` | SHA-256 and sizes of every locally copied runtime artifact. |
-| `research/powertoys-source/` | Snapshot of the existing sparse PowerToys checkout, including upstream license and notice files. |
-| `research/powertoys-source/StayAwake/StayAwake.cs` | Earlier custom C# experiment using SetThreadExecutionState; not the Python helper. |
-| `local/powertoys-awake-runtime/` | Complete local copy of downloaded/extracted binaries, ignored by Git. |
+| [Visual refresh plan](docs/visual-refresh-plan.md) | Current presentation scope and limits |
+| [Native output panes](docs/native-output-panes.md) | Accepted working baseline |
+| [Observation log](docs/observations.md) | Dated machine and application results |
+| [Feasibility record](docs/stay-watch-feasibility.md) | Historical probes and remaining unknowns |
+| [Observer proposal](docs/stay-watch-plan.md) | Historical observer design |
+| [Acceptance vectors](docs/stay-watch-acceptance.md) | Unexecuted historical checks |
+| [Research record](docs/research.md) | Source provenance and earlier investigation |
 
-This repository owns the consolidated copies. Original workspace folders
-remain intact. PowerToys Git history was not imported; provenance is pinned
-in `docs/research.md`. This is a personal project, not a Microsoft fork
-or an official portable PowerToys distribution.
-
-The runtime cache contains 3,271 files totaling 2.32 GB of vendor binaries, and
-contains files above GitHub's normal Git file-size limit. A Git clone gets
-the helper, source snapshot, research, and artifact inventory. It does not
-download the local binary cache. The Python helper does not need that cache.
-
-Upstream PowerToys files retain their
+The PowerToys source snapshot keeps its
 [MIT license](research/powertoys-source/LICENSE) and
-[third-party notices](research/powertoys-source/NOTICE.md).
+[third-party notices](research/powertoys-source/NOTICE.md). This repository is
+independent of Microsoft. It is not an official PowerToys distribution.

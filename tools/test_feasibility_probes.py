@@ -18,9 +18,10 @@ ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT / "local" / "stay-watch" / "feasibility-20260920-1345"
 CAPTURE = Path(__file__).with_name("capture-feasibility-probe.py")
 STATE = Path(__file__).with_name("windows-state-probe.py")
-RUST_EXE = Path(
-    os.environ.get("CARGO_TARGET_DIR", r"C:\Users\test-user\AppData\Local\Rust\target")
-) / "feasibility-20260920-1336" / "rust-state-probe.exe"
+LOCALAPPDATA = Path(
+    os.environ.get("LOCALAPPDATA") or Path.home() / "AppData" / "Local"
+)
+RUST_EXE = LOCALAPPDATA / "Rust" / "target" / "feasibility-20260920-1336" / "rust-state-probe.exe"
 
 
 def load_module(path, name):
@@ -198,7 +199,7 @@ class SilentCommandTests(unittest.TestCase):
     def test_classify_touchpad_from_elan_name(self):
         state = load_module(STATE, "windows_state_probe")
         category = state.classify_device(
-            r"\\?\HID#TOUCHPAD-TEST&Col01#5&TEST-ID&0&0000",
+            r"\\?\HID#TOUCHPAD-TEST&Col01#TEST&0&0000",
             0,
             None,
             None,

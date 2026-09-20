@@ -7,7 +7,6 @@ Scores are advisory. They do not authorize work or change the board.
 ## Board source
 
 This project uses the local Hermes Kanban board `stay-up`, not GitHub Projects.
-See the [root README](../../README.md#kanban-board) for its location.
 This workflow does not need GitHub `read:project` access or a GitHub authorization change.
 
 `docs-derived-tasks.json` is a historical example with five records.

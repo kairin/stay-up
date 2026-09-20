@@ -21,7 +21,6 @@ read-only output panes. This extends the earlier dashboard presentation work.
 The Python helper and monitor remain unchanged. Interactive terminals, Bash,
 ConPTY, and screenshot logging are outside this change.
 
-Implemented in the Rust tree and reviewed in the parent session.
 The [20 September verification record](observations.md#20-september-2026-native-output-panes)
 records the automated checks and remaining manual checks.
 

@@ -1,37 +1,53 @@
 # Repository instructions
 
-Read [required environment verification](docs/rust-environment-verification.md) before installing, relocating, or troubleshooting Rust, and before treating the native development environment as ready. The [feasibility record](docs/stay-watch-feasibility.md) contains observed results. The [observation log](docs/observations.md) distinguishes them from pending application checks.
+Read the [Rust environment procedure](docs/rust-environment-verification.md)
+before you install, move, troubleshoot, or treat the Rust environment as ready. Use the
+[feasibility record](docs/stay-watch-feasibility.md) and
+[observation log](docs/observations.md) to separate results from open checks.
 
-## Verification expectations
+## Environment verification
 
-- Inspect the actual installation paths, user settings, current process settings, and resolved commands. A user-profile installation is not automatically in an allowed executable location.
-- For this managed machine, keep Rust tools and generated executables in the documented locations under `AppData\Local`.
-- After a toolchain or path change, run the repository Cargo probe in a fresh output directory. Require compiler launch, build-script execution, successful linking, and execution of the Win32 probe. Installer success or version output alone is insufficient.
-- If execution fails, record the exact error and distinguish sandbox restrictions from application-control policy. Inspect relevant allow/block evidence before concluding that a new administrator exception is necessary. Observe existing authorization requirements for changes.
-- Record the command, versions, output location, exit status, success markers, and limitations in the observation log. Read only the relevant environment variables; do not dump credentials or the complete environment.
-- Reuse valid evidence when the environment has not changed. Documentation-only edits need link and formatting checks, not repeated interactive machine tests.
+- Inspect installation paths, saved settings, process settings, and resolved commands.
+- Keep Rust tools and outputs in the documented `AppData\Local` locations.
+- After a toolchain or path change, run the Cargo probe in a fresh output directory.
+- Require compiler launch, build-script execution, linking, and Win32 probe execution.
+- Record exact failures. Separate sandbox denial from application-control policy.
+- Inspect allow and block evidence before you request an administrator exception.
+- Observe existing authorization requirements for all access and policy changes.
+- Record commands, versions, paths, exit codes, markers, and limits.
+- Read only relevant environment variables. Do not expose credentials.
+- Reuse unchanged machine evidence. Documentation changes need link and format checks only.
 
 ## Root launch command
 
-Use `python .\launch.py` from this repository to build and start the Rust application.
-The command resolves the repository from `launch.py`.
-It uses the approved Cargo command and the stable output path under `AppData\Local`.
-It starts only the Rust executable.
-It passes `--seconds N` to the Rust application for a timed test.
-It returns a JSON startup result with the status, PID, executable path, and window handle.
-It checks the live Rust process and the owned `StayWatchStatusWindow`.
-It does not take screenshots or claim helper health.
-The supported checkout is `D:\Apps\stay-up`.
-The stable output is `%LOCALAPPDATA%\Rust\target\stay-up`.
-Sandbox write approval is separate from this command.
-After an access denial, request the required terminal authorization. Do not change ACLs or choose a new output directory.
+Run `python .\launch.py` from this repository. It resolves the source path,
+uses approved Cargo settings, and builds under
+`%LOCALAPPDATA%\Rust\target\stay-up`. The supported checkout is
+`D:\Apps\stay-up`.
+
+The launcher starts only the Rust executable. It passes `--seconds N` for a
+timed test. Its JSON result gives status, process ID, executable path, and
+window handle. It checks the Rust process and its owned
+`StayWatchStatusWindow`. It does not take screenshots or prove helper health.
+
+Sandbox write access needs separate authorization. After a denial, request
+terminal authorization for the same command. Do not change access-control lists
+or select another output directory.
 
 ## Application scope
 
-The user accepted commit `fed8eb5` (`feat: add native output panes`) as the working
-baseline on 20 September 2026. Preserve the [accepted baseline contract](docs/native-output-panes.md#accepted-working-baseline)
-when making future changes. Older layout proposals do not override that acceptance.
+Commit `fed8eb5` (`feat: add native output panes`) is the accepted baseline.
+Preserve the [baseline contract](docs/native-output-panes.md#accepted-working-baseline).
 
-Preserve the existing manual helper and heartbeat-monitor behavior. The [visual-refresh plan](docs/visual-refresh-plan.md) controls current work. Keep application changes limited to approved presentation work. Screenshot logging is removed from scope, including explicit-test captures. Do not allocate capture resources. User-supplied media in documentation is separate from application logging. Any later observer must make no power requests, simulate no input, and change no power or locking settings.
+The [visual refresh plan](docs/visual-refresh-plan.md) controls current work.
+Preserve manual helper behavior, heartbeat behavior, process ownership, and
+cleanup. Treat launch, console, or cleanup changes as separate work with
+separate regression checks.
 
-A working Rust probe does not establish input-device, lock, sleep, or idle behavior. The older [observer proposal](docs/stay-watch-plan.md) is historical, and its screenshot requirements are withdrawn. The [feasibility record](docs/stay-watch-feasibility.md) retains probe results and unknowns. Do not treat withdrawn capture checks as passed or as visual-refresh blockers. Preserve the launcher's existing owned-child behavior during visual work. Any launch, console, or cleanup change needs separate regression checks. Do not mark broader observer feasibility complete from installation checks alone.
+Screenshot logging and capture tests are withdrawn. These checks are not
+passed and are not visual-refresh blockers. Do not allocate capture resources. Documentation media is separate from application logging.
+
+A future observer must make no power request, simulate no input, or change a
+power or locking setting. A working Rust probe does not prove input, idle, lock,
+sleep, or helper behavior. Keep those unknowns in the historical
+[observer proposal](docs/stay-watch-plan.md).

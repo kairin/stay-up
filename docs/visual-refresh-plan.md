@@ -1,17 +1,18 @@
 # Visual refresh plan and adversarial review
 
-Current extension: the user approved [native output panes](native-output-panes.md)
-and console suppression within the existing Rust window. That implementation
-contract supersedes the placeholder-only and deferred-console recommendations
-below. Preserve both Python scripts and the existing heartbeat behavior.
+Accepted working baseline: `fed8eb5` (`feat: add native output panes`). On
+20 September 2026, the user confirmed that the implementation works and is the
+baseline for future changes. The [baseline contract](native-output-panes.md#accepted-working-baseline)
+supersedes the placeholder-only and deferred-console recommendations below.
+Preserve the single-window layout, both Python scripts, and heartbeat behavior.
 
-Status: the user-approved dashboard reference is implemented as a Rust presentation change.
-Baseline: `e9c8fad` on `main`.
+The remaining sections retain the earlier design and review history.
+Historical review baseline: `e9c8fad` on `main`.
 
-The reference uses a native window with a running-state header, two process cards,
+The earlier reference used a native window with a running-state header, two process cards,
 an activity-source card, an idle timer, and a prominent Stop control. The process
-cards remain informational: the application does not collect or display process
-output, so their empty panels use truthful placeholder text.
+cards initially used placeholders. The accepted baseline now displays live
+helper output and a read-only view of the shared heartbeat log.
 
 ## Scope and decisions
 

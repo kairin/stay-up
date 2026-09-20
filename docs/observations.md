@@ -172,3 +172,172 @@ Documentation checks passed for local links, all eight media URLs in both the RE
 STE-flavored lint scores were 1.49 findings per 100 words for the visual plan and 1.85 for the media record.
 These are mechanical style scores, not certification.
 No Rust build, helper launch, screenshot capture, or interactive machine test ran for these documentation-only changes.
+
+## 20 September 2026: Cargo build access from an agent
+
+Recorded at approximately 20:14 Singapore time (local time).
+Working directory: `D:\Apps\stay-up`.
+The user requested a check of the build method before implementation of a root launch script.
+
+### Environment
+
+Saved user settings and current process settings agreed:
+
+| Setting | Value |
+|---|---|
+| `CARGO_HOME` | `C:\Users\test-user\AppData\Local\Programs\Rust\cargo` |
+| `RUSTUP_HOME` | `C:\Users\test-user\AppData\Local\Programs\Rust\rustup` |
+| `CARGO_TARGET_DIR` | `C:\Users\test-user\AppData\Local\Rust\target` |
+| Toolchain | `stable-x86_64-pc-windows-gnu` |
+| Versions | Rustup `1.29.1`, rustc `1.98.1`, Cargo `1.98.1`, Codex CLI `0.155.1` |
+
+Command resolution selected the documented Cargo bin directory.
+`rustup which` selected Cargo and rustc under the documented Rustup toolchain directory.
+The user PATH contained the approved Cargo bin directory once, with no old `.cargo\bin` entry.
+The old `.cargo` and `.rustup` directories were absent.
+
+### Original Codex launch
+
+The check included the local Codex session record, not only the displayed transcript.
+Its file is `rollout-2026-09-20T19-58-18-01a0beae-7227-7563-bdd3-7560441146c6.jsonl` under `.codex/sessions/2026/09/20/`.
+
+- Line 6 records `workspace-write` and `on-request` approval.
+- Line 43 runs the default Cargo build without an escalation request.
+- Line 46 records access denied at `debug\.cargo-build-lock`.
+- Line 52 changes the output directory **and** requests `sandbox_permissions: "require_escalated"`.
+- Line 67 records exit code zero and the launched executable path.
+
+Thus, the successful retry changed two conditions. It did not prove that a fresh directory alone fixed the failure.
+
+### Controlled checks
+
+Each check used a new PowerShell 7 process with `-NoProfile -NonInteractive` from the repository root.
+The ordinary checks ran through the Hermes terminal without a Codex sandbox.
+The sandbox checks used `codex sandbox -- <PowerShell command>` from the same root.
+The commands supplied no sandbox permission override.
+
+| Check | Output directory below `CARGO_TARGET_DIR` | Exit code | Result |
+|---|---|---|---|
+| Original default app build | Root | 0 | Compiled and linked. Cargo reported 7.24 seconds. |
+| Fresh installation probe | `installation-check-launch-9ffed62d45` | 0 | Compiler, build script, linker, and Win32 executable ran. |
+| First app build in a stable directory | `stay-up` | 0 | Compiled and linked. Cargo reported 5.62 seconds. |
+| Repeat app build in that directory | `stay-up` | 0 | Cargo reported `Fresh` and 0.02 seconds. |
+| Recompile with a changed compiler argument | `stay-up` | 0 | Compiled and linked. Cargo reported 4.06 seconds. |
+| Default build inside the Codex sandbox | Root | 101 | Access denied at `debug\.cargo-build-lock`. |
+| Stable-directory build inside the Codex sandbox | `stay-up` | 101 | Access denied at `debug\.cargo-build-lock`. |
+| New directory inside the Codex sandbox | `stay-up-sandbox-check-84c17a7211` | 1 | `New-Item` failed with access denied before Cargo ran. |
+
+Commands for the ordinary checks:
+
+```powershell
+cargo build --manifest-path .\stay-watch\Cargo.toml --offline
+cargo run --offline --locked --verbose --manifest-path .\tools\rust-install-check\Cargo.toml --target-dir "$env:CARGO_TARGET_DIR\installation-check-launch-9ffed62d45"
+cargo build --offline --locked --verbose --manifest-path .\stay-watch\Cargo.toml --target-dir "$env:CARGO_TARGET_DIR\stay-up"
+cargo rustc --offline --locked --verbose --manifest-path .\stay-watch\Cargo.toml --target-dir "$env:CARGO_TARGET_DIR\stay-up" --bin stay-watch -- -C debuginfo=1
+```
+
+The stable build command ran twice before the recompile.
+The probe emitted `RUST_BUILD_SCRIPT_EXECUTION_OK` and `RUST_EXECUTION_PROBE_OK pid=2848 console_hwnd=0`.
+These are observed values, not fixed settings.
+The recompile changed an argument, not a source file.
+
+Both sandbox Cargo failures reported:
+
+```text
+error: failed to open: <target>\debug\.cargo-build-lock
+
+Caused by:
+  Access is denied. (os error 5)
+```
+
+File ACL checks showed inherited full access for the user on both target lock files.
+AppLocker event 8002 recorded allowed Cargo execution during the sandbox failures.
+This separates file access in the Codex sandbox from an application-control block on Cargo.
+The tests do not indicate a need for a new administrator exception or a Rust reinstall.
+
+### Launch design correction and limits
+
+A stable project output directory works for repeated builds in the ordinary terminal.
+It does not grant write access through the Codex sandbox.
+A root launch script must retain the approved tool paths and output location.
+The agent must also get the required permission to use that location.
+Do not disable the sandbox or change ACLs as an automatic retry.
+Do not describe `--offline`, `--locked`, or a new directory as a permission fix.
+
+The sandbox test used the current CLI configuration, not the live token from the original interactive session.
+The original session record independently confirms the explicit permission change on its successful retry.
+The existing app remained alive as PID `21104` at the end of the check.
+Its executable remained under `stay-up-launch-20260920-195931-861\debug`.
+The check did not start or stop an app instance. No screenshot, input, power, lock, or sleep check ran.
+No application source, toolchain setting, ACL, or security policy changed.
+At the end of that check, the root launch script and its startup checks remained unimplemented.
+
+## 20 September 2026: Root launch command and owned-process checks
+
+Working directory: `D:\Apps\stay-up`.
+The user approved implementation, closure of the old app, and a new launch.
+A senior developer on `gpt-5.6-luna` prepared the root launcher.
+A separate Luna review found defects in the first version.
+The repairs added argument limits, command-path checks, process-handle checks, and structured error results.
+The parent completed the active-toolchain check and verification.
+The final independent Luna review passed with no blocking findings.
+
+### Commands and results
+
+```powershell
+python -B -m unittest tools.test_launch -v
+cargo test --offline --locked --manifest-path .\stay-watch\Cargo.toml --target-dir "$env:LOCALAPPDATA\Rust\target\stay-up"
+python -B .\launch.py --seconds 12
+python -B .\launch.py
+```
+
+Python `3.11.16` ran the launcher and its tests.
+The Rust setup remained as recorded in the preceding build-access check.
+No toolchain, environment setting, ACL, or security policy changed.
+The stable output remained `%LOCALAPPDATA%\Rust\target\stay-up`.
+
+| Check | Result |
+|---|---|
+| Launcher unit tests | Exit 0. All 24 tests passed. |
+| Rust unit tests | Exit 0. All 12 tests passed. |
+| Old app Stop action | Rust PID `21104` and helper PIDs `23396` and `22824` exited. Held process handles confirmed exit. |
+| Concurrent root commands | Both commands exited 0. One returned `started`; the other returned `already_running`. Both reported PID `18792` and window `1704746`. |
+| Timed exit | The 12-second session ended. Held handles confirmed exit of Rust, both helper launchers, both Python interpreters, and both console hosts. |
+| Invalid arguments | Unknown options and negative seconds returned exit 2 without app startup. Unit tests also cover the Rust `u64` limit. |
+| Sandbox denial | The root command returned exit 1 with `status=failed`. Cargo returned 101 at `debug\.cargo-build-lock` with `Access is denied. (os error 5)`. No app started. |
+| Stop after a persistent launch | PID `1112` and its owned descendants exited through the existing Stop action. All held handles confirmed exit. |
+| Final root launch | Exit 0 at approximately 21:15 Singapore time. The command returned `started` in 2.859 seconds. Rust PID `21004` owned visible window `2426406`. |
+| Repeat from another working directory | Exit 0 with `already_running`, PID `21004`, and the same window. `--seconds 3` did not change the existing session. |
+
+The final executable was:
+
+```text
+C:\Users\test-user\AppData\Local\Rust\target\stay-up\debug\stay-watch.exe
+```
+
+The final Rust process started helper launchers `24276` and `23580`.
+Their Python interpreter PIDs were `16276` and `19040`.
+The monitor recorded `OK helper PID=16276 is running` at `21:15:34+08:00`.
+This is a process-lifetime observation, not an idle, lock, or sleep result.
+
+### Verification limits and evidence
+
+A test harness initially counted older processes that retained the same parent PID as a new Rust process.
+That check failed before any Stop action on those processes.
+The corrected harness checks creation times before it accepts a parent-child relation.
+It also checks helper commands and executable paths, and holds process handles during shutdown.
+The repeated Stop and final launch checks passed. No unrelated process was stopped.
+
+The local JSON records are in `local/stay-watch/root-launch-verification/`.
+They include the old Stop result, later Stop results, final live checks, final startup result, and final review.
+The helper heartbeat remains in `local/stay-watch/keep-awake.monitor.log`.
+These local files are excluded from Git.
+
+The launcher starts only Rust. Rust retains helper startup and cleanup ownership.
+No Rust source or helper source changed. No screenshot or capture resource was used.
+Console presentation was not changed. Broader observer feasibility remains separate.
+The root command does not grant sandbox write permission. An agent must request the required terminal authorization.
+The command left the app open after startup.
+A later read-back at approximately 21:20 found no app process or status window.
+The user confirmed closure and requested that the app remain closed. No further launch occurred.
+No commit or publication occurred.

@@ -57,7 +57,36 @@ See the [media record](docs/issue-media.md) for inspection limits, source detail
 
 ## Run
 
-From PowerShell in this repository:
+From PowerShell in this repository, build and start the Rust application with:
+
+```powershell
+python .\launch.py
+```
+
+The command builds with the approved Cargo setup and uses the stable output path.
+It starts only the Rust executable and returns a JSON startup result.
+The result includes the status, process ID, executable path, and window handle.
+The launcher checks the Rust process and its `StayWatchStatusWindow` only.
+
+For a three-second test, pass the existing option through the launcher:
+
+```powershell
+python .\launch.py --seconds 3
+```
+
+The launcher reports an existing stable-path instance. It does not start a second session.
+The requested arguments do not change an existing session. Use Stop before a new timed test.
+
+The supported source location is `D:\Apps\stay-up`.
+The stable build output is `%LOCALAPPDATA%\Rust\target\stay-up`.
+The launcher checks the documented Rust paths and active toolchain before the build.
+
+An agent still needs permission to write to the stable build output.
+If the sandbox denies access, request the required terminal authorization and repeat the same command.
+The launcher does not disable the sandbox, change ACLs, or select a new timestamped directory.
+See the [build-access evidence](docs/observations.md#20-september-2026-cargo-build-access-from-an-agent).
+
+To run the helper alone, use:
 
 ```powershell
 python .\keep-awake.py
@@ -69,20 +98,10 @@ Press Ctrl+C to release the requests and stop. For a two-hour limit:
 python .\keep-awake.py --seconds 7200
 ```
 
-To start both helpers and an idle timer from Rust:
-
-```powershell
-cargo run --offline --manifest-path .\stay-watch\Cargo.toml
-```
-
+The root command starts Rust. Rust starts both helpers and an idle timer.
 A small window titled `stay-watch` shows the PIDs and idle time.
 Keyboard, mouse, or trackpad input in this session resets idle to `00:00:00`.
 The X button minimizes. Use Stop to end the launcher and the two Python processes.
-For a three-second check:
-
-```powershell
-cargo run --offline --manifest-path .\stay-watch\Cargo.toml -- --seconds 3
-```
 
 To record a one-minute process heartbeat, start `monitor-helper.py` with the
 keep-awake process ID:

@@ -11,6 +11,21 @@ Read [required environment verification](docs/rust-environment-verification.md) 
 - Record the command, versions, output location, exit status, success markers, and limitations in the observation log. Read only the relevant environment variables; do not dump credentials or the complete environment.
 - Reuse valid evidence when the environment has not changed. Documentation-only edits need link and formatting checks, not repeated interactive machine tests.
 
+## Root launch command
+
+Use `python .\launch.py` from this repository to build and start the Rust application.
+The command resolves the repository from `launch.py`.
+It uses the approved Cargo command and the stable output path under `AppData\Local`.
+It starts only the Rust executable.
+It passes `--seconds N` to the Rust application for a timed test.
+It returns a JSON startup result with the status, PID, executable path, and window handle.
+It checks the live Rust process and the owned `StayWatchStatusWindow`.
+It does not take screenshots or claim helper health.
+The supported checkout is `D:\Apps\stay-up`.
+The stable output is `%LOCALAPPDATA%\Rust\target\stay-up`.
+Sandbox write approval is separate from this command.
+After an access denial, request the required terminal authorization. Do not change ACLs or choose a new output directory.
+
 ## Application scope
 
 Preserve the existing manual helper and heartbeat-monitor behavior. The [visual-refresh plan](docs/visual-refresh-plan.md) controls current work. Keep application changes limited to approved presentation work. Screenshot logging is removed from scope, including explicit-test captures. Do not allocate capture resources. User-supplied media in documentation is separate from application logging. Any later observer must make no power requests, simulate no input, and change no power or locking settings.

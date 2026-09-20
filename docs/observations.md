@@ -419,3 +419,18 @@ resize check verifies control bounds, not every painted label's visual fit.
 Normal append selection preservation passed; arbitrary log truncation while
 selected and horizontal scroll retention were not exercised live.
 No commit, push, or board update was performed for this change.
+
+## 20 September 2026: User acceptance of the working baseline
+
+After the native-pane implementation, the user stated, "the implementation is
+working," and then explicitly confirmed, "yes this is the baseline."
+
+The accepted implementation is commit `fed8eb5` (`feat: add native output panes`).
+It includes the single Rust window, status dashboard, adjustable read-only panes,
+and suppression of separate Python console windows. Future changes must preserve
+the [accepted baseline contract](native-output-panes.md#accepted-working-baseline),
+including the existing helper and heartbeat behavior.
+
+This is user-reported acceptance in normal use, not a new controlled test.
+The specific outstanding checks above remain unverified. Recording this
+acceptance changed documentation only; no application launch or runtime test ran.

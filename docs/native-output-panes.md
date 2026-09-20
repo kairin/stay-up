@@ -1,5 +1,21 @@
 # Native output panes
 
+## Accepted working baseline
+
+On 20 September 2026, the user reported that the implementation was working
+and explicitly confirmed it as the baseline. The accepted implementation is
+commit `fed8eb5` (`feat: add native output panes`).
+
+Future changes must preserve the single Rust window, session status, adjustable
+read-only output/log panes, and suppression of separate Python console windows.
+Preserve the working helper behavior, heartbeat logging, PID handshake, idle
+reset rule, timed exit, X-to-minimize behavior, and Stop cleanup order.
+
+This records user acceptance in normal use. It does not complete the specific
+manual or broader behavior checks still listed in the verification record.
+
+## Scope
+
 The user approved one Rust window containing session status and two adjustable,
 read-only output panes. This extends the earlier dashboard presentation work.
 The Python helper and monitor remain unchanged. Interactive terminals, Bash,

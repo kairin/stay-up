@@ -28,6 +28,10 @@ After an access denial, request the required terminal authorization. Do not chan
 
 ## Application scope
 
+The user accepted commit `fed8eb5` (`feat: add native output panes`) as the working
+baseline on 20 September 2026. Preserve the [accepted baseline contract](docs/native-output-panes.md#accepted-working-baseline)
+when making future changes. Older layout proposals do not override that acceptance.
+
 Preserve the existing manual helper and heartbeat-monitor behavior. The [visual-refresh plan](docs/visual-refresh-plan.md) controls current work. Keep application changes limited to approved presentation work. Screenshot logging is removed from scope, including explicit-test captures. Do not allocate capture resources. User-supplied media in documentation is separate from application logging. Any later observer must make no power requests, simulate no input, and change no power or locking settings.
 
 A working Rust probe does not establish input-device, lock, sleep, or idle behavior. The older [observer proposal](docs/stay-watch-plan.md) is historical, and its screenshot requirements are withdrawn. The [feasibility record](docs/stay-watch-feasibility.md) retains probe results and unknowns. Do not treat withdrawn capture checks as passed or as visual-refresh blockers. Preserve the launcher's existing owned-child behavior during visual work. Any launch, console, or cleanup change needs separate regression checks. Do not mark broader observer feasibility complete from installation checks alone.

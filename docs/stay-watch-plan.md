@@ -1,6 +1,8 @@
 # stay-watch plan
 
-Status: design proposal. Task decomposition is on the stay-up board. Implementation and runtime checks remain pending.
+Status: first launcher exists. The later observer is not implemented.
+Native feasibility probes from 20 September 2026 are in [stay-watch-feasibility.md](stay-watch-feasibility.md).
+Remaining open checks are listed there.
 Updated: 20 September 2026.
 
 This plan contains the design rules, including power-source intervals, observation-loss handling, and observer-visibility checks.
@@ -539,9 +541,12 @@ Compare tracking alone with test mode, then compare test mode with and without t
 Use intentional lock and sleep actions to check detectors separately from automatic idle outcomes.
 A thirty-minute idle target is a proposed first helper test, subject to current timeout settings.
 
-Remaining design choices are the exact in-session test controls, capture backend, observer-visibility check, and later graceful child-stop handling.
+Remaining design choices are the exact in-session test controls and later graceful child-stop handling.
+PrintWindow and screen-region BitBlt passed a marker test. Windows Graphics Capture remains untested.
+Observer-visibility checks passed except return to the observer tab.
 Queue-loss recovery and per-source interval boundaries also require the acceptance checks above.
-Feasibility checks must also establish touchpad coverage and Modern Standby event behavior.
+Feasibility checks must also establish live touchpad events and Modern Standby runtime behavior.
+Current machine results are in [stay-watch-feasibility.md](stay-watch-feasibility.md).
 This document fixes no dependency versions, executable layout, or task assignments.
 
 The following prompt carries the agreed scope into later implementation planning.

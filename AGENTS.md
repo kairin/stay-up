@@ -15,4 +15,4 @@ Read [required environment verification](docs/rust-environment-verification.md) 
 
 Preserve the existing manual helper and heartbeat-monitor behavior. The planned observer must make no power requests, simulate no input, and change no power or locking settings. Screenshots belong only to an explicitly invoked test; ordinary tracking must not allocate capture resources.
 
-A working Rust probe does not establish capture, input-device, lock, sleep, or idle behavior. Follow the [stay-watch plan](docs/stay-watch-plan.md) for those checks. Keep owned-child launching and cleanup after the baseline/manual-helper milestone. Do not mark the full feasibility gate complete from installation checks alone.
+A working Rust probe does not establish capture, input-device, lock, sleep, or idle behavior. Follow the [stay-watch plan](docs/stay-watch-plan.md) for those checks. The [feasibility record](docs/stay-watch-feasibility.md) lists which probe checks passed and which remain unknown. Keep owned-child launching and cleanup after the baseline/manual-helper milestone. Do not mark the full feasibility gate complete from installation checks alone.

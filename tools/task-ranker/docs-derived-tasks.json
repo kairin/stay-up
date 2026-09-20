@@ -1,0 +1,118 @@
+{
+  "source": "Historical documentation seed, not a live Hermes Kanban export",
+  "tasks": [
+    {
+      "id": "refresh-terminal-discovery",
+      "task_text": "Run the existing terminal target discovery probe in a normal visible Windows Terminal and record the current result.",
+      "prerequisite_state": [
+        "Python 3 is installed.",
+        "tools/terminal-target-probe.py already exists."
+      ],
+      "applicable_constraints": [
+        "Window handles and process IDs are ephemeral and must not become fixed settings.",
+        "This check must not allocate screenshot resources."
+      ],
+      "current_observations": [
+        "A prior normal-user probe found a visible, non-minimized, uncloaked WindowsTerminal.exe candidate."
+      ],
+      "expected_validation": [
+        "The probe exits successfully.",
+        "The output records whether a current visible terminal candidate is found.",
+        "The observation is not treated as proof of active-tab ownership or capture visibility."
+      ],
+      "evidence_timestamps": ["2026-09-20"]
+    },
+    {
+      "id": "native-observer-probes",
+      "task_text": "Implement small native observer probes for input, lock, suspend, resume, and power-source observations.",
+      "prerequisite_state": [
+        "Rust compilation, build-script execution, linking, and Win32 executable execution pass.",
+        "Windows API presence alone does not establish runtime behavior."
+      ],
+      "applicable_constraints": [
+        "Make no power requests.",
+        "Simulate no input.",
+        "Change no power or locking settings.",
+        "Use documented executable and Cargo output locations under AppData\\Local."
+      ],
+      "current_observations": [
+        "API-presence checks exist as prior static observations.",
+        "Registration, device coverage, and a Rust event loop remain untested."
+      ],
+      "expected_validation": [
+        "Observe real lock, suspend, resume, and power-source transitions.",
+        "Record unavailable observations as limits rather than healthy states.",
+        "Validate keyboard, external mouse, and touchpad coverage separately."
+      ],
+      "evidence_timestamps": ["2026-09-20"]
+    },
+    {
+      "id": "capture-feasibility",
+      "task_text": "Run an explicitly invoked Windows Graphics Capture feasibility test against a live Windows Terminal target.",
+      "prerequisite_state": [
+        "A current visible target must first be discovered.",
+        "The observer content must be displayed in the selected terminal target."
+      ],
+      "applicable_constraints": [
+        "Screenshots are permitted only during this explicit test.",
+        "Ordinary tracking must not allocate capture resources.",
+        "A stable window handle does not prove observer content."
+      ],
+      "current_observations": [
+        "No screenshot or capture session has run.",
+        "Capture support, active-tab ownership, observer visibility, and freshness are unknown."
+      ],
+      "expected_validation": [
+        "Create capture for the selected window.",
+        "Verify a changing marker and image freshness.",
+        "Reject the initial image if observer visibility cannot be established.",
+        "Record resource use and any effect on normal idle behavior."
+      ],
+      "evidence_timestamps": ["2026-09-20"]
+    },
+    {
+      "id": "baseline-helper-comparison",
+      "task_text": "Compare tracking-only, test-mode baseline, and helper-enabled idle outcomes under matching known power conditions.",
+      "prerequisite_state": [
+        "The observer must provide reliable required observations.",
+        "Capture behavior must be validated before screenshot evidence is used."
+      ],
+      "applicable_constraints": [
+        "Do not combine intervals across AC and battery boundaries.",
+        "Document applications that can affect idle behavior.",
+        "Measure display, session, and power outcomes independently."
+      ],
+      "current_observations": [
+        "A historical helper heartbeat and user report exist.",
+        "The controlled idle test beyond the ten-minute screen-saver timeout remains pending."
+      ],
+      "expected_validation": [
+        "Run matching-condition baselines with and without the helper.",
+        "Use continuous known-condition intervals.",
+        "Complete the proposed thirty-minute idle target where applicable.",
+        "Report observation gaps and mixed conditions without claiming a pass."
+      ],
+      "evidence_timestamps": ["2026-09-19", "2026-09-20"]
+    },
+    {
+      "id": "owned-child-cleanup",
+      "task_text": "Implement optional owned-child helper launching, graceful cleanup, and console signal routing.",
+      "prerequisite_state": [
+        "Baseline and separately started manual-helper validation must be complete first."
+      ],
+      "applicable_constraints": [
+        "This is a later milestone.",
+        "Stopping an observer attached to an independently launched helper must not stop that helper."
+      ],
+      "current_observations": [
+        "No Rust observer or owned-child path exists.",
+        "Owned-child cleanup is explicitly outside the current feasibility gate."
+      ],
+      "expected_validation": [
+        "Establish graceful cleanup and console signal routing before enabling helper launching.",
+        "Verify behavior separately for attached and owned helper processes."
+      ],
+      "evidence_timestamps": ["2026-09-20"]
+    }
+  ]
+}

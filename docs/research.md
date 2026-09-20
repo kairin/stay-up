@@ -215,7 +215,9 @@ a supported application tested for that scenario. No lock-policy change
 is part of this investigation.
 [Awake lock-screen behavior](https://learn.microsoft.com/en-us/windows/powertoys/awake).
 
-This record does not change the repository's WSL-based setup support boundary.
+A historical source note mentioned a WSL-based setup support boundary.
+That sentence is source context only.
+This repository's stay-up work uses native Windows.
 
 ### Teams-free alternative
 
@@ -286,4 +288,6 @@ A comparison needs continuous intervals under matching known conditions.
 This follows the different power-request limits described above.
 
 The plan also defines observation-loss handling and requires verified observer content for screenshot evidence.
-The observer implementation, capture feasibility, and runtime checks remain pending.
+The first stay-watch launcher is in `stay-watch/`.
+The later observer for capture, lock, and sleep is not implemented.
+Current probe results and remaining open checks are in [stay-watch-feasibility.md](stay-watch-feasibility.md).

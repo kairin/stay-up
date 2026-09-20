@@ -1,5 +1,7 @@
 # Validation notes
 
+The [required Rust environment procedure](rust-environment-verification.md) defines commands and pass criteria for installation, relocation, environment changes, and native execution failures. The records below describe observed results; historical observations do not pass later application checks.
+
 ## 19 September 2026: observation before planned reboot
 
 Recorded at approximately 09:55 Singapore time (local time).
@@ -53,3 +55,26 @@ Their console signal and cleanup checks remain pending.
 
 Baseline and helper comparisons require matching known power conditions.
 Do not combine separate intervals to reach a target, even when they share the same power source.
+
+## 20 September 2026: corrected Rust installation and repository check
+
+The former `%USERPROFILE%\.cargo` and `%USERPROFILE%\.rustup` installation was removed after checking the paths and confirming they contained only the prior installation. Rustup was reinstalled under `%LOCALAPPDATA%\Programs\Rust`. User settings and PATH were saved as specified in the [required procedure](rust-environment-verification.md).
+
+| Check | Observed result |
+|---|---|
+| Old installation removed | Both old directories absent; old Cargo bin entry absent from user PATH. |
+| Saved configuration | `CARGO_HOME`, `RUSTUP_HOME`, and `CARGO_TARGET_DIR` matched the documented paths. New Cargo bin entry occurred once in user PATH. |
+| Compiler and package manager | `rustc 1.98.1 (48a229cea 2026-09-01)` and `cargo 1.98.1 (797e8a9bc 2026-08-05)` ran successfully. |
+| Active toolchain | `stable-x86_64-pc-windows-gnu` was the default. |
+| First installation fixture | Offline Cargo build, build script, and Win32 executable all passed. |
+| Repository fixture | Fresh offline, locked build and execution passed at approximately 09:10 Singapore time. |
+
+The repository fixture was tested from `D:\Apps\stay-up` with the saved user settings loaded into a new PowerShell child process:
+
+```powershell
+cargo run --offline --locked --manifest-path .\tools\rust-install-check\Cargo.toml --target-dir C:\Users\test-user\AppData\Local\Rust\target\installation-check-20260920-091022-874
+```
+
+The command exited with code zero after a fresh build taking 11.50 seconds. It emitted `RUST_BUILD_SCRIPT_EXECUTION_OK` and `RUST_EXECUTION_PROBE_OK pid=6236 console_hwnd=789308`. Cargo ran the binary from the selected directory's `debug` subdirectory. The PID, handle, and timestamped output directory are historical values, not application settings.
+
+No screenshots, input-device checks, lock/suspend tests, or baseline/helper idle comparisons were run during this installation verification. Terminal enumeration had separately found a visible candidate earlier that day; capture support and observer visibility remain unverified. See the [current feasibility status](stay-watch-feasibility.md).

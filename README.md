@@ -59,6 +59,12 @@ The [feasibility notes](docs/stay-watch-feasibility.md) record the current
 machine limits.
 The utility is not implemented. Capture feasibility and runtime checks remain pending.
 
+## Development verification
+
+Before declaring the Rust environment ready, follow the [required verification procedure](docs/rust-environment-verification.md). It checks approved installation and build-output paths, saved user settings, command resolution, a fresh Cargo build, build-script execution, and the resulting Win32 executable. The [repository instructions](AGENTS.md) define when these checks are required.
+
+The repeatable probe is in `tools/rust-install-check/`; it is separate from the proposed stay-watch implementation. Installation success does not pass the later screenshot, input, lock, or power checks. Record results in the [validation notes](docs/validation.md).
+
 ## Contents
 
 | Path | Purpose |

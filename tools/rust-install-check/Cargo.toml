@@ -1,0 +1,12 @@
+[package]
+name = "stay-up-rust-install-check"
+version = "0.1.0"
+edition = "2021"
+publish = false
+build = "build.rs"
+
+[workspace]
+
+[[bin]]
+name = "stay-up-rust-install-check"
+path = "../rust-execution-probe.rs"

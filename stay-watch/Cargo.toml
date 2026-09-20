@@ -1,0 +1,15 @@
+[package]
+name = "stay-watch"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[lib]
+name = "stay_watch"
+path = "src/lib.rs"
+
+[[bin]]
+name = "stay-watch"
+path = "src/main.rs"

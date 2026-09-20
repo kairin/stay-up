@@ -151,3 +151,24 @@ It printed `Ran 14 tests in 5.950s` and `OK`.
 The suite did not open a capture window.
 No result in `docs/stay-watch-feasibility.md` changed.
 Gate `t_cc724421` stays blocked.
+
+## Visual-refresh planning after issues #6 and #7
+
+The user reports that the repository project works and requests visual improvements only.
+This is user-reported operation, not a new controlled idle or power test.
+The [visual-refresh plan](visual-refresh-plan.md) records the bounded adversarial review.
+No application code, process state, power setting, or toolchain changed.
+
+Screenshot logging is removed from the active plan, including explicit-test captures.
+Earlier capture results remain historical evidence. Withdrawn checks are not passed checks.
+The local board was not changed.
+
+Both issue bodies were read, and all eight completed attachments were retrieved through authenticated GitHub CLI access.
+Four photos were inspected. Video container metadata was read, but video playback was not available.
+The README now includes all four images and links to all four videos.
+The [media record](issue-media.md) lists their provenance, access limits, and the incomplete upload placeholder.
+
+Documentation checks passed for local links, all eight media URLs in both the README and media record, and diff whitespace.
+STE-flavored lint scores were 1.49 findings per 100 words for the visual plan and 1.85 for the media record.
+These are mechanical style scores, not certification.
+No Rust build, helper launch, screenshot capture, or interactive machine test ran for these documentation-only changes.

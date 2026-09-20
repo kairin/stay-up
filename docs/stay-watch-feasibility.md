@@ -1,6 +1,18 @@
 # stay-watch feasibility gate
 
-Checked: 2026-09-20 (Asia/Singapore). Current results below separate verified changes from prior static observations.
+Checked: 2026-09-20 (Asia/Singapore). Results below separate verified changes from prior static observations.
+
+## Current scope update
+
+The [visual-refresh plan](visual-refresh-plan.md) controls current work.
+Screenshot logging is removed from scope. Windows Graphics Capture and observer-tab return are no longer required deliverables.
+Their earlier unknown results remain unknown, not passed.
+The capture gates below describe the older observer proposal, not prerequisites for a visual refresh.
+Other observer runtime checks remain separate from the working launcher.
+The board was not updated during this planning task. Historical gate statements below are not a fresh board-status check.
+The launcher now has an owned-child path. Its broader cleanup guarantees remain unverified by these historical probes.
+
+## Historical probe record
 
 ## Completed
 

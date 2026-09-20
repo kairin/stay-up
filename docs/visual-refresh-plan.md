@@ -1,7 +1,12 @@
 # Visual refresh plan and adversarial review
 
-Status: planning only. No application behavior changed.
+Status: the user-approved dashboard reference is implemented as a Rust presentation change.
 Baseline: `e9c8fad` on `main`.
+
+The reference uses a native window with a running-state header, two process cards,
+an activity-source card, an idle timer, and a prominent Stop control. The process
+cards remain informational: the application does not collect or display process
+output, so their empty panels use truthful placeholder text.
 
 ## Scope and decisions
 
@@ -18,7 +23,7 @@ Other observer work remains separate, not a prerequisite for visual changes.
 - Keep historical probes and evidence. Do not run or delete them during visual work.
 - User-supplied issue media belongs to documentation, not application logging.
 
-The recommendations below are proposals, not implemented features.
+The recommendations below describe the approved visual target and its limits.
 
 ## 1. Are two terminals necessary?
 
@@ -135,8 +140,8 @@ Removing them does not mean those tests passed.
 
 ## 5. Modern Rust window layout
 
-The current [ui.rs](../stay-watch/src/ui.rs) uses one text block and a fixed-position Stop button.
-It creates a 480 × 280 window and repaints the client area each second.
+Before this change, [ui.rs](../stay-watch/src/ui.rs) used one text block and a fixed-position Stop button.
+It creates a responsive dashboard window and repaints the client area each second.
 It has no responsive layout or explicit font hierarchy.
 The issue photos show the result and the surrounding terminal clutter.
 
@@ -144,30 +149,27 @@ The issue photos show the result and the surrounding terminal clutter.
 
 | Layout | Benefits | Costs and limits |
 |---|---|---|
-| Compact status card | Clear timer, few controls, small desktop footprint | Recommended. Uses existing information only. |
-| Two-column dashboard | More room for details and a log panel | More screen space. A live log panel adds file-reading behavior. |
+| Compact status card | Clear timer, few controls, small desktop footprint | Alternative. Uses existing information only. |
+| Two-column dashboard | Matches the approved reference and separates process, activity, and control information | Selected. More screen space, but no live log panel is added. |
 | Narrow toolbar | Minimal footprint | Less room for clear labels and accessible controls. Tray behavior would be new scope. |
 
-### Recommended compact card
+### Approved two-column dashboard
 
-Start near 480 × 320 device-independent pixels, then check text fit at supported scaling levels.
-Keep the native title bar and Windows resizing controls.
-Use responsive rows rather than fixed text and button coordinates.
+Start near 960 × 720 device-independent pixels, then check text fit at supported scaling levels.
+Keep the native title bar and Windows resizing controls. Use responsive rows rather than fixed
+text and button coordinates.
 
-```text
-┌─ stay-watch ──────────────────────────────┐
-│ Session                                  │
-│                                          │
-│                 00:10:38                 │
-│          Idle timer · since launch/input │
-│                                          │
-│ Helper PID                         13560 │
-│ Monitor PID                        25736 │
-│                                          │
-│ [Details ▾]                  [Stop]      │
-│ X minimizes. Stop ends both helpers.     │
-└──────────────────────────────────────────┘
-```
+The approved reference has:
+
+- a green running indicator and `stay-watch - RUNNING` header;
+- `keep-awake.py` and `monitor-helper.py` cards with their PIDs;
+- an honest, non-live output placeholder in each process card;
+- an `Activity sources` card for keyboard, mouse, and touchpad input;
+- a large idle timer and a visible, keyboard-accessible Stop button.
+
+The activity list describes the input categories represented by the idle reset rule. It does not
+claim that a particular device is active. The output panels do not add log reading or screenshot
+capture to the application.
 
 Numbers are illustrative. Do not hardcode them.
 The existing timer starts at launch and resets after a changed last-input sample.
@@ -214,7 +216,7 @@ Consider it only if the native layout cannot meet the agreed design and accessib
 
 ## Proposed sequence and acceptance
 
-1. Agree on the compact card. Use a static mockup before changing application code.
+1. Use the approved two-column dashboard reference as the visual target.
 2. Change only Rust presentation. Preserve process, timer, log, X, and Stop behavior.
 3. Check scaling, resize, keyboard access, contrast, and text clipping.
 4. Compare helper arguments, heartbeat format and interval, timed exit, and Stop with the existing baseline.

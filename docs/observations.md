@@ -52,7 +52,8 @@ That review found two specification gaps and one capture risk:
 - A stable window handle does not prove observer content.
 
 Those rules now live in the [stay-watch plan](stay-watch-plan.md).
-Implementation and runtime checks remain pending.
+This 19 September 2026 review did not run capture or stay-watch tests.
+Later 20 September 2026 records in this log replace this pending statement for current status.
 
 ## 20 September 2026: corrected Rust installation and repository check
 
@@ -75,7 +76,7 @@ cargo run --offline --locked --manifest-path .\tools\rust-install-check\Cargo.to
 
 The command exited with code zero after a fresh build taking 11.50 seconds. It emitted `RUST_BUILD_SCRIPT_EXECUTION_OK` and `RUST_EXECUTION_PROBE_OK pid=6236 console_hwnd=789308`. Cargo ran the binary from the selected directory's `debug` subdirectory. The PID, handle, and timestamped output directory are historical values, not application settings.
 
-No screenshots, input-device checks, lock/suspend tests, or baseline/helper idle comparisons were run during this installation verification. Terminal enumeration had separately found a visible candidate earlier that day; capture support and observer visibility remain unverified. See the [current feasibility status](stay-watch-feasibility.md).
+No screenshots, input-device checks, lock/suspend tests, or baseline/helper idle comparisons were run during this installation verification. Terminal enumeration had separately found a visible candidate earlier that day. Later the same day, capture and state probes ran. Use the later record in this log and the [current feasibility status](stay-watch-feasibility.md) for current status.
 
 ## 20 September 2026: acceptance vectors
 
@@ -83,3 +84,70 @@ A sequential prerequisite review produced the time-based fixtures.
 Those fixtures now live in [stay-watch-acceptance.md](stay-watch-acceptance.md).
 They are not executed tests.
 An earlier Rust `NOT FOUND` preflight from that review is superseded by the installation record above.
+
+## 20 September 2026: native feasibility probes
+
+Recorded in the afternoon, Singapore time (UTC+08:00).
+Working directory: `D:\Apps\stay-up`.
+Python `3.11.16`. `rustc 1.98.1`. `cargo 1.98.1`.
+The probes made no power request and did not simulate input.
+
+Rust state probe:
+
+```powershell
+rustc --out-dir C:\Users\W106036\AppData\Local\Rust\target\feasibility-20260920-1336 D:\Apps\stay-up\tools\rust-state-probe.rs
+C:\Users\W106036\AppData\Local\Rust\target\feasibility-20260920-1336\rust-state-probe.exe
+```
+
+The compiler exited with code zero.
+The executable printed `RUST_STATE_PROBE_OK pid=20124 console_hwnd=0 last_input_ok=1` with `power_ok=1 ac=1 batt%=100 raw_ok=1 mouse=3 keyboard=6 hid=17`.
+
+Python state probe:
+
+```powershell
+python -B tools\windows-state-probe.py --listen-seconds 25 --output .\local\stay-watch\feasibility-20260920-1345\windows-state.json
+```
+
+The command exited with code zero after a repair of the structure-size defect.
+Raw Input registration succeeded for keyboard, mouse, and touchpad usage pages.
+Device lists included keyboard collections, mouse collections, and `ELAN07FF` touchpad collections.
+
+No `WM_INPUT` event arrived in 25 seconds. `GetLastInputInfo` did not change.
+Power source was AC. `powercfg /a` listed `Standby (S0 Low Power Idle) Network Connected`.
+Display notification data after registration was `1`.
+No lock, session return, suspend, or power-source change was observed.
+`WTSSessionInfoEx` flags are not used as a lock verdict.
+
+Explicit capture test:
+
+```powershell
+python -B tools\capture-feasibility-probe.py --output-dir .\local\stay-watch\feasibility-20260920-1345
+python -B tools\capture-feasibility-probe.py --tab-away --output-dir .\local\stay-watch\feasibility-20260920-1345
+```
+
+Both commands exited with code zero.
+`GetConsoleWindow` in the parent process was `0`.
+The capture target was a dedicated window titled `STAYUP-CAP-3e918444`.
+`PrintWindow` with `PW_RENDERFULLCONTENT` and screen-region `BitBlt` both saved PNG files with the title bar and tab strip.
+
+Initial-image rejection, marker visibility, freshness, scroll-away, minimization, and tab-away passed.
+Windows Graphics Capture was not invoked.
+Return to the observer tab was not tested.
+
+Evidence files are under `local/stay-watch/feasibility-20260920-1345/`, which Git ignores.
+These probes do not pass `t_cc724421`. Live input events, lock/sleep runtime, Modern Standby runtime, Windows Graphics Capture, and tab return remain open.
+
+## 20 September 2026: silent re-check of recorded probes
+
+Recorded at 14:21 Singapore time (UTC+08:00).
+Working directory: `D:\Apps\stay-up`.
+
+```powershell
+python -B -m unittest tools.test_feasibility_probes -v
+```
+
+The command exited with code zero.
+It printed `Ran 14 tests in 5.950s` and `OK`.
+The suite did not open a capture window.
+No result in `docs/stay-watch-feasibility.md` changed.
+Gate `t_cc724421` stays blocked.

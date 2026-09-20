@@ -7,7 +7,7 @@ Checked: 2026-09-20 (Asia/Singapore). Current results below separate verified ch
 | Check | Result | Evidence and limit |
 |---|---|---|
 | Rustup installation | PASS | Removed the previous `.cargo` and `.rustup` directories and reinstalled Rustup 1.29.1 under `C:\Users\W106036\AppData\Local\Programs\Rust`. The active toolchain is `stable-x86_64-pc-windows-gnu`. User environment settings and PATH are configured as listed below. |
-| Rust compilation/execution | PASS | `rustc 1.98.1` and `cargo 1.98.1` run. An offline Cargo build executed its build script and compiled the [Win32 probe](../tools/rust-execution-probe.rs). The executable ran from `AppData\Local\Rust\target\debug` and printed `RUST_EXECUTION_PROBE_OK`. |
+| Rust compilation/execution | PASS | `rustc 1.98.1` and `cargo 1.98.1` run. An offline Cargo build executed its build script and compiled the [Win32 probe](../tools/rust-execution-probe.rs). The executable printed `RUST_EXECUTION_PROBE_OK`. Each verification run must use a fresh output directory under `CARGO_TARGET_DIR`. See the [required procedure](rust-environment-verification.md). |
 | Terminal target discovery | CANDIDATE FOUND | A normal-user `EnumWindows` probe found visible, non-minimized, uncloaked `WindowsTerminal.exe`: HWND 591284, PID 15928, rect `[148,0,1236,678]`. These are ephemeral observations, never fixed settings. See [tools/terminal-target-probe.py](../tools/terminal-target-probe.py). |
 | Capture target / observer visibility | UNKNOWN | Discovery is viable, but active-tab ownership, observer visibility, freshness, and capture support remain untested. Earlier `GetConsoleWindow`/`MainWindowHandle` failures were launch-context evidence, not proof that no visible target existed. See [GetConsoleWindow documentation](https://learn.microsoft.com/en-us/windows/console/getconsolewindow). |
 | Capture backend | UNKNOWN | No screenshot or capture session was run. Test [Windows Graphics Capture CreateForWindow](https://learn.microsoft.com/en-us/windows/win32/api/windows.graphics.capture.interop/nf-windows-graphics-capture-interop-igraphicscaptureiteminterop-createforwindow) with a verified marker, freshness check, and initial-image rejection. |
@@ -18,7 +18,7 @@ Checked: 2026-09-20 (Asia/Singapore). Current results below separate verified ch
 
 ## Decision
 
-The Rust installation, compilation, build-script execution, and native executable checks pass. The broader feasibility gate is still incomplete: capture, observer visibility, and runtime observations remain untested. This installation check alone does not complete `t_cc724421`.
+The Rust installation, compilation, build-script execution, and native executable checks pass. The broader feasibility gate is still incomplete: capture, observer visibility, and runtime observations remain untested. This installation check alone does not complete `t_cc724421`. Owned-child cleanup is not part of this gate. It belongs to the later helper-launch milestone.
 
 ## Rust paths and verification
 
@@ -39,7 +39,7 @@ The first installation check used an ignored local fixture. The reusable [reposi
 cargo run --offline --locked --manifest-path .\tools\rust-install-check\Cargo.toml
 ```
 
-It printed `RUST_BUILD_SCRIPT_EXECUTION_OK` during the build and `RUST_EXECUTION_PROBE_OK` when the program ran. The output executable is `C:\Users\W106036\AppData\Local\Rust\target\debug\stay-up-rust-install-check.exe`.
+It printed `RUST_BUILD_SCRIPT_EXECUTION_OK` during the build and `RUST_EXECUTION_PROBE_OK` when the program ran. The default Cargo output executable is `C:\Users\W106036\AppData\Local\Rust\target\debug\stay-up-rust-install-check.exe`. A verification run must still use a fresh directory as specified in the procedure. The dated repository check is in the [observation log](observations.md).
 
 Final checks confirmed that the previous `C:\Users\W106036\.cargo` and `C:\Users\W106036\.rustup` directories are absent, the saved environment values match the new locations, and the new Cargo bin directory occurs once in user PATH.
 

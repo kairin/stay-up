@@ -1,6 +1,6 @@
 # Repository instructions
 
-Read [required environment verification](docs/rust-environment-verification.md) before installing, relocating, or troubleshooting Rust, and before treating the native development environment as ready. The [feasibility record](docs/stay-watch-feasibility.md) contains observed results; [validation notes](docs/validation.md) distinguish them from pending application checks.
+Read [required environment verification](docs/rust-environment-verification.md) before installing, relocating, or troubleshooting Rust, and before treating the native development environment as ready. The [feasibility record](docs/stay-watch-feasibility.md) contains observed results. The [observation log](docs/observations.md) distinguishes them from pending application checks.
 
 ## Verification expectations
 
@@ -8,7 +8,7 @@ Read [required environment verification](docs/rust-environment-verification.md) 
 - For this managed machine, keep Rust tools and generated executables in the documented locations under `AppData\Local`.
 - After a toolchain or path change, run the repository Cargo probe in a fresh output directory. Require compiler launch, build-script execution, successful linking, and execution of the Win32 probe. Installer success or version output alone is insufficient.
 - If execution fails, record the exact error and distinguish sandbox restrictions from application-control policy. Inspect relevant allow/block evidence before concluding that a new administrator exception is necessary. Observe existing authorization requirements for changes.
-- Record the command, versions, output location, exit status, success markers, and limitations in the validation documentation. Read only the relevant environment variables; do not dump credentials or the complete environment.
+- Record the command, versions, output location, exit status, success markers, and limitations in the observation log. Read only the relevant environment variables; do not dump credentials or the complete environment.
 - Reuse valid evidence when the environment has not changed. Documentation-only edits need link and formatting checks, not repeated interactive machine tests.
 
 ## Application scope

@@ -341,3 +341,81 @@ The command left the app open after startup.
 A later read-back at approximately 21:20 found no app process or status window.
 The user confirmed closure and requested that the app remain closed. No further launch occurred.
 No commit or publication occurred.
+
+## 20 September 2026: Native output panes
+
+Working directory: `D:\Apps\stay-up`. Baseline: `bafa248`.
+The user approved one Rust window with status and two native output/log panes,
+and requested implementation by a Luna agent. A `gpt-5.6-luna` agent implemented
+the Rust changes. Parent review requested restoration of the original PID
+handshake, bounded buffering before copying, selection preservation, keyboard
+routing, and child-window paint clipping. The same agent applied the corrections.
+
+The final main process still waits for the helper PID or stdout EOF/error; no
+new handshake timeout remains. Python discovery and both children use
+`CREATE_NO_WINDOW`. The helper stdout and error streams feed bounded display
+buffers. The monitor keeps writing its original file; a separate read-only
+worker supplies the shared-history pane. The root launcher is unchanged.
+
+Both Python scripts and `stay-watch/src/lib.rs` have no content diff from HEAD.
+The helper Git blob hashes before and after the change were:
+
+- `keep-awake.py`: `406c3ff96178c7159bd7d61c4974b411c64b3d0b`
+- `monitor-helper.py`: `5a2d91a060000ee2f63050117f8eca556785c7e8`
+
+### Environment and commands
+
+Saved user settings and current process settings matched the documented Cargo,
+Rustup, and target paths. Command resolution selected Cargo, rustc, and rustup
+from `C:\Users\test-user\AppData\Local\Programs\Rust\cargo\bin`.
+The stable output remained `C:\Users\test-user\AppData\Local\Rust\target\stay-up`.
+No toolchain or path change was made; the previous installation-probe evidence
+was reused. Observed versions: rustc `1.98.1 (48a229cea 2026-09-01)`, Cargo
+`1.98.1 (797e8a9bc 2026-08-05)`, toolchain `stable-x86_64-pc-windows-gnu`,
+and parent Python `3.12.9`.
+
+The implementation agent ran:
+
+```powershell
+cargo test --offline --locked --manifest-path .\stay-watch\Cargo.toml --target-dir "$env:LOCALAPPDATA\Rust\target\stay-up"
+cargo build --offline --locked --manifest-path .\stay-watch\Cargo.toml --target-dir "$env:LOCALAPPDATA\Rust\target\stay-up"
+```
+
+Both commands exited 0. The 17 Rust tests passed (12 existing, five output/log
+and layout tests). Rustfmt was unavailable for this toolchain; no component was
+installed. `git diff --check` passed.
+
+In the parent's Python environment, the documented `python -B -m unittest
+tools.test_launch -q` could not import `tools.test_launch`. Explicit discovery
+with the repository added to `sys.path` ran all 24 launcher tests successfully:
+
+```powershell
+python -B -c "import sys, unittest; sys.path.insert(0, r'D:\Apps\stay-up'); suite=unittest.defaultTestLoader.discover(r'D:\Apps\stay-up\tools', pattern='test_launch.py'); result=unittest.TextTestRunner(verbosity=0).run(suite); sys.exit(not result.wasSuccessful())"
+python -B tools\verify_output_panes.py --run
+```
+
+The live harness ran with terminal authorization for the approved output
+directory and desktop. It used the root launcher and exited 0 at approximately
+22:14 Singapore time. No screenshot or capture resources were used.
+
+| Session | Result |
+|---|---|
+| Timed, 65 seconds | PASS. Rust PID `18400`; held owned PIDs `18400`, `24952`, `5160`, `26552`, `27108`. Two native read-only panes and exactly one visible owned window. SYSTEM, DISPLAY, and PID startup messages were displayed. The next heartbeat appeared while selection 0..6 remained unchanged. Three heartbeat records were appended. All held processes exited after the time limit. |
+| Minimize, resize, split, Stop | PASS. Rust PID `27304`; held owned PIDs `27304`, `28440`, `28416`, `11156`, `14372`. The slider changed pane width. X minimized with owned processes alive. Panes and Stop stayed within the resized client area. Stop ended all held processes. Two heartbeat records were appended. |
+
+Both sessions preserved the pre-existing heartbeat file bytes. Added records
+retained the current helper PID and `interval=60s`. The unchanged Python scripts
+made their usual power requests during the bounded test sessions. Process handles
+and creation times limited checks and cleanup to the test session's descendants.
+The app was left closed.
+
+### Limits
+
+No new long-term idle, sleep, lock, power-policy, screenshot, or input-device
+test was performed. The tests establish the launch/pane changes and observed
+owned-process cleanup only. Manual DPI/scaling, high-contrast, screen-reader,
+and physical keyboard/mouse interaction checks remain outstanding. The metadata
+resize check verifies control bounds, not every painted label's visual fit.
+Normal append selection preservation passed; arbitrary log truncation while
+selected and horizontal scroll retention were not exercised live.
+No commit, push, or board update was performed for this change.

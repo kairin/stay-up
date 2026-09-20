@@ -8,11 +8,13 @@ while its process runs.
 ## Visual refresh
 
 The application works for the user. The current task is a visual refresh, not a replacement of the working helper system.
-The [visual plan and adversarial review](docs/visual-refresh-plan.md) recommends a compact Rust status card.
-Keep both Python processes. Two visible terminals are not required by the application logic.
-Console suppression and optional window placement need separate checks before implementation.
+The [visual plan](docs/visual-refresh-plan.md) now includes the approved
+[native output panes](docs/native-output-panes.md): one Rust window with status,
+helper output, and a read-only view of the shared heartbeat log.
+The two Python scripts retain their existing behavior. The UI owns pane sizing;
+interactive terminals and Git Bash are not required.
 Screenshot logging is removed from the active plan. Application logging remains record-only.
-No application behavior changed during this planning task.
+Launch presentation and shutdown checks are recorded separately in the observation log.
 
 ## User-submitted images and videos
 
@@ -99,7 +101,10 @@ python .\keep-awake.py --seconds 7200
 ```
 
 The root command starts Rust. Rust starts both helpers and an idle timer.
-A small window titled `stay-watch` shows the PIDs and idle time.
+A Rust dashboard shows the PIDs, idle time, helper output, and the shared heartbeat log.
+The two native text panes are read-only and support selection, copying, and scrolling.
+Use the central Split slider to adjust their widths; Tab moves between controls.
+Python console windows are suppressed. The heartbeat pane includes records from other runs.
 Keyboard, mouse, or trackpad input in this session resets idle to `00:00:00`.
 The X button minimizes. Use Stop to end the launcher and the two Python processes.
 

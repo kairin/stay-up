@@ -2,23 +2,61 @@
 
 Checked: 2026-09-20 (Asia/Singapore). Current results below separate verified changes from prior static observations.
 
+## Completed
+
+- Rust installation and a fresh Win32 execution probe.
+- Terminal window discovery.
+- Explicit `PrintWindow` and screen-region capture of a dedicated Windows Terminal window.
+- Marker visibility, freshness, initial-image rejection, scroll-away, minimization, and tab-away.
+- Raw Input registration and device lists, including `TOUCHPAD-TEST` touchpad collections.
+- Current AC power source and S0 Low Power Idle capability.
+
+## Outstanding
+
+- Live `WM_INPUT` events.
+- Lock cycle and sleep or Modern Standby runtime.
+- Windows Graphics Capture `CreateForWindow`.
+- Return to the observer tab.
+- The stay-watch application.
+- Owned-child cleanup, after baseline and manual-helper validation.
+
+Gate `t_cc724421` stays blocked while required outstanding checks remain unknown.
+
+## Verify
+
+From PowerShell in `D:\Apps\stay-up`:
+
+```powershell
+python -B -m unittest tools.test_feasibility_probes -v
+```
+
+The suite checks recorded PNG files, JSON reports, terminal enumeration, and `rust-state-probe.exe`.
+It does not open a capture window.
+Pass when the command prints `OK` and exit status is zero.
+Last silent re-check: 20 September 2026, 14:21 Singapore time, 14 tests passed.
+
 ## Results
 
 | Check | Result | Evidence and limit |
 |---|---|---|
 | Rustup installation | PASS | Removed the previous `.cargo` and `.rustup` directories and reinstalled Rustup 1.29.1 under `C:\Users\test-user\AppData\Local\Programs\Rust`. The active toolchain is `stable-x86_64-pc-windows-gnu`. User environment settings and PATH are configured as listed below. |
-| Rust compilation/execution | PASS | `rustc 1.98.1` and `cargo 1.98.1` run. An offline Cargo build executed its build script and compiled the [Win32 probe](../tools/rust-execution-probe.rs). The executable printed `RUST_EXECUTION_PROBE_OK`. Each verification run must use a fresh output directory under `CARGO_TARGET_DIR`. See the [required procedure](rust-environment-verification.md). |
-| Terminal target discovery | CANDIDATE FOUND | A normal-user `EnumWindows` probe found visible, non-minimized, uncloaked `WindowsTerminal.exe`: HWND 591284, PID 15928, rect `[148,0,1236,678]`. These are ephemeral observations, never fixed settings. See [tools/terminal-target-probe.py](../tools/terminal-target-probe.py). |
-| Capture target / observer visibility | UNKNOWN | Discovery is viable, but active-tab ownership, observer visibility, freshness, and capture support remain untested. Earlier `GetConsoleWindow`/`MainWindowHandle` failures were launch-context evidence, not proof that no visible target existed. See [GetConsoleWindow documentation](https://learn.microsoft.com/en-us/windows/console/getconsolewindow). |
-| Capture backend | UNKNOWN | No screenshot or capture session was run. Test [Windows Graphics Capture CreateForWindow](https://learn.microsoft.com/en-us/windows/win32/api/windows.graphics.capture.interop/nf-windows-graphics-capture-interop-igraphicscaptureiteminterop-createforwindow) with a verified marker, freshness check, and initial-image rejection. |
-| Windows input/state APIs | PRIOR STATIC OBSERVATION | Earlier API-presence checks recorded `RegisterRawInputDevices`, `GetRawInputData`, `GetLastInputInfo`, `RegisterPowerSettingNotification`, `PowerCreateRequest`, and `PowerSetRequest`; registration, device coverage, and a Rust event loop were not retested today. |
-| Modern Standby | PRIOR STATIC OBSERVATION | Earlier `powercfg /a` output reported S0 low power idle with network connection and hibernate; runtime behavior was not retested today. |
-| Raw Input device coverage | UNKNOWN | Keyboard, external mouse, and touchpad coverage still require an observer and real-device validation. |
+| Rust compilation/execution | PASS | `rustc 1.98.1` and `cargo 1.98.1` run. An offline Cargo build executed its build script and compiled the [Win32 probe](../tools/rust-execution-probe.rs). The executable printed `RUST_EXECUTION_PROBE_OK`. On 20 September 2026 the [state probe](../tools/rust-state-probe.rs) compiled under `CARGO_TARGET_DIR` in directory `feasibility-20260920-1336` as `rust-state-probe.exe` and printed `RUST_STATE_PROBE_OK`. Each verification run must use a fresh output directory under `CARGO_TARGET_DIR`. See the [required procedure](rust-environment-verification.md). |
+| Terminal target discovery | PASS | `python -B tools\terminal-target-probe.py` found a visible, non-minimized, uncloaked `WindowsTerminal.exe`. A dedicated probe window titled `STAYUP-CAP-3e918444` was also created and captured. HWND and PID values are ephemeral. See [tools/terminal-target-probe.py](../tools/terminal-target-probe.py). |
+| Capture target / observer visibility | PARTIAL | An explicit capture test saved images of a dedicated Windows Terminal window, including the title bar and tab strip. A unique color marker was present after draw, absent before draw, replaced on the second draw, absent after scroll-away, and absent when minimized. A second tab without the marker was captured while the observer tab remained in the same window. Return to the observer tab was not tested. See `local/stay-watch/feasibility-20260920-1345/`. |
+| Capture backend | PARTIAL | `PrintWindow` with `PW_RENDERFULLCONTENT` and screen-region `BitBlt` both saved verified marker images. Windows Graphics Capture `CreateForWindow` was not invoked. |
+| Windows input/state APIs | PARTIAL | Python and Rust probes called `GetLastInputInfo`, `GetSystemPowerStatus`, and `GetRawInputDeviceList`. Raw Input registration succeeded for keyboard, mouse, and touchpad usage pages. Power and session notification registration succeeded. Current AC line was `ac`. Display notification data was `1` (on) after registration. No lock, session return, suspend, or power-source change occurred during the probe. `WTSSessionInfoEx` flags are not treated as a lock result. |
+| Modern Standby | PARTIAL | `powercfg /a` reports `Standby (S0 Low Power Idle) Network Connected` as available. No sleep or resume was requested or observed. |
+| Raw Input device coverage | PARTIAL | Device lists included keyboard collections, mouse collections, and `TOUCHPAD-TEST` touchpad collections. No live `WM_INPUT` events arrived in a 25-second listen. Event coverage remains unknown. Input was not simulated. |
 | Owned-child cleanup | UNKNOWN / LATER | No Rust observer or owned-child path exists. Keep this later than baseline/manual-helper validation. See [tools/rust-execution-probe.rs](../tools/rust-execution-probe.rs) for the separate compile proof source. |
 
 ## Decision
 
-The Rust installation, compilation, build-script execution, and native executable checks pass. The broader feasibility gate is still incomplete: capture, observer visibility, and runtime observations remain untested. This installation check alone does not complete `t_cc724421`. Owned-child cleanup is not part of this gate. It belongs to the later helper-launch milestone.
+The Rust installation, compilation, build-script execution, and native executable checks pass.
+PrintWindow and screen-region capture passed an explicit marker test on a dedicated Windows Terminal window.
+The feasibility gate is still incomplete.
+Live Raw Input events, lock and sleep transitions, Modern Standby runtime, Windows Graphics Capture, and return to the observer tab remain untested.
+This work does not complete `t_cc724421`.
+Owned-child cleanup is not part of this gate.
 
 ## Rust paths and verification
 
@@ -33,18 +71,19 @@ The earlier AppLocker check identified an allow rule named `%OSDRIVE%\Users\*\Ap
 
 These [Cargo settings](https://doc.rust-lang.org/cargo/reference/environment-variables.html) and [Rustup setting](https://rust-lang.github.io/rustup/environment-variables.html) are saved in the user environment. Cargo's output directory is a user-wide default. Restart existing terminals to load the new settings.
 
-The first installation check used an ignored local fixture. The reusable [repository fixture](../tools/rust-install-check/Cargo.toml) now uses the same [Win32 source](../tools/rust-execution-probe.rs). Follow the [required verification procedure](rust-environment-verification.md) for a fresh output directory and complete pass criteria:
+The first installation check used an ignored local fixture. The reusable [repository fixture](../tools/rust-install-check/Cargo.toml) uses the same [Win32 source](../tools/rust-execution-probe.rs).
+For a new installation check, follow the [required verification procedure](rust-environment-verification.md).
+That procedure requires a fresh output directory and the listed pass criteria.
+Do not treat a cached build as a new check.
 
-```powershell
-cargo run --offline --locked --manifest-path .\tools\rust-install-check\Cargo.toml
-```
-
-It printed `RUST_BUILD_SCRIPT_EXECUTION_OK` during the build and `RUST_EXECUTION_PROBE_OK` when the program ran. The default Cargo output executable is `C:\Users\test-user\AppData\Local\Rust\target\debug\stay-up-rust-install-check.exe`. A verification run must still use a fresh directory as specified in the procedure. The dated repository check is in the [observation log](observations.md).
+The dated repository check from 20 September 2026 is in the [observation log](observations.md).
 
 Final checks confirmed that the previous `C:\Users\test-user\.cargo` and `C:\Users\test-user\.rustup` directories are absent, the saved environment values match the new locations, and the new Cargo bin directory occurs once in user PATH.
 
 ## Next actions
 
-1. Use small native observer probes to validate input, lock, suspend, and power observations.
-2. Run `python -B tools\terminal-target-probe.py` in a normal visible Windows Terminal, then a separately invoked capture feasibility test against the live target. Verify observer content and freshness, including initial-image rejection. No screenshot test has run here.
-3. Keep owned-child launching and cleanup for the later milestone after baseline/manual-helper validation.
+1. Repeat the state probe while the user types, moves a mouse, and uses the touchpad. Do not simulate input.
+2. With user approval, observe one lock cycle and one sleep or Modern Standby cycle. Do not change power or lock policy.
+3. If needed, test Windows Graphics Capture `CreateForWindow` on the same marker window.
+4. Test return to the observer tab after a tab change.
+5. Keep owned-child launching and cleanup for the later milestone after baseline/manual-helper validation.

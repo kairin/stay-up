@@ -71,14 +71,14 @@ The 20 September 2026 results were Rustup 1.29.1, rustc 1.98.1, and Cargo
 
 ## 3. Check a fresh build and execution
 
-The fixture at [tools/rust-install-check](../tools/rust-install-check/Cargo.toml)
+The fixture at [scripts/rust-install-check](../scripts/rust-install-check/Cargo.toml)
 has no external dependency. Its build script and Win32 program print separate
 success markers.
 
 ```powershell
 if (-not $env:CARGO_TARGET_DIR) { throw 'CARGO_TARGET_DIR is not configured.' }
 $rustCheckTarget = Join-Path $env:CARGO_TARGET_DIR ('installation-check-' + (Get-Date -Format 'yyyyMMdd-HHmmss-fff'))
-cargo run --offline --locked --manifest-path .\tools\rust-install-check\Cargo.toml --target-dir $rustCheckTarget
+cargo run --offline --locked --manifest-path .\scripts\rust-install-check\Cargo.toml --target-dir $rustCheckTarget
 if ($LASTEXITCODE -ne 0) { throw 'Rust build or execution check failed.' }
 ```
 

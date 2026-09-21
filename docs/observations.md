@@ -4,6 +4,9 @@ The [Rust procedure](rust-environment-verification.md) defines commands and
 pass criteria. These records state observed results. They do not pass later or
 broader application checks.
 
+
+Historical entries retain the paths that they used. Current scripts and logs use scripts/ and logs/ as described in the [repository layout](repository-layout.md).
+
 Commands ran from `D:\Apps\stay-up`. Profile paths use environment variables
 for privacy. Other recorded commands and results retain their original meaning.
 
@@ -193,3 +196,42 @@ dashboard, adjustable read-only panes, and suppressed Python console windows.
 Future changes must preserve the
 [accepted baseline contract](native-output-panes.md#accepted-working-baseline).
 This acceptance is not a controlled input, idle, lock, sleep, or power test.
+
+## 22 September 2026: repository layout cleanup
+
+The cleanup moved the Rust package to Cargo.toml, Cargo.lock, and src/. It
+moved application and verification scripts to scripts/. It moved active and
+archived logs to logs/. The package name, library name, binary name, helper
+arguments, process ownership, and approved AppData target stayed unchanged.
+
+```powershell
+cargo test --offline --locked --manifest-path .\Cargo.toml --target-dir "$env:LOCALAPPDATA\Rust\target\stay-up"
+```
+
+The root Cargo test returned zero. It ran 12 library tests and 6 binary tests.
+The moved launcher test returned zero after 24 tests.
+
+```powershell
+$rustCheckTarget = Join-Path $env:CARGO_TARGET_DIR ('installation-check-layout-20260922-052739-965')
+cargo run --offline --locked --manifest-path .\scripts\rust-install-check\Cargo.toml --target-dir $rustCheckTarget
+```
+
+The fresh fixture returned zero. It emitted
+RUST_BUILD_SCRIPT_EXECUTION_OK and RUST_EXECUTION_PROBE_OK.
+
+A launch from D:\Apps used D:\Apps\stay-up\launch.py --seconds 3. It
+returned started and used the stable executable under the approved AppData
+target. The session ended and left no root log or old active-log path.
+
+An initial live output-pane run reached the canonical log but failed its
+selection refresh check. The log exceeded the 48 KiB display tail. The unchanged
+view deferred replacement while selection held because the tail prefix changed.
+The old harness expected an immediate refresh while selection held. It reported
+WinError 0 or no refresh before the deadline. All owned processes ended. The
+corrected harness waited for the heartbeat on disk, preserved the selected text,
+and passed the timed and Stop sessions. It did not use capture resources.
+
+The feasibility test for terminal eligibility returned no eligible candidate. This is an environment limit. It did not open a terminal or use capture resources.
+
+The changed prose passed the STE lint in one pass. Each file scored below the
+2.5 per 100 words flavored target.

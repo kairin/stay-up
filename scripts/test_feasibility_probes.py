@@ -168,7 +168,7 @@ class ReportTests(unittest.TestCase):
 class SilentCommandTests(unittest.TestCase):
     def test_terminal_target_probe_enumerates(self):
         completed = subprocess.run(
-            [sys.executable, "-B", str(ROOT / "tools" / "terminal-target-probe.py")],
+            [sys.executable, "-B", str(ROOT / "scripts" / "terminal-target-probe.py")],
             capture_output=True,
             text=True,
             encoding="utf-8",

@@ -25,7 +25,7 @@ The launcher checks the documented Rust paths and active toolchain. It builds to
 the Rust executable. Its JSON result gives the status, process ID, executable
 path, and window handle.
 
-The application starts `keep-awake.py` and `monitor-helper.py`. Its window
+The application starts `scripts/keep-awake.py` and `scripts/monitor-helper.py`. Its window
 shows their process IDs, output, the shared heartbeat log, and input idle time.
 Use the Split slider to size the panes. Use Stop to end all three processes.
 The X button minimizes the window.
@@ -41,8 +41,8 @@ lists or select a different output directory.
 Run the helper by itself when you do not need the dashboard:
 
 ```powershell
-python .\keep-awake.py
-python .\keep-awake.py --seconds 7200
+python .\scripts\keep-awake.py
+python .\scripts\keep-awake.py --seconds 7200
 ```
 
 Press Ctrl+C to stop the helper and release its power requests.
@@ -130,7 +130,7 @@ The launcher reports an absolute executable path in its JSON result. On
 Windows, that path can contain the account name from the profile path. The
 path is diagnostic output and is not an input to the application.
 
-The optional probes in `tools/` can inspect device names or window content.
+The optional probes in `scripts/` can inspect device names or window content.
 They are not part of the application launch path.
 
 ## Development
@@ -139,12 +139,13 @@ Read the [Rust environment procedure](docs/rust-environment-verification.md)
 before you install, move, or troubleshoot Rust. Installation and version output
 do not prove that the environment can build and run this project.
 
-The repeatable probe is in `tools/rust-install-check/`. Record new machine
+The repeatable probe is in `scripts/rust-install-check/`. Record new machine
 results in [docs/observations.md](docs/observations.md). Documentation-only
 changes do not require a new machine test.
 
 | Document | Purpose |
 |---|---|
+| [Repository layout](docs/repository-layout.md) | Current directory purposes and naming rules |
 | [Visual refresh plan](docs/visual-refresh-plan.md) | Current presentation scope and limits |
 | [Native output panes](docs/native-output-panes.md) | Accepted working baseline |
 | [Observation log](docs/observations.md) | Dated machine and application results |

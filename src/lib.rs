@@ -39,7 +39,7 @@ pub fn parse_seconds(args: &[String]) -> Result<Option<u64>, String> {
 
 /// Build the keep-awake command. The Rust program does not make power requests.
 pub fn keep_awake_args(repo: &Path, seconds: Option<u64>) -> (PathBuf, Vec<String>) {
-    let script = repo.join("keep-awake.py");
+    let script = repo.join("scripts").join("keep-awake.py");
     let mut args = vec![script.to_string_lossy().into_owned()];
     if let Some(limit) = seconds {
         args.push("--seconds".to_string());
@@ -51,7 +51,10 @@ pub fn keep_awake_args(repo: &Path, seconds: Option<u64>) -> (PathBuf, Vec<Strin
 /// Build the monitor command. The monitor follows the keep-awake process ID.
 pub fn monitor_args(repo: &Path, helper_pid: u32, log: &Path) -> Vec<String> {
     vec![
-        repo.join("monitor-helper.py").to_string_lossy().into_owned(),
+        repo.join("scripts")
+            .join("monitor-helper.py")
+            .to_string_lossy()
+            .into_owned(),
         helper_pid.to_string(),
         "--interval".to_string(),
         "60".to_string(),
@@ -84,8 +87,15 @@ mod tests {
     fn keep_awake_args_without_limit() {
         let repo = PathBuf::from("D:/Apps/stay-up");
         let (script, args) = keep_awake_args(&repo, None);
-        assert_eq!(script, repo.join("keep-awake.py"));
-        assert_eq!(args, vec![repo.join("keep-awake.py").to_string_lossy().into_owned()]);
+        assert_eq!(script, repo.join("scripts").join("keep-awake.py"));
+        assert_eq!(
+            args,
+            vec![repo
+                .join("scripts")
+                .join("keep-awake.py")
+                .to_string_lossy()
+                .into_owned()]
+        );
     }
 
     #[test]
@@ -121,7 +131,7 @@ mod tests {
     #[test]
     fn monitor_args_include_pid_and_log() {
         let repo = PathBuf::from("D:/Apps/stay-up");
-        let log = PathBuf::from("D:/Apps/stay-up/local/stay-watch/keep-awake.monitor.log");
+        let log = PathBuf::from("D:/Apps/stay-up/logs/keep-awake.monitor.log");
         let args = monitor_args(&repo, 12345, &log);
         assert_eq!(args[1], "12345");
         assert_eq!(args[3], "60");

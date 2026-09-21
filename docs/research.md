@@ -79,8 +79,8 @@ The helper does not simulate input, change system settings, install software,
 or need administrator access.
 
 ```powershell
-python .\keep-awake.py
-python .\keep-awake.py --seconds 7200
+python .\scripts\keep-awake.py
+python .\scripts\keep-awake.py --seconds 7200
 ```
 
 The helper exits nonzero if Windows rejects a request. It clears acquired

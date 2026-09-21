@@ -14,6 +14,11 @@ reset rule, timed exit, X-to-minimize behavior, and Stop cleanup order.
 This records user acceptance in normal use. It does not complete the specific
 manual or broader behavior checks still listed in the verification record.
 
+On 22 September 2026, the user authorized a repository layout cleanup. The
+cleanup moves the helper files to scripts/ and the active log to logs/. It
+preserves the helper bytes, arguments, heartbeat format, and process behavior.
+Historical entries retain the paths used during their runs.
+
 ## Scope
 
 The user approved one Rust window containing session status and two adjustable,
@@ -44,8 +49,9 @@ records the automated checks and remaining manual checks.
 
 - `keep-awake.py` and `monitor-helper.py` remain byte-for-byte unchanged.
 - The helper receives the same optional `--seconds` argument.
-- The monitor follows the helper PID with `--interval 60` and the existing log
-  path, `local/stay-watch/keep-awake.monitor.log`.
+- The accepted baseline used `local/stay-watch/keep-awake.monitor.log`. The
+  current monitor follows the helper PID with `--interval 60` and writes to
+  `logs/keep-awake.monitor.log`.
 - The monitor remains the writer. The view must not truncate, rotate, rewrite,
   annotate, or create the heartbeat log.
 - Stop ends the monitor before the helper. X minimizes. Timed helper exit still
@@ -73,13 +79,13 @@ regression checks, even though the scripts and their behavior stay the same.
 | Lifecycle | Minimize leaves children alive; timed exit and Stop release all owned test processes. |
 | Logging | Existing bytes remain intact, the format stays the same, and a session beyond 60 seconds produces a subsequent heartbeat. |
 
-The explicit live harness is [verify_output_panes.py](../tools/verify_output_panes.py).
+The explicit live harness is [verify_output_panes.py](../scripts/verify_output_panes.py).
 It refuses an existing stable-path app and starts bounded sessions through the
 root launcher. It reads window text and process metadata; it uses no capture
 resources. The test helpers make their usual power requests while running.
 
 ```powershell
-python -B tools\verify_output_panes.py --run
+python -B scripts\verify_output_panes.py --run
 ```
 
 Run with the required authorization for the approved stable Cargo target.

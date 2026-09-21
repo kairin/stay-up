@@ -34,12 +34,12 @@ SUPPORTED_CHECKOUT = Path("D:/Apps/stay-up")
 SUPPORTED_TOOLCHAIN = "stable-x86_64-pc-windows-gnu"
 
 REQUIRED_SOURCES = (
-    Path("stay-watch") / "Cargo.toml",
-    Path("stay-watch") / "src" / "lib.rs",
-    Path("stay-watch") / "src" / "main.rs",
-    Path("stay-watch") / "src" / "ui.rs",
-    Path("keep-awake.py"),
-    Path("monitor-helper.py"),
+    Path("Cargo.toml"),
+    Path("src") / "lib.rs",
+    Path("src") / "main.rs",
+    Path("src") / "ui.rs",
+    Path("scripts") / "keep-awake.py",
+    Path("scripts") / "monitor-helper.py",
 )
 
 
@@ -217,7 +217,7 @@ def build_command(cargo, repo, stable_target):
         "--offline",
         "--locked",
         "--manifest-path",
-        str(repo / "stay-watch" / "Cargo.toml"),
+        str(repo / "Cargo.toml"),
         "--target-dir",
         str(stable_target),
         "--bin",

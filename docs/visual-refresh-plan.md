@@ -51,7 +51,7 @@ change later, check discovery, the PID handshake, error handling, and shutdown.
 
 ## 4. What does logging do now?
 
-The launcher selects `local/stay-watch/keep-awake.monitor.log`. The monitor
+The launcher selects `logs/keep-awake.monitor.log`. The monitor
 appends UTF-8 records with local ISO 8601 timestamps and UTC offsets. It opens,
 flushes, and closes the file for each record. This does not guarantee a disk
 `fsync`.

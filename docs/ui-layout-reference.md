@@ -3,7 +3,7 @@
 ## Purpose
 
 This document records the current position, size, and shape values for the native dashboard.
-It describes the implementation in `stay-watch/src/ui.rs`.
+It describes the implementation in `src/ui.rs`.
 It is not a future design target.
 
 The Rust UI uses Win32 client-area coordinates. It does not use CSS or a global padding value.
@@ -12,7 +12,7 @@ The source code is the final source of truth.
 
 ## Main layout
 
-The main layout is in `dashboard_layout` at `stay-watch/src/ui.rs:323-357`.
+The main layout is in `dashboard_layout` at `src/ui.rs:323-357`.
 
 | Reference | Current value | Effect |
 |---|---:|---|
@@ -54,7 +54,7 @@ The outer card areas have an 8-pixel left, right, and bottom margin.
 
 ## Process cards
 
-The process cards use `draw_process_card` at `stay-watch/src/ui.rs:453-483`.
+The process cards use `draw_process_card` at `src/ui.rs:453-483`.
 The common card shell is in `draw_card_shell` at `:447-451`.
 
 ### Card shell
@@ -99,7 +99,7 @@ The code does not set `EM_SETMARGINS` or `EM_SETRECT`.
 
 ## Header
 
-The header is in `draw_header` at `stay-watch/src/ui.rs:549-583`.
+The header is in `draw_header` at `src/ui.rs:549-583`.
 
 - The header fill is 64 pixels high.
 - The separator is drawn from y `63` to y `65`.
@@ -121,7 +121,7 @@ The header height remains 64 pixels.
 
 ### Activity labels
 
-The activity labels are in `draw_header_activity` at `stay-watch/src/ui.rs:485-509`.
+The activity labels are in `draw_header_activity` at `src/ui.rs:485-509`.
 
 - The activity area starts at x `66`.
 - It starts at y `30`, below the status text.
@@ -134,7 +134,7 @@ The activity labels are in `draw_header_activity` at `stay-watch/src/ui.rs:485-5
 
 ### Idle timer
 
-The idle timer is in `draw_header_idle` at `stay-watch/src/ui.rs:511-547`.
+The idle timer is in `draw_header_idle` at `src/ui.rs:511-547`.
 
 - The panel width is `170` pixels.
 - The panel height is `32` pixels.
@@ -146,7 +146,7 @@ The idle timer is in `draw_header_idle` at `stay-watch/src/ui.rs:511-547`.
 
 ### Stop button
 
-The Stop button is in the header at `stay-watch/src/ui.rs:341-344`.
+The Stop button is in the header at `src/ui.rs:341-344`.
 Its custom drawing is in `draw_stop_button` at `:765-827`.
 Hover detection is in `stop_button_hovered` at `:751-763`.
 
@@ -163,7 +163,7 @@ Hover detection is in `stop_button_hovered` at `:751-763`.
 
 ## Splitter
 
-The splitter is in `stay-watch/src/ui.rs:617-625` and `:1053-1100`.
+The splitter is in `src/ui.rs:617-625` and `:1053-1100`.
 
 - The painted splitter area is 16 pixels wide.
 - The `Split` label uses a 22-pixel-high area.
@@ -179,10 +179,10 @@ The resize path calls `layout_controls` for the child controls at `:693-743`.
 
 ## Window size and resize
 
-The main window is created at `stay-watch/src/ui.rs:952-965`.
+The main window is created at `src/ui.rs:952-965`.
 
 - Initial size: `800` by `340`.
-- Minimum track size: `800` by `340` at `stay-watch/src/ui.rs:831-835`.
+- Minimum track size: `800` by `340` at `src/ui.rs:831-835`.
 
 `WM_SIZE` calls `layout_controls` and repaints the dashboard.
 The child controls receive the current rectangles after each resize.
@@ -194,12 +194,12 @@ The layout code replaces it before the window is shown.
 Text line breaks affect white space inside the output panes.
 They do not change the pane rectangles.
 
-- `stay-watch/src/ui.rs:701-705` inserts one blank line after the log path.
-- `stay-watch/src/output.rs:41-44` converts line endings to Windows CRLF format.
-- `stay-watch/src/output.rs:148-155` adds a separator before additional output or errors.
-- `stay-watch/src/output.rs:56-57` adds line breaks around read errors.
-- `keep-awake.py:72-73` prints one line for each startup message.
-- `monitor-helper.py:11-15` writes one newline after each heartbeat record.
+- `src/ui.rs:701-705` inserts one blank line after the log path.
+- `src/output.rs:41-44` converts line endings to Windows CRLF format.
+- `src/output.rs:148-155` adds a separator before additional output or errors.
+- `src/output.rs:56-57` adds line breaks around read errors.
+- `scripts/keep-awake.py:72-73` prints one line for each startup message.
+- `scripts/monitor-helper.py:11-15` writes one newline after each heartbeat record.
 
 ## Source map
 
@@ -207,13 +207,13 @@ Use these source areas when a visual change is required:
 
 | Visual part | Source reference |
 |---|---|
-| Main positions and sizes | `stay-watch/src/ui.rs:323-357` |
-| Card shell and process text | `stay-watch/src/ui.rs:447-483` |
-| Activity labels | `stay-watch/src/ui.rs:485-509` |
-| Idle timer | `stay-watch/src/ui.rs:511-547` |
-| Header and splitter label | `stay-watch/src/ui.rs:549-614` |
-| Child control positions | `stay-watch/src/ui.rs:697-747` |
-| Stop button hover and shape | `stay-watch/src/ui.rs:751-827` |
-| Window minimum size | `stay-watch/src/ui.rs:831-835` |
-| Native control styles | `stay-watch/src/ui.rs:999-1109` |
-| Output text line breaks | `stay-watch/src/output.rs:41-155` |
+| Main positions and sizes | `src/ui.rs:323-357` |
+| Card shell and process text | `src/ui.rs:447-483` |
+| Activity labels | `src/ui.rs:485-509` |
+| Idle timer | `src/ui.rs:511-547` |
+| Header and splitter label | `src/ui.rs:549-614` |
+| Child control positions | `src/ui.rs:697-747` |
+| Stop button hover and shape | `src/ui.rs:751-827` |
+| Window minimum size | `src/ui.rs:831-835` |
+| Native control styles | `src/ui.rs:999-1109` |
+| Output text line breaks | `src/output.rs:41-155` |

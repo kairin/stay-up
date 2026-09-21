@@ -6,7 +6,7 @@
       "task_text": "Run the existing terminal target discovery probe in a normal visible Windows Terminal and record the current result.",
       "prerequisite_state": [
         "Python 3 is installed.",
-        "tools/terminal-target-probe.py already exists."
+        "scripts/terminal-target-probe.py already exists."
       ],
       "applicable_constraints": [
         "Window handles and process IDs are ephemeral and must not become fixed settings.",

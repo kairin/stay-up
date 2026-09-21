@@ -19,7 +19,7 @@ Run these commands from the repository root:
 
 ```powershell
 hermes kanban --board stay-up list --json
-python .\tools\task-ranker\export_kanban.py --board stay-up --output .\local\stay-up-ranking-tasks.json
+python .\scripts\task-ranker\export_kanban.py --board stay-up --output .\local\stay-up-ranking-tasks.json
 ```
 
 The exporter reads task details through the Hermes CLI, not the SQLite file.
@@ -52,13 +52,13 @@ For an interpreter with virtual-environment support:
 ```powershell
 python --version
 python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r .\tools\task-ranker\requirements.txt
+.\.venv\Scripts\python.exe -m pip install -r .\scripts\task-ranker\requirements.txt
 ```
 
 If the selected interpreter lacks `venv`, use a local SDK installation:
 
 ```powershell
-python -m pip install --target .\local\typesafe-python -r .\tools\task-ranker\requirements.txt
+python -m pip install --target .\local\typesafe-python -r .\scripts\task-ranker\requirements.txt
 ```
 
 Use the same Python version for installation and live scoring.
@@ -71,7 +71,7 @@ Git ignores `local/`, `.venv/`, and Python bytecode.
 With the SDK and key available to the selected interpreter:
 
 ```powershell
-python .\tools\task-ranker\rank_tasks.py .\local\stay-up-ranking-tasks.json --cache .\local\stay-up-ranking-cache.json
+python .\scripts\task-ranker\rank_tasks.py .\local\stay-up-ranking-tasks.json --cache .\local\stay-up-ranking-cache.json
 ```
 
 This command sends exported task text and evidence fields to TypeSafe on a cache miss.
@@ -88,7 +88,7 @@ Windows process-lock tests pass. POSIX locking still needs verification on a POS
 Use cached results without an SDK or network request:
 
 ```powershell
-python .\tools\task-ranker\rank_tasks.py .\local\stay-up-ranking-tasks.json --cache .\local\stay-up-ranking-cache.json --cached-only
+python .\scripts\task-ranker\rank_tasks.py .\local\stay-up-ranking-tasks.json --cache .\local\stay-up-ranking-cache.json --cached-only
 ```
 
 A cache miss in this mode fails. It does not produce a replacement score or call the API.
@@ -135,8 +135,8 @@ API error messages omit the raw service error text to reduce credential exposure
 ## Verify
 
 ```powershell
-python -m unittest discover -s .\tools\task-ranker -p "test_*.py" -v
-python .\tools\task-ranker\rank_tasks.py .\tools\task-ranker\docs-derived-tasks.json --cached-only
+python -m unittest discover -s .\scripts\task-ranker -p "test_*.py" -v
+python .\scripts\task-ranker\rank_tasks.py .\scripts\task-ranker\docs-derived-tasks.json --cached-only
 ```
 
 The unit tests use explicit fixtures and make no API calls.

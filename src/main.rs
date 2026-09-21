@@ -23,9 +23,6 @@ const HANDSHAKE_FRAGMENT_LIMIT: usize = 16 * 1024;
 
 fn repo_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .expect("stay-watch crate must live in the repository")
-        .to_path_buf()
 }
 
 fn python_executable() -> PathBuf {
@@ -108,13 +105,13 @@ fn main() {
     };
 
     let repo = repo_root();
-    let keep_script = repo.join("keep-awake.py");
-    let monitor_script = repo.join("monitor-helper.py");
+    let keep_script = repo.join("scripts").join("keep-awake.py");
+    let monitor_script = repo.join("scripts").join("monitor-helper.py");
     if !keep_script.is_file() || !monitor_script.is_file() {
         std::process::exit(1);
     }
 
-    let log = repo.join("local").join("stay-watch").join("keep-awake.monitor.log");
+    let log = repo.join("logs").join("keep-awake.monitor.log");
     if let Some(parent) = log.parent() {
         if fs::create_dir_all(parent).is_err() {
             std::process::exit(1);

@@ -135,7 +135,7 @@ def require(condition, message):
 def run_session(desktop, mode, seconds):
     executable = launch.expected_paths(launch.os.environ['LOCALAPPDATA']).executable
     require(not desktop.inspector.matching_pids(executable), "Existing app: leave it untouched and close it before running this test")
-    log = ROOT / 'local' / 'stay-watch' / 'keep-awake.monitor.log'
+    log = ROOT / 'logs' / 'keep-awake.monitor.log'
     before = log.read_bytes() if log.exists() else b''
     command = [sys.executable, '-B', str(ROOT / 'launch.py'), '--seconds', str(seconds)]
     result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=90)
@@ -183,15 +183,37 @@ def run_session(desktop, mode, seconds):
             desktop.check_bounds(hwnd, edits + buttons)
             time.sleep(1)
             desktop.send(hwnd, 0x0111, 1)  # Existing Stop command.
+        refresh_branch = 'not-applicable'
         if mode == 'timed' and seconds >= 65:
             desktop.send(monitor_edit, 0x00B1, 0, 6)  # Select existing text before the next heartbeat.
-            baseline_count = desktop.text(monitor_edit).count(f'OK helper PID={helper_pid} ')
-            deadline = time.monotonic() + 61
-            while desktop.text(monitor_edit).count(f'OK helper PID={helper_pid} ') <= baseline_count:
-                require(time.monotonic() < deadline, 'Next heartbeat did not reach the pane')
+            initial_pane = desktop.text(monitor_edit)
+            baseline_count = initial_pane.count(f'OK helper PID={helper_pid} ')
+            heartbeat_deadline = time.monotonic() + 61
+            while True:
+                current = log.read_bytes()
+                require(current.startswith(before), 'Heartbeat log changed before its saved prefix')
+                added_text = current[len(before):].decode('utf-8', errors='replace')
+                if added_text.count(f'OK helper PID={helper_pid} ') >= 2:
+                    break
+                require(time.monotonic() < heartbeat_deadline, 'Next heartbeat did not reach the log')
                 time.sleep(0.25)
+            time.sleep(2)
+            selected_pane = desktop.text(monitor_edit)
+            require(
+                selected_pane == initial_pane or selected_pane.startswith(initial_pane),
+                'Output refresh changed the selected text or its prefix',
+            )
             selected = desktop.send(monitor_edit, 0x00B0)
             require(selected & 0xffff == 0 and selected >> 16 == 6, 'Output refresh changed the user selection')
+            if selected_pane.count(f'OK helper PID={helper_pid} ') > baseline_count:
+                refresh_branch = 'append-while-selected'
+            else:
+                refresh_branch = 'deferred-while-selected'
+                desktop.send(monitor_edit, 0x00B1, 0, 0)
+                pane_deadline = time.monotonic() + 15
+                while desktop.text(monitor_edit).count(f'OK helper PID={helper_pid} ') <= baseline_count:
+                    require(time.monotonic() < pane_deadline, 'Next heartbeat did not reach the pane after selection cleared')
+                    time.sleep(0.25)
         deadline = time.monotonic() + seconds + 10
         while any(desktop.inspector.handle_is_alive(h) for h in handles.values()) and time.monotonic() < deadline:
             time.sleep(0.2)
@@ -202,7 +224,7 @@ def run_session(desktop, mode, seconds):
         require(f'helper PID={helper_pid}; interval=60s' in added and f'OK helper PID={helper_pid} ' in added, 'Heartbeat format/interval changed')
         if mode == 'timed' and seconds >= 65:
             require(added.count(f'OK helper PID={helper_pid} ') >= 2, 'Expected initial and subsequent heartbeat')
-        print(json.dumps({'mode': mode, 'status': 'passed', 'pid': pid, 'owned_pids': list(handles), 'native_panes': len(edits), 'visible_owned_windows': len(visible), 'heartbeat_records_added': len(added.splitlines())}), flush=True)
+        print(json.dumps({'mode': mode, 'status': 'passed', 'pid': pid, 'owned_pids': list(handles), 'native_panes': len(edits), 'visible_owned_windows': len(visible), 'heartbeat_records_added': len(added.splitlines()), 'refresh_branch': refresh_branch}), flush=True)
     finally:
         # Only this harness's new instance may receive Stop on test failure.
         if handles and desktop.inspector.handle_is_alive(handles[pid]):
@@ -219,5 +241,5 @@ if __name__ == '__main__':
     if not args.run:
         parser.error('Pass --run to explicitly start live regression sessions')
     desktop = Desktop()
-    run_session(desktop, 'timed', 65)
+    run_session(desktop, 'timed', 75)
     run_session(desktop, 'stop', 20)

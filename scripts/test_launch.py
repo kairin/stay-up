@@ -6,6 +6,8 @@ import threading
 import unittest
 from unittest import mock
 
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 import launch
 
 
@@ -82,7 +84,7 @@ class LaunchTests(unittest.TestCase):
         self.assertEqual(
             launch.build_command(cargo, repo, target),
             [str(cargo), "build", "--offline", "--locked", "--manifest-path",
-             str(repo / "stay-watch" / "Cargo.toml"), "--target-dir", str(target),
+             str(repo / "Cargo.toml"), "--target-dir", str(target),
              "--bin", "stay-watch"],
         )
 

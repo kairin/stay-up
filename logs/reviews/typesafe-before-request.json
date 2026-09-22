@@ -1,0 +1,85 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "repository": "stay-up",
+    "purpose": "Clean the repository layout without changing application behavior.",
+    "actual_root_evidence": {
+      "root_scripts": [
+        "keep-awake.py",
+        "monitor-helper.py",
+        "launch.py"
+      ],
+      "root_logs": [
+        "keep-awake.err.log",
+        "keep-awake.monitor.log",
+        "keep-awake.out.log",
+        "monitor.err.log",
+        "monitor.out.log"
+      ],
+      "owned_directories": [
+        "docs",
+        "local",
+        "research",
+        "stay-watch",
+        "tools"
+      ],
+      "collision": "root keep-awake.monitor.log and local/stay-watch/keep-awake.monitor.log are distinct files"
+    },
+    "proposed_layout": {
+      "scripts": [
+        "keep-awake.py",
+        "monitor-helper.py",
+        "all former tools files and directories"
+      ],
+      "logs": [
+        "active keep-awake.monitor.log",
+        "archive/root/<former root log names>",
+        "archive/local/<former local log paths>",
+        "reviews/<judge evidence>"
+      ],
+      "retained": [
+        "launch.py",
+        "docs",
+        "local",
+        "research",
+        "stay-watch"
+      ]
+    },
+    "constraints": [
+      "Preserve helper file bytes and command arguments.",
+      "Preserve Cargo package and crate identity.",
+      "Preserve historical log bytes without merging or overwriting.",
+      "Keep approved Rust output paths outside the repository.",
+      "Update all current consumers and documentation paths."
+    ]
+  },
+  "questions": {
+    "layout": {
+      "type": "score",
+      "instructions": "Score how clearly the proposed layout gives each purpose one home while preserving required package boundaries.",
+      "criteria": [
+        "0: Mixed purposes remain in several roots or a move breaks a required boundary.",
+        "1: Most purposes are separated, but duplicate or ambiguous homes remain.",
+        "2: Each purpose has one clear home, with only justified package, vendor, or generated-data exceptions."
+      ]
+    },
+    "naming": {
+      "type": "score",
+      "instructions": "Score how consistent the proposed directory names and path terms are for this repository.",
+      "criteria": [
+        "0: Conflicting directory terms or naming styles remain.",
+        "1: Minor naming ambiguity remains in owned paths.",
+        "2: Owned directories use consistent lowercase hyphen names, with documented framework exceptions."
+      ]
+    },
+    "scope": {
+      "type": "choice",
+      "instructions": "Choose the correct scope for the proposed cleanup.",
+      "criteria": {
+        "minimal": "Moves only the files needed to consolidate scripts and logs and updates their consumers.",
+        "excessive": "Moves package, vendor, or non-log evidence data without a required consumer change.",
+        "insufficient": "Leaves duplicate owned script or log homes that the request requires to consolidate."
+      }
+    }
+  }
+}

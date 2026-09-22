@@ -1,0 +1,13 @@
+{
+  "round": 1,
+  "utc": "2026-09-21T23:02:39.519730+00:00",
+  "model": "jev-1.13.0",
+  "usage": {
+    "input_tokens": 15259,
+    "output_tokens": 415
+  },
+  "question_count": 21,
+  "request_sha256": "d3076973de33f177ab7f0da5aeb6da24caf65d503e6d79fd740267d5ed2575d0",
+  "response_sha256": "1150633f9867302cde8c55dad4103470e886a16e9e5a60923e9b2d7f2f58e7a7",
+  "key_present": true
+}

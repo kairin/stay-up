@@ -1,0 +1,91 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "resulting_tree": {
+      "root_files": [
+        "AGENTS.md",
+        "Cargo.toml",
+        "Cargo.lock",
+        "README.md",
+        "launch.py"
+      ],
+      "directories": [
+        "docs",
+        "local",
+        "logs",
+        "research",
+        "scripts",
+        "src"
+      ],
+      "scripts": [
+        "keep-awake.py",
+        "monitor-helper.py",
+        "verify_output_panes.py",
+        "rust-install-check",
+        "task-ranker"
+      ],
+      "logs": [
+        "keep-awake.monitor.log",
+        "archive/root/<five former root logs>",
+        "reviews/<evidence>"
+      ],
+      "local": [
+        "non-log generated evidence, caches, local dependencies"
+      ],
+      "src": [
+        "lib.rs",
+        "main.rs",
+        "output.rs",
+        "ui.rs"
+      ]
+    },
+    "identity": {
+      "cargo_package": "stay-watch",
+      "cargo_library": "stay_watch",
+      "cargo_binary": "stay-watch",
+      "launch_manifest": "Cargo.toml",
+      "launch_build_selector": "--bin stay-watch",
+      "cargo_target": "%LOCALAPPDATA%/Rust/target/stay-up"
+    },
+    "evidence": {
+      "launcher_tests": "24 passed",
+      "rust_tests": "18 passed",
+      "task_ranker_tests": "30 passed before final crate move and unchanged afterward",
+      "second_cwd_launch": "started and cleaned up",
+      "rust_fixture": "build script and execution markers passed in fresh AppData target",
+      "live_pane_harness": "failed existing pane refresh check; canonical log received heartbeat and owned processes cleaned up",
+      "feasibility_limit": "terminal eligibility assertion failed because no eligible terminal was present; no capture resources used",
+      "ste_lint": "all changed prose files below 2.5 per 100 words in one pass"
+    },
+    "layout_rule": "One owned directory per purpose. Owned directories use lowercase hyphen names. Keep framework, vendor, and generated cache names when required."
+  },
+  "questions": {
+    "maintainability": {
+      "type": "score",
+      "instructions": "Score the maintainability of the resulting repository layout and its current path consumers.",
+      "criteria": [
+        "0: The resulting layout has mixed purposes, stale consumers, or unsupported claims.",
+        "1: The resulting layout is usable but has a clear maintainability or evidence gap.",
+        "2: The resulting layout has one clear home per purpose, current consumers, and evidence that matches the tested limits."
+      ]
+    },
+    "evidence_completeness": {
+      "type": "score",
+      "instructions": "Score whether the evidence distinguishes passed checks, failed checks, historical limits, and untested behavior.",
+      "criteria": [
+        "0: The resulting layout has mixed purposes, stale consumers, or unsupported claims.",
+        "1: The resulting layout is usable but has a clear maintainability or evidence gap.",
+        "2: The resulting layout has one clear home per purpose, current consumers, and evidence that matches the tested limits."
+      ]
+    },
+    "ste_wording": {
+      "type": "score",
+      "instructions": "Score whether the new repository layout wording uses clear ASD-STE100-style technical language and one term per concept.",
+      "criteria": [
+        "0: The new wording is ambiguous, inconsistent, or makes unsupported claims.",
+        "1: The new wording is mostly clear but has minor style or naming issues.",
+        "2: The new wording is concise, direct, consistent, and states limits clearly."
+      ]
+    }
+  }
+}

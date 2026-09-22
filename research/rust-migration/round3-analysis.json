@@ -1,0 +1,521 @@
+{
+  "round": 3,
+  "weights": {
+    "behavior_preservation": 25,
+    "implementation_simplicity": 20,
+    "ownership_failure_clarity": 20,
+    "build_distribution_simplicity": 15,
+    "testability_rollback": 10,
+    "maintenance_cost": 10
+  },
+  "profiles": {
+    "default": {
+      "behavior_preservation": 25,
+      "implementation_simplicity": 20,
+      "ownership_failure_clarity": 20,
+      "build_distribution_simplicity": 15,
+      "testability_rollback": 10,
+      "maintenance_cost": 10
+    },
+    "preservation_heavy": {
+      "behavior_preservation": 35,
+      "implementation_simplicity": 15,
+      "ownership_failure_clarity": 25,
+      "build_distribution_simplicity": 5,
+      "testability_rollback": 15,
+      "maintenance_cost": 5
+    },
+    "simplicity_heavy": {
+      "behavior_preservation": 20,
+      "implementation_simplicity": 35,
+      "ownership_failure_clarity": 15,
+      "build_distribution_simplicity": 20,
+      "testability_rollback": 5,
+      "maintenance_cost": 5
+    }
+  },
+  "rows": {
+    "M1": {
+      "behavior_preservation": {
+        "score": 2.92,
+        "confidence": 0.87,
+        "expected_from_probabilities": 2.92,
+        "score_minus_expected": 0.0,
+        "max_probability": 0.86,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      },
+      "implementation_simplicity": {
+        "score": 2.24,
+        "confidence": 0.63,
+        "expected_from_probabilities": 2.22,
+        "score_minus_expected": 0.02,
+        "max_probability": 0.56,
+        "probability_sum": 0.99,
+        "finite_ranges": true
+      },
+      "build_distribution_simplicity": {
+        "score": 1.91,
+        "confidence": 0.78,
+        "expected_from_probabilities": 1.92,
+        "score_minus_expected": -0.01,
+        "max_probability": 0.75,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      },
+      "testability_rollback": {
+        "score": 2.68,
+        "confidence": 0.43,
+        "expected_from_probabilities": 2.68,
+        "score_minus_expected": 0.0,
+        "max_probability": 0.48,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      },
+      "maintenance_cost": {
+        "score": 2.29,
+        "confidence": 0.4,
+        "expected_from_probabilities": 2.28,
+        "score_minus_expected": 0.01,
+        "max_probability": 0.48,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      },
+      "ownership_failure_clarity": {
+        "score": 2.79,
+        "confidence": 0.55,
+        "expected_from_probabilities": 2.79,
+        "score_minus_expected": 0.0,
+        "max_probability": 0.5,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      }
+    },
+    "M2": {
+      "behavior_preservation": {
+        "score": 2.04,
+        "confidence": 0.6,
+        "expected_from_probabilities": 2.05,
+        "score_minus_expected": -0.01,
+        "max_probability": 0.63,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      },
+      "implementation_simplicity": {
+        "score": 2.12,
+        "confidence": 0.7,
+        "expected_from_probabilities": 2.11,
+        "score_minus_expected": 0.01,
+        "max_probability": 0.65,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      },
+      "build_distribution_simplicity": {
+        "score": 1.82,
+        "confidence": 0.75,
+        "expected_from_probabilities": 1.83,
+        "score_minus_expected": -0.01,
+        "max_probability": 0.73,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      },
+      "testability_rollback": {
+        "score": 2.15,
+        "confidence": 0.86,
+        "expected_from_probabilities": 2.15,
+        "score_minus_expected": 0.0,
+        "max_probability": 0.85,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      },
+      "maintenance_cost": {
+        "score": 2.21,
+        "confidence": 0.54,
+        "expected_from_probabilities": 2.2,
+        "score_minus_expected": 0.01,
+        "max_probability": 0.46,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      },
+      "ownership_failure_clarity": {
+        "score": 2.79,
+        "confidence": 0.55,
+        "expected_from_probabilities": 2.79,
+        "score_minus_expected": 0.0,
+        "max_probability": 0.5,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      }
+    },
+    "M3": {
+      "behavior_preservation": {
+        "score": 0.11,
+        "confidence": 0.91,
+        "expected_from_probabilities": 0.1,
+        "score_minus_expected": 0.01,
+        "max_probability": 0.92,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      },
+      "implementation_simplicity": {
+        "score": 1.11,
+        "confidence": 0.66,
+        "expected_from_probabilities": 1.11,
+        "score_minus_expected": 0.0,
+        "max_probability": 0.61,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      },
+      "ownership_failure_clarity": {
+        "score": 1.43,
+        "confidence": 0.47,
+        "expected_from_probabilities": 1.43,
+        "score_minus_expected": 0.0,
+        "max_probability": 0.46,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      },
+      "build_distribution_simplicity": {
+        "score": 1.8,
+        "confidence": 0.63,
+        "expected_from_probabilities": 1.81,
+        "score_minus_expected": -0.01,
+        "max_probability": 0.6,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      },
+      "testability_rollback": {
+        "score": 1.96,
+        "confidence": 0.79,
+        "expected_from_probabilities": 1.95,
+        "score_minus_expected": 0.01,
+        "max_probability": 0.76,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      },
+      "maintenance_cost": {
+        "score": 1.76,
+        "confidence": 0.35,
+        "expected_from_probabilities": 1.76,
+        "score_minus_expected": 0.0,
+        "max_probability": 0.46,
+        "probability_sum": 1.0,
+        "finite_ranges": true
+      }
+    }
+  },
+  "shared_ownership_answer": {
+    "score": 2.79,
+    "confidence": 0.55,
+    "expected_from_probabilities": 2.79,
+    "score_minus_expected": 0.0,
+    "max_probability": 0.5,
+    "probability_sum": 1.0,
+    "finite_ranges": true
+  },
+  "totals": {
+    "default": {
+      "M1": 62.987,
+      "M2": 55.025,
+      "M3": 29.438
+    },
+    "preservation_heavy": {
+      "M1": 66.688,
+      "M2": 56.337,
+      "M3": 25.863
+    },
+    "simplicity_heavy": {
+      "M1": 60.425,
+      "M2": 53.763,
+      "M3": 29.275
+    }
+  },
+  "sensitivity_one_weight_relative_20": {
+    "behavior_preservation_down20_relative": {
+      "M1": 62.461,
+      "M2": 55.237,
+      "M3": 30.842
+    },
+    "behavior_preservation_up20_relative": {
+      "M1": 63.464,
+      "M2": 54.833,
+      "M3": 28.167
+    },
+    "implementation_simplicity_down20_relative": {
+      "M1": 63.279,
+      "M2": 55.109,
+      "M3": 29.508
+    },
+    "implementation_simplicity_up20_relative": {
+      "M1": 62.719,
+      "M2": 54.947,
+      "M3": 29.373
+    },
+    "ownership_failure_clarity_down20_relative": {
+      "M1": 62.706,
+      "M2": 54.411,
+      "M3": 29.174
+    },
+    "ownership_failure_clarity_up20_relative": {
+      "M1": 63.248,
+      "M2": 55.591,
+      "M3": 29.68
+    },
+    "build_distribution_simplicity_down20_relative": {
+      "M1": 63.459,
+      "M2": 55.32,
+      "M3": 28.956
+    },
+    "build_distribution_simplicity_up20_relative": {
+      "M1": 62.544,
+      "M2": 54.748,
+      "M3": 29.891
+    },
+    "testability_rollback_down20_relative": {
+      "M1": 62.906,
+      "M2": 55.051,
+      "M3": 29.038
+    },
+    "testability_rollback_up20_relative": {
+      "M1": 63.066,
+      "M2": 55.0,
+      "M3": 29.821
+    },
+    "maintenance_cost_down20_relative": {
+      "M1": 63.105,
+      "M2": 55.02,
+      "M3": 29.14
+    },
+    "maintenance_cost_up20_relative": {
+      "M1": 62.875,
+      "M2": 55.029,
+      "M3": 29.723
+    }
+  },
+  "quality": {
+    "fairness": {
+      "score": 2.17,
+      "confidence": 0.1,
+      "expected_from_probabilities": 2.16,
+      "score_minus_expected": 0.01,
+      "max_probability": 0.35,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    "completeness": {
+      "score": 3.28,
+      "confidence": 0.64,
+      "expected_from_probabilities": 3.3,
+      "score_minus_expected": -0.02,
+      "max_probability": 0.58,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    "overengineering": {
+      "score": 3.48,
+      "confidence": 0.57,
+      "expected_from_probabilities": 3.51,
+      "score_minus_expected": -0.03,
+      "max_probability": 0.55,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    }
+  },
+  "weak_or_uncertain": [
+    {
+      "candidate": "M1",
+      "criterion": "implementation_simplicity",
+      "score": 2.24,
+      "confidence": 0.63,
+      "expected_from_probabilities": 2.22,
+      "score_minus_expected": 0.02,
+      "max_probability": 0.56,
+      "probability_sum": 0.99,
+      "finite_ranges": true
+    },
+    {
+      "candidate": "M1",
+      "criterion": "build_distribution_simplicity",
+      "score": 1.91,
+      "confidence": 0.78,
+      "expected_from_probabilities": 1.92,
+      "score_minus_expected": -0.01,
+      "max_probability": 0.75,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    {
+      "candidate": "M1",
+      "criterion": "testability_rollback",
+      "score": 2.68,
+      "confidence": 0.43,
+      "expected_from_probabilities": 2.68,
+      "score_minus_expected": 0.0,
+      "max_probability": 0.48,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    {
+      "candidate": "M1",
+      "criterion": "maintenance_cost",
+      "score": 2.29,
+      "confidence": 0.4,
+      "expected_from_probabilities": 2.28,
+      "score_minus_expected": 0.01,
+      "max_probability": 0.48,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    {
+      "candidate": "M1",
+      "criterion": "ownership_failure_clarity",
+      "score": 2.79,
+      "confidence": 0.55,
+      "expected_from_probabilities": 2.79,
+      "score_minus_expected": 0.0,
+      "max_probability": 0.5,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    {
+      "candidate": "M2",
+      "criterion": "build_distribution_simplicity",
+      "score": 1.82,
+      "confidence": 0.75,
+      "expected_from_probabilities": 1.83,
+      "score_minus_expected": -0.01,
+      "max_probability": 0.73,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    {
+      "candidate": "M2",
+      "criterion": "maintenance_cost",
+      "score": 2.21,
+      "confidence": 0.54,
+      "expected_from_probabilities": 2.2,
+      "score_minus_expected": 0.01,
+      "max_probability": 0.46,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    {
+      "candidate": "M2",
+      "criterion": "ownership_failure_clarity",
+      "score": 2.79,
+      "confidence": 0.55,
+      "expected_from_probabilities": 2.79,
+      "score_minus_expected": 0.0,
+      "max_probability": 0.5,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    {
+      "candidate": "M3",
+      "criterion": "behavior_preservation",
+      "score": 0.11,
+      "confidence": 0.91,
+      "expected_from_probabilities": 0.1,
+      "score_minus_expected": 0.01,
+      "max_probability": 0.92,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    {
+      "candidate": "M3",
+      "criterion": "implementation_simplicity",
+      "score": 1.11,
+      "confidence": 0.66,
+      "expected_from_probabilities": 1.11,
+      "score_minus_expected": 0.0,
+      "max_probability": 0.61,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    {
+      "candidate": "M3",
+      "criterion": "ownership_failure_clarity",
+      "score": 1.43,
+      "confidence": 0.47,
+      "expected_from_probabilities": 1.43,
+      "score_minus_expected": 0.0,
+      "max_probability": 0.46,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    {
+      "candidate": "M3",
+      "criterion": "build_distribution_simplicity",
+      "score": 1.8,
+      "confidence": 0.63,
+      "expected_from_probabilities": 1.81,
+      "score_minus_expected": -0.01,
+      "max_probability": 0.6,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    {
+      "candidate": "M3",
+      "criterion": "testability_rollback",
+      "score": 1.96,
+      "confidence": 0.79,
+      "expected_from_probabilities": 1.95,
+      "score_minus_expected": 0.01,
+      "max_probability": 0.76,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    {
+      "candidate": "M3",
+      "criterion": "maintenance_cost",
+      "score": 1.76,
+      "confidence": 0.35,
+      "expected_from_probabilities": 1.76,
+      "score_minus_expected": 0.0,
+      "max_probability": 0.46,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    {
+      "quality": "fairness",
+      "score": 2.17,
+      "confidence": 0.1,
+      "expected_from_probabilities": 2.16,
+      "score_minus_expected": 0.01,
+      "max_probability": 0.35,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    {
+      "quality": "completeness",
+      "score": 3.28,
+      "confidence": 0.64,
+      "expected_from_probabilities": 3.3,
+      "score_minus_expected": -0.02,
+      "max_probability": 0.58,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    },
+    {
+      "quality": "overengineering",
+      "score": 3.48,
+      "confidence": 0.57,
+      "expected_from_probabilities": 3.51,
+      "score_minus_expected": -0.03,
+      "max_probability": 0.55,
+      "probability_sum": 1.0,
+      "finite_ranges": true
+    }
+  ],
+  "checks": {
+    "design_questions": 17,
+    "quality_questions": 3,
+    "total_questions": 20,
+    "shared_ownership_copied_to_M1_M2": true,
+    "score_tolerance": 0.055,
+    "maximum_score_probability_discrepancy": 0.03,
+    "probability_sum_bound": 0.025,
+    "finite_ranges_and_keys": "passed"
+  },
+  "method_note": "Shared ownership was scored once and assigned identically to M1 and M2. This corrects double-counting; it does not prove implementation equivalence. Scores use a 0.055 rounding bound: 0.05 from five independently rounded probabilities plus 0.005 score rounding."
+}

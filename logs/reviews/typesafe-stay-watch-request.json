@@ -1,0 +1,119 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "repository": "stay-up",
+    "current_rust_boundary": {
+      "directory": "stay-watch",
+      "files": [
+        "Cargo.toml",
+        "Cargo.lock",
+        "src/lib.rs",
+        "src/main.rs",
+        "src/ui.rs",
+        "src/output.rs"
+      ],
+      "package": "stay-watch",
+      "library": "stay_watch",
+      "binary": "stay-watch",
+      "dependencies": 0,
+      "workspace_members": 0
+    },
+    "consumers": [
+      "root launch.py validates stay-watch/Cargo.toml and stay-watch/src files",
+      "root launch.py builds stay-watch/Cargo.toml with --package stay-watch",
+      "stay-watch/src/main.rs derives repository root from CARGO_MANIFEST_DIR parent",
+      "scripts/test_launch.py asserts the manifest path and binary name",
+      "approved Cargo target remains under %LOCALAPPDATA%/Rust/target/stay-up",
+      "scripts/rust-install-check is a separate Cargo fixture"
+    ],
+    "root_cleanliness_intent": "Remove confusing owned source folders while preserving the root launch.py entry point.",
+    "candidates": {
+      "retain_stay_watch": "Keep the current stay-watch/Cargo.toml, stay-watch/Cargo.lock, and stay-watch/src.",
+      "rename_app": "Move the package directory to app/ and keep Cargo.toml, Cargo.lock, and src under app/.",
+      "root_cargo_src": "Move the one application Cargo.toml and Cargo.lock to the repository root and move its four Rust source files to root src/."
+    }
+  },
+  "questions": {
+    "retain_stay_watch_discoverability": {
+      "type": "score",
+      "instructions": "Score the discoverability of this Rust layout candidate for the stay-up repository: Keep the current stay-watch/Cargo.toml, stay-watch/Cargo.lock, and stay-watch/src.",
+      "criteria": [
+        "0: The candidate is hard to find or conflicts with the stated repository structure.",
+        "1: The candidate is usable but has a clear discoverability or structure drawback.",
+        "2: The candidate is immediately clear for this repository and follows the stated structure."
+      ]
+    },
+    "retain_stay_watch_fit": {
+      "type": "score",
+      "instructions": "Score how well this Rust layout candidate fits one application, one root launcher, and a separate scripts/rust-install-check fixture: Keep the current stay-watch/Cargo.toml, stay-watch/Cargo.lock, and stay-watch/src.",
+      "criteria": [
+        "0: The candidate is hard to find or conflicts with the stated repository structure.",
+        "1: The candidate is usable but has a clear discoverability or structure drawback.",
+        "2: The candidate is immediately clear for this repository and follows the stated structure."
+      ]
+    },
+    "retain_stay_watch_path_risk": {
+      "type": "score",
+      "instructions": "Score how low the path-change risk is for this Rust layout candidate, considering launch.py, CARGO_MANIFEST_DIR, tests, package identity, and approved AppData output: Keep the current stay-watch/Cargo.toml, stay-watch/Cargo.lock, and stay-watch/src.",
+      "criteria": [
+        "0: The candidate needs broad path or identity changes and creates high breakage risk.",
+        "1: The candidate needs several path changes but can preserve package and binary identity.",
+        "2: The candidate needs few path changes and preserves existing identities and output paths."
+      ]
+    },
+    "rename_app_discoverability": {
+      "type": "score",
+      "instructions": "Score the discoverability of this Rust layout candidate for the stay-up repository: Move the package directory to app/ and keep Cargo.toml, Cargo.lock, and src under app/.",
+      "criteria": [
+        "0: The candidate is hard to find or conflicts with the stated repository structure.",
+        "1: The candidate is usable but has a clear discoverability or structure drawback.",
+        "2: The candidate is immediately clear for this repository and follows the stated structure."
+      ]
+    },
+    "rename_app_fit": {
+      "type": "score",
+      "instructions": "Score how well this Rust layout candidate fits one application, one root launcher, and a separate scripts/rust-install-check fixture: Move the package directory to app/ and keep Cargo.toml, Cargo.lock, and src under app/.",
+      "criteria": [
+        "0: The candidate is hard to find or conflicts with the stated repository structure.",
+        "1: The candidate is usable but has a clear discoverability or structure drawback.",
+        "2: The candidate is immediately clear for this repository and follows the stated structure."
+      ]
+    },
+    "rename_app_path_risk": {
+      "type": "score",
+      "instructions": "Score how low the path-change risk is for this Rust layout candidate, considering launch.py, CARGO_MANIFEST_DIR, tests, package identity, and approved AppData output: Move the package directory to app/ and keep Cargo.toml, Cargo.lock, and src under app/.",
+      "criteria": [
+        "0: The candidate needs broad path or identity changes and creates high breakage risk.",
+        "1: The candidate needs several path changes but can preserve package and binary identity.",
+        "2: The candidate needs few path changes and preserves existing identities and output paths."
+      ]
+    },
+    "root_cargo_src_discoverability": {
+      "type": "score",
+      "instructions": "Score the discoverability of this Rust layout candidate for the stay-up repository: Move the one application Cargo.toml and Cargo.lock to the repository root and move its four Rust source files to root src/.",
+      "criteria": [
+        "0: The candidate is hard to find or conflicts with the stated repository structure.",
+        "1: The candidate is usable but has a clear discoverability or structure drawback.",
+        "2: The candidate is immediately clear for this repository and follows the stated structure."
+      ]
+    },
+    "root_cargo_src_fit": {
+      "type": "score",
+      "instructions": "Score how well this Rust layout candidate fits one application, one root launcher, and a separate scripts/rust-install-check fixture: Move the one application Cargo.toml and Cargo.lock to the repository root and move its four Rust source files to root src/.",
+      "criteria": [
+        "0: The candidate is hard to find or conflicts with the stated repository structure.",
+        "1: The candidate is usable but has a clear discoverability or structure drawback.",
+        "2: The candidate is immediately clear for this repository and follows the stated structure."
+      ]
+    },
+    "root_cargo_src_path_risk": {
+      "type": "score",
+      "instructions": "Score how low the path-change risk is for this Rust layout candidate, considering launch.py, CARGO_MANIFEST_DIR, tests, package identity, and approved AppData output: Move the one application Cargo.toml and Cargo.lock to the repository root and move its four Rust source files to root src/.",
+      "criteria": [
+        "0: The candidate needs broad path or identity changes and creates high breakage risk.",
+        "1: The candidate needs several path changes but can preserve package and binary identity.",
+        "2: The candidate needs few path changes and preserves existing identities and output paths."
+      ]
+    }
+  }
+}

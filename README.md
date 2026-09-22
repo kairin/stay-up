@@ -84,10 +84,10 @@ state gap would end a confirmed interval.
 
 ### Current design
 
-The current app uses a Rust launcher and two unchanged Python helpers. The Rust
-window shows status, helper output, the shared heartbeat log, and input idle
-time. It owns shutdown and keeps the output panes read-only. Screenshot and
-capture logging from the first plan are withdrawn.
+The current app uses a Python root launcher, a Rust dashboard, and two Python
+helpers. The Rust window shows status, helper output, the shared heartbeat log,
+and input idle time. It owns shutdown and keeps the output panes read-only.
+Screenshot and capture logging from the first plan are withdrawn.
 
 ### Issue images and videos
 
@@ -153,6 +153,8 @@ changes do not require a new machine test.
 | [Observer proposal](docs/stay-watch-plan.md) | Historical observer design |
 | [Acceptance vectors](docs/stay-watch-acceptance.md) | Unexecuted historical checks |
 | [Research record](docs/research.md) | Source provenance and earlier investigation |
+| [Rust migration review](docs/rust-only-migration-review.md) | Proposed Rust migration, TypeSafe matrix, gates, and staged decisions |
+| [Rust migration plan](docs/rust-only-migration-plan.md) | Ordered Rust ports, tool decisions, first build, and acceptance checks |
 
 The PowerToys source snapshot keeps its
 [MIT license](research/powertoys-source/LICENSE) and

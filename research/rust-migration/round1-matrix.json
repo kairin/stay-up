@@ -1,0 +1,68 @@
+{
+  "weights": {
+    "behavior_preservation": 25,
+    "implementation_simplicity": 20,
+    "ownership_failure_clarity": 20,
+    "build_distribution_simplicity": 15,
+    "testability_rollback": 10,
+    "maintenance_cost": 10
+  },
+  "anchors": {
+    "behavior_preservation": [
+      "0: breaks one or more accepted visible, manual, heartbeat, Stop, path, or policy gates.",
+      "1: preserves only a small part of the known behavior and leaves major contract gaps.",
+      "2: preserves several known contracts but leaves material behavior or rollback gaps.",
+      "3: preserves the known contracts with bounded, testable gaps and a rollback path.",
+      "4: preserves all stated contracts with an explicit rollback path and no new unbounded behavior."
+    ],
+    "implementation_simplicity": [
+      "0: requires a broad redesign with new frameworks or many unrelated moving parts.",
+      "1: requires several new subsystems and difficult coordination across them.",
+      "2: requires a moderate number of focused changes with some new coordination.",
+      "3: requires focused changes with familiar components and bounded coordination.",
+      "4: requires the smallest coherent change set for the endpoint."
+    ],
+    "ownership_failure_clarity": [
+      "0: makes ownership ambiguous and leaves common failure paths without a clear owner.",
+      "1: clarifies few failure paths and introduces substantial lifecycle ambiguity.",
+      "2: gives partial ownership clarity but leaves material crash or PID risks.",
+      "3: gives clear ownership for ordinary failures with bounded hardening work.",
+      "4: gives clear ownership, failure boundaries, and cleanup responsibilities."
+    ],
+    "build_distribution_simplicity": [
+      "0: needs a fragile bootstrap, broad dependency set, or incompatible output paths.",
+      "1: has major bootstrap or dependency distribution risk.",
+      "2: has a workable build with several unresolved bootstrap or cache decisions.",
+      "3: uses the approved paths and a bounded build sequence with minor decisions left.",
+      "4: uses a simple reproducible build and distribution sequence under approved paths."
+    ],
+    "testability_rollback": [
+      "0: cannot isolate regressions or restore the accepted baseline.",
+      "1: needs broad new tests before any useful rollback is possible.",
+      "2: supports partial isolation and rollback with material untested areas.",
+      "3: supports staged tests, evidence, and rollback for known contracts.",
+      "4: supports small staged tests, direct comparison, and a clear rollback at each step."
+    ],
+    "maintenance_cost": [
+      "0: creates high long-term duplication or a new framework burden.",
+      "1: creates substantial maintenance burden across runtime and tooling.",
+      "2: has moderate ongoing burden and some duplicated contracts.",
+      "3: keeps maintenance bounded with limited duplication.",
+      "4: minimizes ongoing code, dependency, and contract maintenance."
+    ]
+  },
+  "candidates": {
+    "M1": {
+      "name": "Separate native helper and monitor binaries",
+      "design": "Rust UI starts native keep-awake and monitor-helper binaries. A native launcher builds stay-watch plus both helpers. The process boundaries remain separate. Migration is staged from the current Python helpers."
+    },
+    "M2": {
+      "name": "One Rust binary with explicit modes",
+      "design": "One Rust runtime binary serves UI, helper, and monitor modes, still as three processes. A native launcher builds the same binary. The GUI subsystem setting, helper console behavior, Ctrl+C handling, and control-handler path require a decision."
+    },
+    "M3": {
+      "name": "One Rust process with internal modules",
+      "design": "One Rust process owns the UI, power request, and monitor modules. A native launcher starts it. It loses external process observation and changes process, pane, and cleanup semantics. This is conditional on accepting that scope change."
+    }
+  }
+}

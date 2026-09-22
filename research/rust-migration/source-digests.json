@@ -1,0 +1,75 @@
+{
+  "commit": "d459cbfd6cad7fae0bd3219874f1e3d0de1cd46d",
+  "files": [
+    {
+      "path": "src/main.rs",
+      "sha256": "c8b14d89f39695a3bf90ffcff4f2ea79235f0f818680abc556bc3d63b7379d61",
+      "bytes": 5756
+    },
+    {
+      "path": "src/lib.rs",
+      "sha256": "717175a709e70dfe91bff71f5c530013f076d92279d63a83703fcb375df5bd99",
+      "bytes": 4849
+    },
+    {
+      "path": "src/ui.rs",
+      "sha256": "5c2571ed296fbfd855e672bd3f98adbf71898c1b403bebdfca8e6c2a1e4906ce",
+      "bytes": 38214
+    },
+    {
+      "path": "src/output.rs",
+      "sha256": "e6689b819953f6d966eda6dcda8af801e45b10358d2411081969e15510457884",
+      "bytes": 6504
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256": "5fae0c7fa0222c0d9297fe8d2b86267c0ab3ebb1d18ce3ef29a472c77b84092b",
+      "bytes": 206
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256": "de620d777c3211b3193162daf7b5c406ecf3a96fb955f3017d37c12d60bc3882",
+      "bytes": 161
+    },
+    {
+      "path": "scripts/keep-awake.py",
+      "sha256": "77dcbc7e4d9cf317573ebd0af82efb90a060855d3554fbeba5ceb146a0fdadd1",
+      "bytes": 3654
+    },
+    {
+      "path": "scripts/monitor-helper.py",
+      "sha256": "78286bfcc1eecde8ebdc2f787cd1cc4c463318579e494f250c4f1fb9c12b6642",
+      "bytes": 2150
+    },
+    {
+      "path": "launch.py",
+      "sha256": "2fd32acde3f76184e12cf851c879ea1dbba91bea7861097a1fd8f981c910217e",
+      "bytes": 25136
+    },
+    {
+      "path": "scripts/test_launch.py",
+      "sha256": "a30172e0da54adefa9427baf494aaa27f1eeb28d573f8946532785daf200ae0f",
+      "bytes": 14776
+    },
+    {
+      "path": "scripts/verify_output_panes.py",
+      "sha256": "c744008ca9709c3e8cc1ce319124092325e9239ea51c0810ba08b57aa9c11961",
+      "bytes": 13835
+    },
+    {
+      "path": "scripts/task-ranker/README.md",
+      "sha256": "d35a38252388696c8a14c2a3238ca3a6c51747ddb34c98de6ce6d03b14d438b9",
+      "bytes": 6756
+    },
+    {
+      "path": "scripts/task-ranker/requirements.txt",
+      "sha256": "c67e6b34f7bc433751919c88d345757da35bdc2aa3067a1f5e8aa3e215106371",
+      "bytes": 21
+    },
+    {
+      "path": "docs/rust-only-migration-review.md",
+      "sha256": "50f6b5647ce2c1ea9dbc34bb37f816b6be2b66033871690f9b7b65be5e8da812",
+      "bytes": 15567
+    }
+  ]
+}

@@ -1,0 +1,358 @@
+{
+  "weights": {
+    "behavior_preservation": 25,
+    "implementation_simplicity": 20,
+    "ownership_failure_clarity": 20,
+    "build_distribution_simplicity": 15,
+    "testability_rollback": 10,
+    "maintenance_cost": 10
+  },
+  "profiles": {
+    "default": {
+      "behavior_preservation": 25,
+      "implementation_simplicity": 20,
+      "ownership_failure_clarity": 20,
+      "build_distribution_simplicity": 15,
+      "testability_rollback": 10,
+      "maintenance_cost": 10
+    },
+    "preservation_heavy": {
+      "behavior_preservation": 35,
+      "implementation_simplicity": 15,
+      "ownership_failure_clarity": 25,
+      "build_distribution_simplicity": 5,
+      "testability_rollback": 15,
+      "maintenance_cost": 5
+    },
+    "simplicity_heavy": {
+      "behavior_preservation": 20,
+      "implementation_simplicity": 35,
+      "ownership_failure_clarity": 15,
+      "build_distribution_simplicity": 20,
+      "testability_rollback": 5,
+      "maintenance_cost": 5
+    }
+  },
+  "anchors": {
+    "behavior_preservation": [
+      "Breaks accepted visible, manual, heartbeat, or process protocol behavior.",
+      "Preserves few observable contracts and leaves major behavior gaps.",
+      "Preserves several observable contracts but leaves material behavior gaps.",
+      "Preserves the observable contracts with bounded untested edge cases.",
+      "Preserves all observable, manual, log, and protocol contracts with no unresolved behavior change."
+    ],
+    "implementation_simplicity": [
+      "Requires a broad redesign, new framework, or many unrelated moving parts.",
+      "Requires several new subsystems and difficult coordination.",
+      "Requires a moderate focused change with material coordination.",
+      "Requires focused changes with bounded coordination.",
+      "Requires the smallest coherent endpoint change."
+    ],
+    "ownership_failure_clarity": [
+      "Leaves process, handle, or error ownership ambiguous.",
+      "Clarifies few failure paths and adds major lifecycle ambiguity.",
+      "Gives partial ownership clarity but leaves material lifecycle risks.",
+      "Gives clear ordinary ownership with bounded hardening gaps.",
+      "Gives clear process, handle, error, and cleanup responsibility."
+    ],
+    "build_distribution_simplicity": [
+      "Needs fragile bootstrap, broad dependency distribution, or changed output paths.",
+      "Has major bootstrap, dependency, or distribution risk.",
+      "Has a workable build with several unresolved bootstrap decisions.",
+      "Uses approved paths and a bounded build with minor decisions.",
+      "Uses a simple reproducible build and distribution sequence."
+    ],
+    "testability_rollback": [
+      "Cannot isolate regressions or restore the accepted baseline.",
+      "Needs broad new tests before useful rollback is possible.",
+      "Supports partial isolation and rollback with material untested areas.",
+      "Supports staged tests, evidence, and rollback for known contracts.",
+      "Supports small isolated tests, direct comparison, and rollback at each slice."
+    ],
+    "maintenance_cost": [
+      "Creates high long-term duplication or framework burden.",
+      "Creates substantial ongoing maintenance across runtime and tooling.",
+      "Creates moderate burden or duplicated contracts.",
+      "Keeps ongoing maintenance bounded with limited duplication.",
+      "Minimizes code, dependency, and contract maintenance."
+    ]
+  },
+  "common_state": {
+    "endpoint": "Python-free application and native launcher, followed by Rust ports for all retained owned maintained tools and tests. The withdrawn capture tool is explicitly excluded from reimplementation and needs an archive or retirement record.",
+    "hard_gates": [
+      "Approved AppData paths, Windows policy, canonical logs, and accepted visible, manual, heartbeat, and Stop behavior remain unchanged.",
+      "No capture resources or new capture implementation are required.",
+      "Scores cannot waive unrun implementation acceptance."
+    ],
+    "facts": [
+      "src/main.rs starts two Python children and waits for a helper PID handshake.",
+      "src/ui.rs owns two Child handles, uses forced kill and wait on ordinary Stop, and UI death does not automatically terminate children.",
+      "launch.py validates the fixed checkout and approved AppData paths, builds stay-watch, checks exact process image and owned window, and uses a hashed checkout mutex.",
+      "The Python power helper creates one request, sets SYSTEM and DISPLAY, clears acquired requests in reverse order, and closes its handle.",
+      "The Python monitor opens SYNCHRONIZE, writes local-time ISO lines, polls the helper, and records STOPPED or ERROR.",
+      "src/main.rs uses the Windows GUI subsystem. README.md documents manual helper Ctrl+C and visible helper output.",
+      "The task-ranker requirements declare typesafe-sdk==0.7.0. The exporter invokes external Hermes CLI. Hermes language and ownership are unknown.",
+      "No maintained .ps1, .sh, .cmd, or .bat files appear under scripts. PowerToys scripts and generated/vendor data are exclusions."
+    ],
+    "proposals": [
+      "Share native power and monitor modules and use small entrypoints or modes.",
+      "Use explicit cleanup, a bounded ready record after successful PowerSetRequest calls, preserved stdout/log format, local time offset and precision, flush, interval, and direct Ctrl+C handling.",
+      "Build the native launcher first with external Cargo or an approved prebuilt executable. Later builds exclude the launcher and use repeated --bin options for runtime outputs.",
+      "Port one accepted slice at a time with rollback. Do not add a service, scheduler, async runtime, GUI framework, installer, updater, IPC bus, or Job Object hardening for the language port."
+    ],
+    "unknowns": [
+      "Native Win32 bindings and console control behavior.",
+      "M2 direct UI invocation and hidden helper-mode behavior under the proposed console-subsystem route.",
+      "Native launcher bootstrap distribution and offline dependency cache.",
+      "Hermes implementation language and ownership boundary.",
+      "All native implementation behavior remains untested."
+    ],
+    "tooling_dispositions": [
+      "launch.py -> Rust native launcher.",
+      "keep-awake.py and monitor-helper.py -> Rust runtime binaries or modes.",
+      "test_launch.py -> Rust launcher tests.",
+      "verify_output_panes.py -> opt-in Rust desktop harness after parity.",
+      "windows-state-probe.py, terminal-target-probe.py, and test_feasibility_probes.py -> Rust probes/tests or explicit retirement decisions.",
+      "capture-feasibility-probe.py -> withdrawn historical tool; archive or retire, with no reimplementation.",
+      "task-ranker rank_tasks.py, export_kanban.py, and both test files -> Rust ports by default. Hermes remains an external dependency boundary and does not enter app deployment.",
+      "Rust probes and rust-install-check fixture -> reuse if sufficient."
+    ],
+    "evidence_sources": [
+      "source commit d459cbfd6cad7fae0bd3219874f1e3d0de1cd46d",
+      "docs/rust-environment-verification.md",
+      "docs/native-output-panes.md",
+      "docs/observations.md",
+      "README.md"
+    ]
+  },
+  "candidates": {
+    "M1": {
+      "name": "Separate native helper and monitor binaries",
+      "topology": "GUI Rust UI plus console keep-awake and monitor-helper binaries, still three processes.",
+      "shared_code": "One Cargo package with shared power and monitor modules and small entrypoints; not duplicate codebases.",
+      "behavior": "Reuse current separate Child handles, independent monitor, stdout/log format, ordinary forced Stop, and UI-crash child gap.",
+      "ownership": "Same parent-owned two Child handles, external monitor process handle, helper power handle, explicit partial cleanup, ordinary forced Stop, and UI-crash gap as M2. No Job Object.",
+      "manual_console": "Direct helper mode uses console control handling and visible output. GUI parent keeps child startup hidden.",
+      "build_bootstrap": "Native launcher is first built externally by Cargo or supplied as approved prebuilt output. Later same-release builds include all three runtime sibling outputs and exclude launcher.",
+      "rollback": "Port helper, monitor, launcher, then tools. Roll back each slice to the previous Python or accepted Rust slice.",
+      "benefits": "Closest process and observation semantics with separate failure boundaries.",
+      "costs": "Three runtime artifacts and sibling path wiring require one same-release build.",
+      "unknowns": "Native binding, control handler, readiness timeout, and launcher bootstrap are untested.",
+      "tooling_phase": "Port or explicitly retire every owned tool after runtime and launcher parity. Capture is archive or retire only."
+    },
+    "M2": {
+      "name": "One Rust binary with explicit modes",
+      "topology": "One runtime binary serves UI, helper, and monitor modes, still three processes.",
+      "shared_code": "One Cargo package and one binary with common modules and mode dispatch before UI, log, or power side effects.",
+      "behavior": "Reuse the same separate Child handles, independent monitor, ordinary forced Stop, and UI-crash gap as M1; mode startup changes.",
+      "ownership": "Same parent-owned two Child handles, external monitor process handle, helper power handle, explicit partial cleanup, ordinary forced Stop, and UI-crash gap as M1. No Job Object.",
+      "manual_console": "Proposed untested route: console-subsystem runtime; native launcher starts UI hidden, owned modes hidden, and manual helper mode with terminal output and control handling. Direct UI invocation needs a decision.",
+      "build_bootstrap": "Native launcher is first built externally by Cargo or supplied as approved prebuilt output. Later builds target the runtime mode binary and exclude launcher.",
+      "rollback": "Port shared native code and modes one slice at a time. Roll back each mode slice to the previous Python or accepted Rust slice.",
+      "benefits": "Fewer runtime artifacts and no helper-image version mismatch while retaining three processes.",
+      "costs": "GUI and console behavior needs a real decision; one binary has more mode dispatch paths.",
+      "unknowns": "Direct invocation, hidden console behavior, control handling, readiness, and launcher bootstrap are untested.",
+      "tooling_phase": "Port or explicitly retire every owned tool after runtime and launcher parity. Capture is archive or retire only."
+    },
+    "M3": {
+      "name": "One Rust process with internal modules",
+      "topology": "One process owns UI, power request, and monitor modules. No external helper or monitor observer.",
+      "shared_code": "One Cargo package with shared in-process modules.",
+      "behavior": "Changes process identity, pane meaning, startup coordination, cancellation, panic behavior, and liveness semantics.",
+      "ownership": "Owner process handles its own resources, but in-process cancellation and panic ownership need new rules. No Job Object.",
+      "manual_console": "Manual helper mode needs a replacement for current visible Ctrl+C behavior or an explicit scope decision.",
+      "build_bootstrap": "Native launcher is first built externally by Cargo or supplied as approved prebuilt output. Later builds target one runtime binary and exclude launcher.",
+      "rollback": "Port internal modules behind staged slices and retain the prior multi-process endpoint until each slice passes.",
+      "benefits": "Removes child startup and sibling path coordination.",
+      "costs": "Loses external observation and separate failure boundaries; changes cleanup and pane contracts.",
+      "unknowns": "In-process cancellation, panic cleanup, self-heartbeat meaning, and endpoint parity are untested.",
+      "tooling_phase": "Port or explicitly retire every owned tool after runtime and launcher parity. Capture is archive or retire only."
+    }
+  },
+  "quality": {
+    "fairness": {
+      "instructions": "Judge whether the complete v3 matrix gives M1, M2, and M3 equally complete fields and a fair comparison for the required endpoint.",
+      "criteria": [
+        "The matrix materially favors one candidate or omits a material cost or benefit from another.",
+        "The matrix has major asymmetry that can change the ordering.",
+        "The matrix is usable but leaves material comparison ambiguity.",
+        "The matrix gives equal fields and credible descriptions with minor gaps.",
+        "The matrix gives equal fields, credible benefits and costs, and no hidden preference."
+      ]
+    },
+    "completeness": {
+      "instructions": "Judge whether the complete v3 state contains enough facts, proposals, unknowns, gates, tool dispositions, M2 evidence, and source references to judge all six criteria.",
+      "criteria": [
+        "The state omits major evidence needed for the endpoint decision.",
+        "The state omits several material facts or endpoint decisions.",
+        "The state includes main facts but leaves material evidence gaps.",
+        "The state includes required facts and marks remaining unknowns.",
+        "The state supplies complete bounded evidence for this planning judgment."
+      ]
+    },
+    "overengineering": {
+      "instructions": "Judge whether the v3 matrix keeps optional machinery separate and rewards only the required endpoint and its required tool ports.",
+      "criteria": [
+        "The matrix rewards unrelated machinery or hides scope expansion.",
+        "The matrix materially favors unnecessary frameworks or hardening.",
+        "The matrix is mostly bounded but leaves some scope pressure.",
+        "The matrix keeps optional work separate with minor ambiguity.",
+        "The matrix clearly rewards the smallest required endpoint and defers optional work."
+      ]
+    }
+  },
+  "quality_state": {
+    "candidates": {
+      "M1": {
+        "name": "Separate native helper and monitor binaries",
+        "topology": "GUI Rust UI plus console keep-awake and monitor-helper binaries, still three processes.",
+        "shared_code": "One Cargo package with shared power and monitor modules and small entrypoints; not duplicate codebases.",
+        "behavior": "Reuse current separate Child handles, independent monitor, stdout/log format, ordinary forced Stop, and UI-crash child gap.",
+        "ownership": "Same parent-owned two Child handles, external monitor process handle, helper power handle, explicit partial cleanup, ordinary forced Stop, and UI-crash gap as M2. No Job Object.",
+        "manual_console": "Direct helper mode uses console control handling and visible output. GUI parent keeps child startup hidden.",
+        "build_bootstrap": "Native launcher is first built externally by Cargo or supplied as approved prebuilt output. Later same-release builds include all three runtime sibling outputs and exclude launcher.",
+        "rollback": "Port helper, monitor, launcher, then tools. Roll back each slice to the previous Python or accepted Rust slice.",
+        "benefits": "Closest process and observation semantics with separate failure boundaries.",
+        "costs": "Three runtime artifacts and sibling path wiring require one same-release build.",
+        "unknowns": "Native binding, control handler, readiness timeout, and launcher bootstrap are untested.",
+        "tooling_phase": "Port or explicitly retire every owned tool after runtime and launcher parity. Capture is archive or retire only."
+      },
+      "M2": {
+        "name": "One Rust binary with explicit modes",
+        "topology": "One runtime binary serves UI, helper, and monitor modes, still three processes.",
+        "shared_code": "One Cargo package and one binary with common modules and mode dispatch before UI, log, or power side effects.",
+        "behavior": "Reuse the same separate Child handles, independent monitor, ordinary forced Stop, and UI-crash gap as M1; mode startup changes.",
+        "ownership": "Same parent-owned two Child handles, external monitor process handle, helper power handle, explicit partial cleanup, ordinary forced Stop, and UI-crash gap as M1. No Job Object.",
+        "manual_console": "Proposed untested route: console-subsystem runtime; native launcher starts UI hidden, owned modes hidden, and manual helper mode with terminal output and control handling. Direct UI invocation needs a decision.",
+        "build_bootstrap": "Native launcher is first built externally by Cargo or supplied as approved prebuilt output. Later builds target the runtime mode binary and exclude launcher.",
+        "rollback": "Port shared native code and modes one slice at a time. Roll back each mode slice to the previous Python or accepted Rust slice.",
+        "benefits": "Fewer runtime artifacts and no helper-image version mismatch while retaining three processes.",
+        "costs": "GUI and console behavior needs a real decision; one binary has more mode dispatch paths.",
+        "unknowns": "Direct invocation, hidden console behavior, control handling, readiness, and launcher bootstrap are untested.",
+        "tooling_phase": "Port or explicitly retire every owned tool after runtime and launcher parity. Capture is archive or retire only."
+      },
+      "M3": {
+        "name": "One Rust process with internal modules",
+        "topology": "One process owns UI, power request, and monitor modules. No external helper or monitor observer.",
+        "shared_code": "One Cargo package with shared in-process modules.",
+        "behavior": "Changes process identity, pane meaning, startup coordination, cancellation, panic behavior, and liveness semantics.",
+        "ownership": "Owner process handles its own resources, but in-process cancellation and panic ownership need new rules. No Job Object.",
+        "manual_console": "Manual helper mode needs a replacement for current visible Ctrl+C behavior or an explicit scope decision.",
+        "build_bootstrap": "Native launcher is first built externally by Cargo or supplied as approved prebuilt output. Later builds target one runtime binary and exclude launcher.",
+        "rollback": "Port internal modules behind staged slices and retain the prior multi-process endpoint until each slice passes.",
+        "benefits": "Removes child startup and sibling path coordination.",
+        "costs": "Loses external observation and separate failure boundaries; changes cleanup and pane contracts.",
+        "unknowns": "In-process cancellation, panic cleanup, self-heartbeat meaning, and endpoint parity are untested.",
+        "tooling_phase": "Port or explicitly retire every owned tool after runtime and launcher parity. Capture is archive or retire only."
+      }
+    },
+    "anchors": {
+      "behavior_preservation": [
+        "Breaks accepted visible, manual, heartbeat, or process protocol behavior.",
+        "Preserves few observable contracts and leaves major behavior gaps.",
+        "Preserves several observable contracts but leaves material behavior gaps.",
+        "Preserves the observable contracts with bounded untested edge cases.",
+        "Preserves all observable, manual, log, and protocol contracts with no unresolved behavior change."
+      ],
+      "implementation_simplicity": [
+        "Requires a broad redesign, new framework, or many unrelated moving parts.",
+        "Requires several new subsystems and difficult coordination.",
+        "Requires a moderate focused change with material coordination.",
+        "Requires focused changes with bounded coordination.",
+        "Requires the smallest coherent endpoint change."
+      ],
+      "ownership_failure_clarity": [
+        "Leaves process, handle, or error ownership ambiguous.",
+        "Clarifies few failure paths and adds major lifecycle ambiguity.",
+        "Gives partial ownership clarity but leaves material lifecycle risks.",
+        "Gives clear ordinary ownership with bounded hardening gaps.",
+        "Gives clear process, handle, error, and cleanup responsibility."
+      ],
+      "build_distribution_simplicity": [
+        "Needs fragile bootstrap, broad dependency distribution, or changed output paths.",
+        "Has major bootstrap, dependency, or distribution risk.",
+        "Has a workable build with several unresolved bootstrap decisions.",
+        "Uses approved paths and a bounded build with minor decisions.",
+        "Uses a simple reproducible build and distribution sequence."
+      ],
+      "testability_rollback": [
+        "Cannot isolate regressions or restore the accepted baseline.",
+        "Needs broad new tests before useful rollback is possible.",
+        "Supports partial isolation and rollback with material untested areas.",
+        "Supports staged tests, evidence, and rollback for known contracts.",
+        "Supports small isolated tests, direct comparison, and rollback at each slice."
+      ],
+      "maintenance_cost": [
+        "Creates high long-term duplication or framework burden.",
+        "Creates substantial ongoing maintenance across runtime and tooling.",
+        "Creates moderate burden or duplicated contracts.",
+        "Keeps ongoing maintenance bounded with limited duplication.",
+        "Minimizes code, dependency, and contract maintenance."
+      ]
+    },
+    "weights": {
+      "behavior_preservation": 25,
+      "implementation_simplicity": 20,
+      "ownership_failure_clarity": 20,
+      "build_distribution_simplicity": 15,
+      "testability_rollback": 10,
+      "maintenance_cost": 10
+    },
+    "profiles": {
+      "default": {
+        "behavior_preservation": 25,
+        "implementation_simplicity": 20,
+        "ownership_failure_clarity": 20,
+        "build_distribution_simplicity": 15,
+        "testability_rollback": 10,
+        "maintenance_cost": 10
+      },
+      "preservation_heavy": {
+        "behavior_preservation": 35,
+        "implementation_simplicity": 15,
+        "ownership_failure_clarity": 25,
+        "build_distribution_simplicity": 5,
+        "testability_rollback": 15,
+        "maintenance_cost": 5
+      },
+      "simplicity_heavy": {
+        "behavior_preservation": 20,
+        "implementation_simplicity": 35,
+        "ownership_failure_clarity": 15,
+        "build_distribution_simplicity": 20,
+        "testability_rollback": 5,
+        "maintenance_cost": 5
+      }
+    },
+    "gates": {
+      "M1": "plan-compatible; native acceptance pending",
+      "M2": "plan-compatible; native acceptance pending",
+      "M3": "requires product-scope exception and is ineligible while separate observation is required",
+      "baseline": "hold and rollback comparator; fails endpoint"
+    },
+    "endpoint": "Python-free application and native launcher, followed by Rust ports for all retained owned maintained tools and tests. The withdrawn capture tool is explicitly excluded from reimplementation and needs an archive or retirement record.",
+    "tooling_dispositions": [
+      "launch.py -> Rust native launcher.",
+      "keep-awake.py and monitor-helper.py -> Rust runtime binaries or modes.",
+      "test_launch.py -> Rust launcher tests.",
+      "verify_output_panes.py -> opt-in Rust desktop harness after parity.",
+      "windows-state-probe.py, terminal-target-probe.py, and test_feasibility_probes.py -> Rust probes/tests or explicit retirement decisions.",
+      "capture-feasibility-probe.py -> withdrawn historical tool; archive or retire, with no reimplementation.",
+      "task-ranker rank_tasks.py, export_kanban.py, and both test files -> Rust ports by default. Hermes remains an external dependency boundary and does not enter app deployment.",
+      "Rust probes and rust-install-check fixture -> reuse if sufficient."
+    ],
+    "evidence_sources": [
+      "source commit d459cbfd6cad7fae0bd3219874f1e3d0de1cd46d",
+      "docs/rust-environment-verification.md",
+      "docs/native-output-panes.md",
+      "docs/observations.md",
+      "README.md"
+    ]
+  },
+  "gates": {
+    "M1": "plan-compatible; native acceptance pending",
+    "M2": "plan-compatible; native acceptance pending",
+    "M3": "requires product-scope exception and is ineligible while separate observation is required",
+    "baseline": "hold and rollback comparator; fails endpoint"
+  }
+}

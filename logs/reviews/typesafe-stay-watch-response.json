@@ -1,0 +1,147 @@
+{
+  "http_status": 200,
+  "response": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "retain_stay_watch_discoverability": {
+        "type": "score",
+        "score": 1.01,
+        "confidence": 0.68,
+        "legend": {
+          "0": "0: The candidate is hard to find or conflicts with the stated repository structure.",
+          "1": "1: The candidate is usable but has a clear discoverability or structure drawback.",
+          "2": "2: The candidate is immediately clear for this repository and follows the stated structure."
+        },
+        "probabilities": {
+          "0": 0.1,
+          "1": 0.79,
+          "2": 0.11
+        }
+      },
+      "retain_stay_watch_fit": {
+        "type": "score",
+        "score": 1.16,
+        "confidence": 0.57,
+        "legend": {
+          "0": "0: The candidate is hard to find or conflicts with the stated repository structure.",
+          "1": "1: The candidate is usable but has a clear discoverability or structure drawback.",
+          "2": "2: The candidate is immediately clear for this repository and follows the stated structure."
+        },
+        "probabilities": {
+          "0": 0.06,
+          "1": 0.72,
+          "2": 0.22
+        }
+      },
+      "retain_stay_watch_path_risk": {
+        "type": "score",
+        "score": 1.83,
+        "confidence": 0.75,
+        "legend": {
+          "0": "0: The candidate needs broad path or identity changes and creates high breakage risk.",
+          "1": "1: The candidate needs several path changes but can preserve package and binary identity.",
+          "2": "2: The candidate needs few path changes and preserves existing identities and output paths."
+        },
+        "probabilities": {
+          "0": 0.02,
+          "1": 0.12,
+          "2": 0.86
+        }
+      },
+      "rename_app_discoverability": {
+        "type": "score",
+        "score": 0.99,
+        "confidence": 0.55,
+        "legend": {
+          "0": "0: The candidate is hard to find or conflicts with the stated repository structure.",
+          "1": "1: The candidate is usable but has a clear discoverability or structure drawback.",
+          "2": "2: The candidate is immediately clear for this repository and follows the stated structure."
+        },
+        "probabilities": {
+          "0": 0.15,
+          "1": 0.7,
+          "2": 0.15
+        }
+      },
+      "rename_app_fit": {
+        "type": "score",
+        "score": 1.2,
+        "confidence": 0.47,
+        "legend": {
+          "0": "0: The candidate is hard to find or conflicts with the stated repository structure.",
+          "1": "1: The candidate is usable but has a clear discoverability or structure drawback.",
+          "2": "2: The candidate is immediately clear for this repository and follows the stated structure."
+        },
+        "probabilities": {
+          "0": 0.08,
+          "1": 0.64,
+          "2": 0.28
+        }
+      },
+      "rename_app_path_risk": {
+        "type": "score",
+        "score": 0.75,
+        "confidence": 0.49,
+        "legend": {
+          "0": "0: The candidate needs broad path or identity changes and creates high breakage risk.",
+          "1": "1: The candidate needs several path changes but can preserve package and binary identity.",
+          "2": "2: The candidate needs few path changes and preserves existing identities and output paths."
+        },
+        "probabilities": {
+          "0": 0.29,
+          "1": 0.67,
+          "2": 0.04
+        }
+      },
+      "root_cargo_src_discoverability": {
+        "type": "score",
+        "score": 1.33,
+        "confidence": 0.0,
+        "legend": {
+          "0": "0: The candidate is hard to find or conflicts with the stated repository structure.",
+          "1": "1: The candidate is usable but has a clear discoverability or structure drawback.",
+          "2": "2: The candidate is immediately clear for this repository and follows the stated structure."
+        },
+        "probabilities": {
+          "0": 0.12,
+          "1": 0.42,
+          "2": 0.46
+        }
+      },
+      "root_cargo_src_fit": {
+        "type": "score",
+        "score": 1.14,
+        "confidence": 0.34,
+        "legend": {
+          "0": "0: The candidate is hard to find or conflicts with the stated repository structure.",
+          "1": "1: The candidate is usable but has a clear discoverability or structure drawback.",
+          "2": "2: The candidate is immediately clear for this repository and follows the stated structure."
+        },
+        "probabilities": {
+          "0": 0.15,
+          "1": 0.56,
+          "2": 0.29
+        }
+      },
+      "root_cargo_src_path_risk": {
+        "type": "score",
+        "score": 0.39,
+        "confidence": 0.42,
+        "legend": {
+          "0": "0: The candidate needs broad path or identity changes and creates high breakage risk.",
+          "1": "1: The candidate needs several path changes but can preserve package and binary identity.",
+          "2": "2: The candidate needs few path changes and preserves existing identities and output paths."
+        },
+        "probabilities": {
+          "0": 0.65,
+          "1": 0.32,
+          "2": 0.03
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 1744,
+      "output_tokens": 169
+    }
+  }
+}

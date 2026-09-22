@@ -1,0 +1,408 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "m1_behavior_preservation": {
+      "type": "score",
+      "score": 2.93,
+      "confidence": 0.84,
+      "legend": {
+        "0": "0: breaks one or more accepted visible, manual, heartbeat, Stop, path, or policy gates.",
+        "1": "1: preserves only a small part of the known behavior and leaves major contract gaps.",
+        "2": "2: preserves several known contracts but leaves material behavior or rollback gaps.",
+        "3": "3: preserves the known contracts with bounded, testable gaps and a rollback path.",
+        "4": "4: preserves all stated contracts with an explicit rollback path and no new unbounded behavior."
+      },
+      "probabilities": {
+        "0": 0.01,
+        "1": 0.0,
+        "2": 0.1,
+        "3": 0.83,
+        "4": 0.06
+      }
+    },
+    "m1_implementation_simplicity": {
+      "type": "score",
+      "score": 2.3,
+      "confidence": 0.58,
+      "legend": {
+        "0": "0: requires a broad redesign with new frameworks or many unrelated moving parts.",
+        "1": "1: requires several new subsystems and difficult coordination across them.",
+        "2": "2: requires a moderate number of focused changes with some new coordination.",
+        "3": "3: requires focused changes with familiar components and bounded coordination.",
+        "4": "4: requires the smallest coherent change set for the endpoint."
+      },
+      "probabilities": {
+        "0": 0.0,
+        "1": 0.1,
+        "2": 0.5,
+        "3": 0.39,
+        "4": 0.01
+      }
+    },
+    "m1_ownership_failure_clarity": {
+      "type": "score",
+      "score": 3.03,
+      "confidence": 0.8,
+      "legend": {
+        "0": "0: makes ownership ambiguous and leaves common failure paths without a clear owner.",
+        "1": "1: clarifies few failure paths and introduces substantial lifecycle ambiguity.",
+        "2": "2: gives partial ownership clarity but leaves material crash or PID risks.",
+        "3": "3: gives clear ownership for ordinary failures with bounded hardening work.",
+        "4": "4: gives clear ownership, failure boundaries, and cleanup responsibilities."
+      },
+      "probabilities": {
+        "0": 0.0,
+        "1": 0.01,
+        "2": 0.09,
+        "3": 0.76,
+        "4": 0.14
+      }
+    },
+    "m1_build_distribution_simplicity": {
+      "type": "score",
+      "score": 2.73,
+      "confidence": 0.74,
+      "legend": {
+        "0": "0: needs a fragile bootstrap, broad dependency set, or incompatible output paths.",
+        "1": "1: has major bootstrap or dependency distribution risk.",
+        "2": "2: has a workable build with several unresolved bootstrap or cache decisions.",
+        "3": "3: uses the approved paths and a bounded build sequence with minor decisions left.",
+        "4": "4: uses a simple reproducible build and distribution sequence under approved paths."
+      },
+      "probabilities": {
+        "0": 0.0,
+        "1": 0.01,
+        "2": 0.26,
+        "3": 0.71,
+        "4": 0.02
+      }
+    },
+    "m1_testability_rollback": {
+      "type": "score",
+      "score": 3.29,
+      "confidence": 0.72,
+      "legend": {
+        "0": "0: cannot isolate regressions or restore the accepted baseline.",
+        "1": "1: needs broad new tests before any useful rollback is possible.",
+        "2": "2: supports partial isolation and rollback with material untested areas.",
+        "3": "3: supports staged tests, evidence, and rollback for known contracts.",
+        "4": "4: supports small staged tests, direct comparison, and a clear rollback at each step."
+      },
+      "probabilities": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.02,
+        "3": 0.66,
+        "4": 0.32
+      }
+    },
+    "m1_maintenance_cost": {
+      "type": "score",
+      "score": 2.47,
+      "confidence": 0.54,
+      "legend": {
+        "0": "0: creates high long-term duplication or a new framework burden.",
+        "1": "1: creates substantial maintenance burden across runtime and tooling.",
+        "2": "2: has moderate ongoing burden and some duplicated contracts.",
+        "3": "3: keeps maintenance bounded with limited duplication.",
+        "4": "4: minimizes ongoing code, dependency, and contract maintenance."
+      },
+      "probabilities": {
+        "0": 0.0,
+        "1": 0.06,
+        "2": 0.41,
+        "3": 0.52,
+        "4": 0.01
+      }
+    },
+    "m2_behavior_preservation": {
+      "type": "score",
+      "score": 2.12,
+      "confidence": 0.79,
+      "legend": {
+        "0": "0: breaks one or more accepted visible, manual, heartbeat, Stop, path, or policy gates.",
+        "1": "1: preserves only a small part of the known behavior and leaves major contract gaps.",
+        "2": "2: preserves several known contracts but leaves material behavior or rollback gaps.",
+        "3": "3: preserves the known contracts with bounded, testable gaps and a rollback path.",
+        "4": "4: preserves all stated contracts with an explicit rollback path and no new unbounded behavior."
+      },
+      "probabilities": {
+        "0": 0.02,
+        "1": 0.02,
+        "2": 0.78,
+        "3": 0.18,
+        "4": 0.0
+      }
+    },
+    "m2_implementation_simplicity": {
+      "type": "score",
+      "score": 1.76,
+      "confidence": 0.61,
+      "legend": {
+        "0": "0: requires a broad redesign with new frameworks or many unrelated moving parts.",
+        "1": "1: requires several new subsystems and difficult coordination across them.",
+        "2": "2: requires a moderate number of focused changes with some new coordination.",
+        "3": "3: requires focused changes with familiar components and bounded coordination.",
+        "4": "4: requires the smallest coherent change set for the endpoint."
+      },
+      "probabilities": {
+        "0": 0.0,
+        "1": 0.35,
+        "2": 0.54,
+        "3": 0.11,
+        "4": 0.0
+      }
+    },
+    "m2_ownership_failure_clarity": {
+      "type": "score",
+      "score": 1.93,
+      "confidence": 0.68,
+      "legend": {
+        "0": "0: makes ownership ambiguous and leaves common failure paths without a clear owner.",
+        "1": "1: clarifies few failure paths and introduces substantial lifecycle ambiguity.",
+        "2": "2: gives partial ownership clarity but leaves material crash or PID risks.",
+        "3": "3: gives clear ownership for ordinary failures with bounded hardening work.",
+        "4": "4: gives clear ownership, failure boundaries, and cleanup responsibilities."
+      },
+      "probabilities": {
+        "0": 0.02,
+        "1": 0.2,
+        "2": 0.63,
+        "3": 0.14,
+        "4": 0.01
+      }
+    },
+    "m2_build_distribution_simplicity": {
+      "type": "score",
+      "score": 2.58,
+      "confidence": 0.61,
+      "legend": {
+        "0": "0: needs a fragile bootstrap, broad dependency set, or incompatible output paths.",
+        "1": "1: has major bootstrap or dependency distribution risk.",
+        "2": "2: has a workable build with several unresolved bootstrap or cache decisions.",
+        "3": "3: uses the approved paths and a bounded build sequence with minor decisions left.",
+        "4": "4: uses a simple reproducible build and distribution sequence under approved paths."
+      },
+      "probabilities": {
+        "0": 0.0,
+        "1": 0.03,
+        "2": 0.38,
+        "3": 0.56,
+        "4": 0.03
+      }
+    },
+    "m2_testability_rollback": {
+      "type": "score",
+      "score": 2.17,
+      "confidence": 0.68,
+      "legend": {
+        "0": "0: cannot isolate regressions or restore the accepted baseline.",
+        "1": "1: needs broad new tests before any useful rollback is possible.",
+        "2": "2: supports partial isolation and rollback with material untested areas.",
+        "3": "3: supports staged tests, evidence, and rollback for known contracts.",
+        "4": "4: supports small staged tests, direct comparison, and a clear rollback at each step."
+      },
+      "probabilities": {
+        "0": 0.0,
+        "1": 0.1,
+        "2": 0.62,
+        "3": 0.27,
+        "4": 0.01
+      }
+    },
+    "m2_maintenance_cost": {
+      "type": "score",
+      "score": 2.34,
+      "confidence": 0.54,
+      "legend": {
+        "0": "0: creates high long-term duplication or a new framework burden.",
+        "1": "1: creates substantial maintenance burden across runtime and tooling.",
+        "2": "2: has moderate ongoing burden and some duplicated contracts.",
+        "3": "3: keeps maintenance bounded with limited duplication.",
+        "4": "4: minimizes ongoing code, dependency, and contract maintenance."
+      },
+      "probabilities": {
+        "0": 0.0,
+        "1": 0.1,
+        "2": 0.47000000000000003,
+        "3": 0.42,
+        "4": 0.01
+      }
+    },
+    "m3_behavior_preservation": {
+      "type": "score",
+      "score": 0.1,
+      "confidence": 0.92,
+      "legend": {
+        "0": "0: breaks one or more accepted visible, manual, heartbeat, Stop, path, or policy gates.",
+        "1": "1: preserves only a small part of the known behavior and leaves major contract gaps.",
+        "2": "2: preserves several known contracts but leaves material behavior or rollback gaps.",
+        "3": "3: preserves the known contracts with bounded, testable gaps and a rollback path.",
+        "4": "4: preserves all stated contracts with an explicit rollback path and no new unbounded behavior."
+      },
+      "probabilities": {
+        "0": 0.93,
+        "1": 0.05,
+        "2": 0.02,
+        "3": 0.0,
+        "4": 0.0
+      }
+    },
+    "m3_implementation_simplicity": {
+      "type": "score",
+      "score": 1.07,
+      "confidence": 0.64,
+      "legend": {
+        "0": "0: requires a broad redesign with new frameworks or many unrelated moving parts.",
+        "1": "1: requires several new subsystems and difficult coordination across them.",
+        "2": "2: requires a moderate number of focused changes with some new coordination.",
+        "3": "3: requires focused changes with familiar components and bounded coordination.",
+        "4": "4: requires the smallest coherent change set for the endpoint."
+      },
+      "probabilities": {
+        "0": 0.18,
+        "1": 0.65,
+        "2": 0.11,
+        "3": 0.04,
+        "4": 0.02
+      }
+    },
+    "m3_ownership_failure_clarity": {
+      "type": "score",
+      "score": 1.15,
+      "confidence": 0.58,
+      "legend": {
+        "0": "0: makes ownership ambiguous and leaves common failure paths without a clear owner.",
+        "1": "1: clarifies few failure paths and introduces substantial lifecycle ambiguity.",
+        "2": "2: gives partial ownership clarity but leaves material crash or PID risks.",
+        "3": "3: gives clear ownership for ordinary failures with bounded hardening work.",
+        "4": "4: gives clear ownership, failure boundaries, and cleanup responsibilities."
+      },
+      "probabilities": {
+        "0": 0.18,
+        "1": 0.55,
+        "2": 0.23,
+        "3": 0.03,
+        "4": 0.01
+      }
+    },
+    "m3_build_distribution_simplicity": {
+      "type": "score",
+      "score": 2.38,
+      "confidence": 0.17,
+      "legend": {
+        "0": "0: needs a fragile bootstrap, broad dependency set, or incompatible output paths.",
+        "1": "1: has major bootstrap or dependency distribution risk.",
+        "2": "2: has a workable build with several unresolved bootstrap or cache decisions.",
+        "3": "3: uses the approved paths and a bounded build sequence with minor decisions left.",
+        "4": "4: uses a simple reproducible build and distribution sequence under approved paths."
+      },
+      "probabilities": {
+        "0": 0.09,
+        "1": 0.15,
+        "2": 0.24,
+        "3": 0.33,
+        "4": 0.19
+      }
+    },
+    "m3_testability_rollback": {
+      "type": "score",
+      "score": 0.62,
+      "confidence": 0.58,
+      "legend": {
+        "0": "0: cannot isolate regressions or restore the accepted baseline.",
+        "1": "1: needs broad new tests before any useful rollback is possible.",
+        "2": "2: supports partial isolation and rollback with material untested areas.",
+        "3": "3: supports staged tests, evidence, and rollback for known contracts.",
+        "4": "4: supports small staged tests, direct comparison, and a clear rollback at each step."
+      },
+      "probabilities": {
+        "0": 0.44,
+        "1": 0.51,
+        "2": 0.04,
+        "3": 0.0,
+        "4": 0.01
+      }
+    },
+    "m3_maintenance_cost": {
+      "type": "score",
+      "score": 2.07,
+      "confidence": 0.03,
+      "legend": {
+        "0": "0: creates high long-term duplication or a new framework burden.",
+        "1": "1: creates substantial maintenance burden across runtime and tooling.",
+        "2": "2: has moderate ongoing burden and some duplicated contracts.",
+        "3": "3: keeps maintenance bounded with limited duplication.",
+        "4": "4: minimizes ongoing code, dependency, and contract maintenance."
+      },
+      "probabilities": {
+        "0": 0.05,
+        "1": 0.36,
+        "2": 0.2,
+        "3": 0.26,
+        "4": 0.13
+      }
+    },
+    "rubric_fairness": {
+      "type": "score",
+      "score": 2.62,
+      "confidence": 0.52,
+      "legend": {
+        "0": "0: materially unfair, incomplete, or rewards unnecessary machinery.",
+        "1": "1: has major fairness, completeness, or scope defects.",
+        "2": "2: usable but has material ambiguity or overengineering risk.",
+        "3": "3: mostly fair, complete, and bounded with minor gaps.",
+        "4": "4: fair, complete, and bounded for the stated endpoint."
+      },
+      "probabilities": {
+        "0": 0.03,
+        "1": 0.1,
+        "2": 0.19,
+        "3": 0.58,
+        "4": 0.1
+      }
+    },
+    "rubric_completeness": {
+      "type": "score",
+      "score": 2.25,
+      "confidence": 0.47,
+      "legend": {
+        "0": "0: materially unfair, incomplete, or rewards unnecessary machinery.",
+        "1": "1: has major fairness, completeness, or scope defects.",
+        "2": "2: usable but has material ambiguity or overengineering risk.",
+        "3": "3: mostly fair, complete, and bounded with minor gaps.",
+        "4": "4: fair, complete, and bounded for the stated endpoint."
+      },
+      "probabilities": {
+        "0": 0.03,
+        "1": 0.13,
+        "2": 0.43,
+        "3": 0.37,
+        "4": 0.04
+      }
+    },
+    "rubric_overengineering": {
+      "type": "score",
+      "score": 2.59,
+      "confidence": 0.48,
+      "legend": {
+        "0": "0: materially unfair, incomplete, or rewards unnecessary machinery.",
+        "1": "1: has major fairness, completeness, or scope defects.",
+        "2": "2: usable but has material ambiguity or overengineering risk.",
+        "3": "3: mostly fair, complete, and bounded with minor gaps.",
+        "4": "4: fair, complete, and bounded for the stated endpoint."
+      },
+      "probabilities": {
+        "0": 0.04,
+        "1": 0.08,
+        "2": 0.25,
+        "3": 0.52,
+        "4": 0.11
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 15259,
+    "output_tokens": 415
+  }
+}

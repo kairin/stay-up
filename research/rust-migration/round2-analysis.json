@@ -1,0 +1,457 @@
+{
+  "round": 2,
+  "weights": {
+    "behavior_preservation": 25,
+    "implementation_simplicity": 20,
+    "ownership_failure_clarity": 20,
+    "build_distribution_simplicity": 15,
+    "testability_rollback": 10,
+    "maintenance_cost": 10
+  },
+  "profiles": {
+    "default": {
+      "behavior_preservation": 25,
+      "implementation_simplicity": 20,
+      "ownership_failure_clarity": 20,
+      "build_distribution_simplicity": 15,
+      "testability_rollback": 10,
+      "maintenance_cost": 10
+    },
+    "preservation_heavy": {
+      "behavior_preservation": 35,
+      "implementation_simplicity": 15,
+      "ownership_failure_clarity": 25,
+      "build_distribution_simplicity": 5,
+      "testability_rollback": 15,
+      "maintenance_cost": 5
+    },
+    "simplicity_heavy": {
+      "behavior_preservation": 20,
+      "implementation_simplicity": 35,
+      "ownership_failure_clarity": 15,
+      "build_distribution_simplicity": 20,
+      "testability_rollback": 5,
+      "maintenance_cost": 5
+    }
+  },
+  "rows": {
+    "m1": {
+      "behavior_preservation": {
+        "score": 2.69,
+        "confidence": 0.67,
+        "expected_from_probabilities": 2.71,
+        "score_minus_expected": -0.02,
+        "max_probability": 0.63,
+        "probability_sum": 1.0
+      },
+      "implementation_simplicity": {
+        "score": 2.35,
+        "confidence": 0.65,
+        "expected_from_probabilities": 2.35,
+        "score_minus_expected": 0.0,
+        "max_probability": 0.59,
+        "probability_sum": 1.0
+      },
+      "ownership_failure_clarity": {
+        "score": 2.77,
+        "confidence": 0.8,
+        "expected_from_probabilities": 2.78,
+        "score_minus_expected": -0.01,
+        "max_probability": 0.76,
+        "probability_sum": 1.0
+      },
+      "build_distribution_simplicity": {
+        "score": 2.26,
+        "confidence": 0.75,
+        "expected_from_probabilities": 2.25,
+        "score_minus_expected": 0.01,
+        "max_probability": 0.71,
+        "probability_sum": 1.0
+      },
+      "testability_rollback": {
+        "score": 2.9,
+        "confidence": 0.8,
+        "expected_from_probabilities": 2.91,
+        "score_minus_expected": -0.01,
+        "max_probability": 0.77,
+        "probability_sum": 1.0
+      },
+      "maintenance_cost": {
+        "score": 2.65,
+        "confidence": 0.7,
+        "expected_from_probabilities": 2.64,
+        "score_minus_expected": 0.01,
+        "max_probability": 0.67,
+        "probability_sum": 1.0
+      }
+    },
+    "m2": {
+      "behavior_preservation": {
+        "score": 2.3,
+        "confidence": 0.7,
+        "expected_from_probabilities": 2.3,
+        "score_minus_expected": 0.0,
+        "max_probability": 0.65,
+        "probability_sum": 1.0
+      },
+      "implementation_simplicity": {
+        "score": 2.29,
+        "confidence": 0.69,
+        "expected_from_probabilities": 2.28,
+        "score_minus_expected": 0.01,
+        "max_probability": 0.64,
+        "probability_sum": 1.0
+      },
+      "ownership_failure_clarity": {
+        "score": 2.31,
+        "confidence": 0.7,
+        "expected_from_probabilities": 2.31,
+        "score_minus_expected": 0.0,
+        "max_probability": 0.65,
+        "probability_sum": 1.0
+      },
+      "build_distribution_simplicity": {
+        "score": 2.41,
+        "confidence": 0.63,
+        "expected_from_probabilities": 2.42,
+        "score_minus_expected": -0.01,
+        "max_probability": 0.5700000000000001,
+        "probability_sum": 1.0
+      },
+      "testability_rollback": {
+        "score": 2.52,
+        "confidence": 0.58,
+        "expected_from_probabilities": 2.51,
+        "score_minus_expected": 0.01,
+        "max_probability": 0.5,
+        "probability_sum": 1.0
+      },
+      "maintenance_cost": {
+        "score": 2.69,
+        "confidence": 0.72,
+        "expected_from_probabilities": 2.7,
+        "score_minus_expected": -0.01,
+        "max_probability": 0.69,
+        "probability_sum": 1.0
+      }
+    },
+    "m3": {
+      "behavior_preservation": {
+        "score": 0.18,
+        "confidence": 0.85,
+        "expected_from_probabilities": 0.17,
+        "score_minus_expected": 0.01,
+        "max_probability": 0.84,
+        "probability_sum": 1.0
+      },
+      "implementation_simplicity": {
+        "score": 1.08,
+        "confidence": 0.74,
+        "expected_from_probabilities": 1.08,
+        "score_minus_expected": 0.0,
+        "max_probability": 0.72,
+        "probability_sum": 1.0
+      },
+      "ownership_failure_clarity": {
+        "score": 1.49,
+        "confidence": 0.56,
+        "expected_from_probabilities": 1.49,
+        "score_minus_expected": 0.0,
+        "max_probability": 0.5,
+        "probability_sum": 1.0
+      },
+      "build_distribution_simplicity": {
+        "score": 2.19,
+        "confidence": 0.6,
+        "expected_from_probabilities": 2.18,
+        "score_minus_expected": 0.01,
+        "max_probability": 0.56,
+        "probability_sum": 1.0
+      },
+      "testability_rollback": {
+        "score": 2.1,
+        "confidence": 0.71,
+        "expected_from_probabilities": 2.09,
+        "score_minus_expected": 0.01,
+        "max_probability": 0.67,
+        "probability_sum": 1.0
+      },
+      "maintenance_cost": {
+        "score": 2.13,
+        "confidence": 0.2,
+        "expected_from_probabilities": 2.13,
+        "score_minus_expected": 0.0,
+        "max_probability": 0.33,
+        "probability_sum": 1.0
+      }
+    }
+  },
+  "totals": {
+    "default": {
+      "m1": 64.763,
+      "m2": 59.438,
+      "m3": 32.763
+    },
+    "preservation_heavy": {
+      "m1": 66.675,
+      "m2": 58.975,
+      "m3": 28.212
+    },
+    "simplicity_heavy": {
+      "m1": 62.637,
+      "m2": 58.763,
+      "m3": 32.175
+    }
+  },
+  "sensitivity_one_weight_relative_20": {
+    "behavior_preservation_down20_relative": {
+      "m1": 64.632,
+      "m2": 59.539,
+      "m3": 34.25
+    },
+    "behavior_preservation_up20_relative": {
+      "m1": 64.881,
+      "m2": 59.345,
+      "m3": 31.417
+    },
+    "implementation_simplicity_down20_relative": {
+      "m1": 65.013,
+      "m2": 59.529,
+      "m3": 33.003
+    },
+    "implementation_simplicity_up20_relative": {
+      "m1": 64.531,
+      "m2": 59.353,
+      "m3": 32.541
+    },
+    "ownership_failure_clarity_down20_relative": {
+      "m1": 64.576,
+      "m2": 59.508,
+      "m3": 32.576
+    },
+    "ownership_failure_clarity_up20_relative": {
+      "m1": 64.935,
+      "m2": 59.373,
+      "m3": 32.935
+    },
+    "build_distribution_simplicity_down20_relative": {
+      "m1": 65.018,
+      "m2": 59.412,
+      "m3": 32.082
+    },
+    "build_distribution_simplicity_up20_relative": {
+      "m1": 64.522,
+      "m2": 59.461,
+      "m3": 33.403
+    },
+    "testability_rollback_down20_relative": {
+      "m1": 64.605,
+      "m2": 59.365,
+      "m3": 32.36
+    },
+    "testability_rollback_up20_relative": {
+      "m1": 64.914,
+      "m2": 59.507,
+      "m3": 33.15
+    },
+    "maintenance_cost_down20_relative": {
+      "m1": 64.732,
+      "m2": 59.278,
+      "m3": 32.344
+    },
+    "maintenance_cost_up20_relative": {
+      "m1": 64.792,
+      "m2": 59.591,
+      "m3": 33.164
+    }
+  },
+  "quality": {
+    "fairness": {
+      "score": 0.86,
+      "confidence": 0.28
+    },
+    "completeness": {
+      "score": 3.02,
+      "confidence": 0.7
+    },
+    "overengineering": {
+      "score": 3.34,
+      "confidence": 0.45
+    }
+  },
+  "weak_or_uncertain": [
+    {
+      "candidate": "m1",
+      "criterion": "implementation_simplicity",
+      "score": 2.35,
+      "confidence": 0.65,
+      "expected_from_probabilities": 2.35,
+      "score_minus_expected": 0.0,
+      "max_probability": 0.59,
+      "probability_sum": 1.0
+    },
+    {
+      "candidate": "m2",
+      "criterion": "build_distribution_simplicity",
+      "score": 2.41,
+      "confidence": 0.63,
+      "expected_from_probabilities": 2.42,
+      "score_minus_expected": -0.01,
+      "max_probability": 0.5700000000000001,
+      "probability_sum": 1.0
+    },
+    {
+      "candidate": "m2",
+      "criterion": "testability_rollback",
+      "score": 2.52,
+      "confidence": 0.58,
+      "expected_from_probabilities": 2.51,
+      "score_minus_expected": 0.01,
+      "max_probability": 0.5,
+      "probability_sum": 1.0
+    },
+    {
+      "candidate": "m3",
+      "criterion": "behavior_preservation",
+      "score": 0.18,
+      "confidence": 0.85,
+      "expected_from_probabilities": 0.17,
+      "score_minus_expected": 0.01,
+      "max_probability": 0.84,
+      "probability_sum": 1.0
+    },
+    {
+      "candidate": "m3",
+      "criterion": "implementation_simplicity",
+      "score": 1.08,
+      "confidence": 0.74,
+      "expected_from_probabilities": 1.08,
+      "score_minus_expected": 0.0,
+      "max_probability": 0.72,
+      "probability_sum": 1.0
+    },
+    {
+      "candidate": "m3",
+      "criterion": "ownership_failure_clarity",
+      "score": 1.49,
+      "confidence": 0.56,
+      "expected_from_probabilities": 1.49,
+      "score_minus_expected": 0.0,
+      "max_probability": 0.5,
+      "probability_sum": 1.0
+    },
+    {
+      "candidate": "m3",
+      "criterion": "build_distribution_simplicity",
+      "score": 2.19,
+      "confidence": 0.6,
+      "expected_from_probabilities": 2.18,
+      "score_minus_expected": 0.01,
+      "max_probability": 0.56,
+      "probability_sum": 1.0
+    },
+    {
+      "candidate": "m3",
+      "criterion": "maintenance_cost",
+      "score": 2.13,
+      "confidence": 0.2,
+      "expected_from_probabilities": 2.13,
+      "score_minus_expected": 0.0,
+      "max_probability": 0.33,
+      "probability_sum": 1.0
+    }
+  ],
+  "checks": [
+    {
+      "candidate": "m1",
+      "criterion": "behavior_preservation",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m1",
+      "criterion": "implementation_simplicity",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m1",
+      "criterion": "ownership_failure_clarity",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m1",
+      "criterion": "build_distribution_simplicity",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m1",
+      "criterion": "testability_rollback",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m1",
+      "criterion": "maintenance_cost",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m2",
+      "criterion": "behavior_preservation",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m2",
+      "criterion": "implementation_simplicity",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m2",
+      "criterion": "ownership_failure_clarity",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m2",
+      "criterion": "build_distribution_simplicity",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m2",
+      "criterion": "testability_rollback",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m2",
+      "criterion": "maintenance_cost",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m3",
+      "criterion": "behavior_preservation",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m3",
+      "criterion": "implementation_simplicity",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m3",
+      "criterion": "ownership_failure_clarity",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m3",
+      "criterion": "build_distribution_simplicity",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m3",
+      "criterion": "testability_rollback",
+      "score_rounding_within_tolerance": true
+    },
+    {
+      "candidate": "m3",
+      "criterion": "maintenance_cost",
+      "score_rounding_within_tolerance": true
+    }
+  ],
+  "score_tolerance": "0.03 because API score is rounded to two decimals and probabilities can sum with floating rounding"
+}

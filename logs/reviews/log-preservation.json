@@ -1,0 +1,75 @@
+{
+  "purpose": "Evidence for log relocation and collision handling.",
+  "records": [
+    {
+      "source": "keep-awake.err.log",
+      "destination": "logs/archive/root/keep-awake.err.log",
+      "source_length": 0,
+      "source_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "destination_exists": true,
+      "destination_length": 0,
+      "destination_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "bytes_match": true
+    },
+    {
+      "source": "keep-awake.monitor.log",
+      "destination": "logs/archive/root/keep-awake.monitor.log",
+      "source_length": 33020,
+      "source_sha256": "EF545459DF928790D387A14F55E97D1E4007B1AE7AB6A11743C789A2BE72BAE8",
+      "destination_exists": true,
+      "destination_length": 33020,
+      "destination_sha256": "EF545459DF928790D387A14F55E97D1E4007B1AE7AB6A11743C789A2BE72BAE8",
+      "bytes_match": true
+    },
+    {
+      "source": "keep-awake.out.log",
+      "destination": "logs/archive/root/keep-awake.out.log",
+      "source_length": 123,
+      "source_sha256": "7173761F0E1C5DE6F3FC5C600C6DB590FFA34D5E2B25136F96D248FF9AC5D7B6",
+      "destination_exists": true,
+      "destination_length": 123,
+      "destination_sha256": "7173761F0E1C5DE6F3FC5C600C6DB590FFA34D5E2B25136F96D248FF9AC5D7B6",
+      "bytes_match": true
+    },
+    {
+      "source": "monitor.err.log",
+      "destination": "logs/archive/root/monitor.err.log",
+      "source_length": 0,
+      "source_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "destination_exists": true,
+      "destination_length": 0,
+      "destination_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "bytes_match": true
+    },
+    {
+      "source": "monitor.out.log",
+      "destination": "logs/archive/root/monitor.out.log",
+      "source_length": 0,
+      "source_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "destination_exists": true,
+      "destination_length": 0,
+      "destination_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "bytes_match": true
+    },
+    {
+      "source": "local/stay-watch/keep-awake.monitor.log",
+      "destination": "logs/keep-awake.monitor.log",
+      "source_length": 71327,
+      "source_sha256": "8FA34B6086129E1EECC4C38B5AE23F71EA28E4E21512F73F08359A874A5FC92F",
+      "note": "The canonical log received new bounded-session records after the move.",
+      "destination_exists": true,
+      "destination_length": 72036,
+      "destination_sha256": "7E61C6D4CBCB2F8AA5D516B4B0CD673DC9E53FA40B53DB39B6BBBDA093D5B761",
+      "prefix_length": 71327,
+      "prefix_sha256": "8FA34B6086129E1EECC4C38B5AE23F71EA28E4E21512F73F08359A874A5FC92F",
+      "prefix_bytes_match": true
+    }
+  ],
+  "local_log_collision": {
+    "root_log_archived": "logs/archive/root/keep-awake.monitor.log",
+    "former_local_log_promoted": "logs/keep-awake.monitor.log",
+    "merge_performed": false,
+    "overwrite_performed": false,
+    "prefix_verification": "The first 71327 destination bytes match the former local source hash."
+  }
+}

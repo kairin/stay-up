@@ -1,0 +1,57 @@
+{
+  "http_status": 200,
+  "response": {
+    "model": "jev-1.13.0",
+    "answers": {
+      "maintainability": {
+        "type": "score",
+        "score": 1.48,
+        "confidence": 0.23,
+        "legend": {
+          "0": "0: Mixed purposes or stale consumers remain.",
+          "1": "1: The layout is usable but has a clear maintainability gap.",
+          "2": "2: Each purpose has one clear home and current consumers use the documented paths."
+        },
+        "probabilities": {
+          "0": 0.06,
+          "1": 0.4,
+          "2": 0.54
+        }
+      },
+      "evidence_completeness": {
+        "type": "score",
+        "score": 1.55,
+        "confidence": 0.33,
+        "legend": {
+          "0": "0: Evidence hides failures or claims unsupported behavior.",
+          "1": "1: Evidence records the main results but leaves a clear classification gap.",
+          "2": "2: Evidence records results, limits, commands, and open behavior without unsupported claims."
+        },
+        "probabilities": {
+          "0": 0.02,
+          "1": 0.4,
+          "2": 0.58
+        }
+      },
+      "ste_wording": {
+        "type": "score",
+        "score": 1.27,
+        "confidence": 0.47,
+        "legend": {
+          "0": "0: The wording is ambiguous or makes unsupported claims.",
+          "1": "1: The wording is mostly clear but has minor style or naming issues.",
+          "2": "2: The wording is concise, direct, consistent, and states limits clearly."
+        },
+        "probabilities": {
+          "0": 0.04,
+          "1": 0.65,
+          "2": 0.31
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 1210,
+      "output_tokens": 55
+    }
+  }
+}

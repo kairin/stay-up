@@ -1,0 +1,53 @@
+{
+  "round": 2,
+  "actions": [
+    {
+      "weakness": "R2 fairness score 0.86/confidence 0.28",
+      "minimal_action": "Keep common fields and criterion-specific anchors; require a human comparison before using rank.",
+      "acceptance_evidence": "round2-matrix.json shows equal fields and separate quality questions; parent review records whether any asymmetry remains.",
+      "owner_role": "architecture reviewer",
+      "decision_effect": "Do not run R3 unless a material ordering decision depends on unresolved asymmetry.",
+      "residual_risk": "A semantic model can still judge inherently different topologies unevenly."
+    },
+    {
+      "weakness": "R2 M1 implementation simplicity 2.35 with diffuse probability",
+      "minimal_action": "Share power and monitor modules across the two native binaries and port one helper slice at a time.",
+      "acceptance_evidence": "Native helper and monitor tests plus rollback to the prior accepted slice.",
+      "owner_role": "runtime implementer",
+      "decision_effect": "M1 remains the default staged route without adding a framework.",
+      "residual_risk": "Three artifacts still require same-release build wiring."
+    },
+    {
+      "weakness": "R2 M2 testability 2.52/confidence 0.58 and unresolved GUI/console behavior",
+      "minimal_action": "Make the console-subsystem route an explicit design decision and test direct UI, hidden owned modes, and manual helper control handling before selecting M2.",
+      "acceptance_evidence": "Native launcher and manual helper checks with no changed UI or log contract.",
+      "owner_role": "launcher and Windows-runtime reviewer",
+      "decision_effect": "Defer M2 unless it removes a material maintenance cost without reducing parity.",
+      "residual_risk": "Windows subsystem behavior remains untested."
+    },
+    {
+      "weakness": "R2 M3 behavior 0.18; testability and rollback 2.10/confidence 0.71",
+      "minimal_action": "Keep M3 conditional and do not select it while separate process observation and pane meaning are required.",
+      "acceptance_evidence": "A product-scope decision explicitly accepts changed observation and cleanup semantics, followed by new tests.",
+      "owner_role": "product owner",
+      "decision_effect": "M3 is ineligible for the current endpoint.",
+      "residual_risk": "In-process cancellation and panic ownership remain open."
+    },
+    {
+      "weakness": "Maintained tooling endpoint includes Hermes CLI boundary",
+      "minimal_action": "Port owned Python sources or record explicit retire/archive decisions; inspect Hermes implementation ownership before claiming a Python-free developer workflow.",
+      "acceptance_evidence": "Tool inventory decision ledger and Rust/retirement acceptance records.",
+      "owner_role": "tooling owner",
+      "decision_effect": "No claim that the whole developer workflow is Python-free until Hermes is resolved.",
+      "residual_risk": "External CLI may remain outside repository control."
+    },
+    {
+      "weakness": "Native implementation acceptance is unrun",
+      "minimal_action": "Use staged helper, monitor, launcher, and tool tests with rollback after each accepted slice.",
+      "acceptance_evidence": "Future runtime and tooling test records; this planning record makes no runtime pass claim.",
+      "owner_role": "implementation reviewer",
+      "decision_effect": "Scores remain plan fitness only and cannot clear gates.",
+      "residual_risk": "Win32 behavior may differ from the plan."
+    }
+  ]
+}

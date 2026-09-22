@@ -1,0 +1,41 @@
+{
+  "commit": "d459cbfd6cad7fae0bd3219874f1e3d0de1cd46d",
+  "scope": "final documentation and Round Three artifacts",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "c97706584ddefcefd13f2e4012b3b6e9779f8ffa0938bf75b9c4f24b33e27faa",
+      "bytes": 7778
+    },
+    {
+      "path": "docs/rust-only-migration-review.md",
+      "sha256": "82cb4a0e8e648e1ffbaecfe67cadadb5ebbb5f7fcb371a57d9e4b741f722d165",
+      "bytes": 26684
+    },
+    {
+      "path": "research/rust-migration/round3-matrix.json",
+      "sha256": "c0826156c1132d16ce82729f1d906ce5adc510010d50e4d8cd6b8a4430eaaafd",
+      "bytes": 24638
+    },
+    {
+      "path": "research/rust-migration/round3-request.json",
+      "sha256": "498cb8c31a301f5cf27d59b32652687e2015b1e94bb0edc8c7061bfad4090208",
+      "bytes": 147626
+    },
+    {
+      "path": "research/rust-migration/round3-response.json",
+      "sha256": "16eaddb561ff62a280dc54d4dd9d25fabc7d349f577f2dd4f2ba45217b74abd2",
+      "bytes": 13888
+    },
+    {
+      "path": "research/rust-migration/round3-analysis.json",
+      "sha256": "b38d68e01a2cf5e23d7e191c0e129cd6db2c6d4eb44a8ef6d24d01f73731ad87",
+      "bytes": 14745
+    },
+    {
+      "path": "research/rust-migration/round3-action-ledger.json",
+      "sha256": "dab938cc29aa2d9000a8eaf11ab3e6b8effdec939a184a7dc45f21f4494497f5",
+      "bytes": 5292
+    }
+  ]
+}

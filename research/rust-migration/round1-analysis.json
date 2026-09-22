@@ -1,0 +1,475 @@
+{
+  "round": 1,
+  "criteria_order": [
+    "behavior_preservation",
+    "implementation_simplicity",
+    "ownership_failure_clarity",
+    "build_distribution_simplicity",
+    "testability_rollback",
+    "maintenance_cost"
+  ],
+  "weights": {
+    "behavior_preservation": 25,
+    "implementation_simplicity": 20,
+    "ownership_failure_clarity": 20,
+    "build_distribution_simplicity": 15,
+    "testability_rollback": 10,
+    "maintenance_cost": 10
+  },
+  "profile_weights": {
+    "default": {
+      "behavior_preservation": 25,
+      "implementation_simplicity": 20,
+      "ownership_failure_clarity": 20,
+      "build_distribution_simplicity": 15,
+      "testability_rollback": 10,
+      "maintenance_cost": 10
+    },
+    "preservation_heavy": {
+      "behavior_preservation": 35,
+      "implementation_simplicity": 15,
+      "ownership_failure_clarity": 25,
+      "build_distribution_simplicity": 5,
+      "testability_rollback": 15,
+      "maintenance_cost": 5
+    },
+    "simplicity_heavy": {
+      "behavior_preservation": 20,
+      "implementation_simplicity": 35,
+      "ownership_failure_clarity": 15,
+      "build_distribution_simplicity": 20,
+      "testability_rollback": 5,
+      "maintenance_cost": 5
+    }
+  },
+  "rows": {
+    "m1": {
+      "behavior_preservation": {
+        "score": 2.93,
+        "confidence": 0.84,
+        "expected_from_probabilities": 2.93,
+        "min_probability": 0.0,
+        "max_probability": 0.83
+      },
+      "implementation_simplicity": {
+        "score": 2.3,
+        "confidence": 0.58,
+        "expected_from_probabilities": 2.31,
+        "min_probability": 0.0,
+        "max_probability": 0.5
+      },
+      "ownership_failure_clarity": {
+        "score": 3.03,
+        "confidence": 0.8,
+        "expected_from_probabilities": 3.03,
+        "min_probability": 0.0,
+        "max_probability": 0.76
+      },
+      "build_distribution_simplicity": {
+        "score": 2.73,
+        "confidence": 0.74,
+        "expected_from_probabilities": 2.74,
+        "min_probability": 0.0,
+        "max_probability": 0.71
+      },
+      "testability_rollback": {
+        "score": 3.29,
+        "confidence": 0.72,
+        "expected_from_probabilities": 3.3,
+        "min_probability": 0.0,
+        "max_probability": 0.66
+      },
+      "maintenance_cost": {
+        "score": 2.47,
+        "confidence": 0.54,
+        "expected_from_probabilities": 2.48,
+        "min_probability": 0.0,
+        "max_probability": 0.52
+      }
+    },
+    "m2": {
+      "behavior_preservation": {
+        "score": 2.12,
+        "confidence": 0.79,
+        "expected_from_probabilities": 2.12,
+        "min_probability": 0.0,
+        "max_probability": 0.78
+      },
+      "implementation_simplicity": {
+        "score": 1.76,
+        "confidence": 0.61,
+        "expected_from_probabilities": 1.76,
+        "min_probability": 0.0,
+        "max_probability": 0.54
+      },
+      "ownership_failure_clarity": {
+        "score": 1.93,
+        "confidence": 0.68,
+        "expected_from_probabilities": 1.92,
+        "min_probability": 0.01,
+        "max_probability": 0.63
+      },
+      "build_distribution_simplicity": {
+        "score": 2.58,
+        "confidence": 0.61,
+        "expected_from_probabilities": 2.59,
+        "min_probability": 0.0,
+        "max_probability": 0.56
+      },
+      "testability_rollback": {
+        "score": 2.17,
+        "confidence": 0.68,
+        "expected_from_probabilities": 2.19,
+        "min_probability": 0.0,
+        "max_probability": 0.62
+      },
+      "maintenance_cost": {
+        "score": 2.34,
+        "confidence": 0.54,
+        "expected_from_probabilities": 2.34,
+        "min_probability": 0.0,
+        "max_probability": 0.47000000000000003
+      }
+    },
+    "m3": {
+      "behavior_preservation": {
+        "score": 0.1,
+        "confidence": 0.92,
+        "expected_from_probabilities": 0.09,
+        "min_probability": 0.0,
+        "max_probability": 0.93
+      },
+      "implementation_simplicity": {
+        "score": 1.07,
+        "confidence": 0.64,
+        "expected_from_probabilities": 1.07,
+        "min_probability": 0.02,
+        "max_probability": 0.65
+      },
+      "ownership_failure_clarity": {
+        "score": 1.15,
+        "confidence": 0.58,
+        "expected_from_probabilities": 1.14,
+        "min_probability": 0.01,
+        "max_probability": 0.55
+      },
+      "build_distribution_simplicity": {
+        "score": 2.38,
+        "confidence": 0.17,
+        "expected_from_probabilities": 2.38,
+        "min_probability": 0.09,
+        "max_probability": 0.33
+      },
+      "testability_rollback": {
+        "score": 0.62,
+        "confidence": 0.58,
+        "expected_from_probabilities": 0.63,
+        "min_probability": 0.0,
+        "max_probability": 0.51
+      },
+      "maintenance_cost": {
+        "score": 2.07,
+        "confidence": 0.03,
+        "expected_from_probabilities": 2.06,
+        "min_probability": 0.05,
+        "max_probability": 0.36
+      }
+    }
+  },
+  "totals": {
+    "default": {
+      "m1": 69.6,
+      "m2": 52.65,
+      "m3": 27.375
+    },
+    "preservation_heavy": {
+      "m1": 72.038,
+      "m2": 51.5,
+      "m3": 19.962
+    },
+    "simplicity_heavy": {
+      "m1": 66.987,
+      "m2": 51.775,
+      "m3": 29.438
+    }
+  },
+  "sensitivity_one_weight_relative_20": {
+    "behavior_preservation_down20_relative": {
+      "m1": 69.408,
+      "m2": 52.632,
+      "m3": 28.684
+    },
+    "behavior_preservation_up20_relative": {
+      "m1": 69.774,
+      "m2": 52.667,
+      "m3": 26.19
+    },
+    "implementation_simplicity_down20_relative": {
+      "m1": 70.104,
+      "m2": 53.01,
+      "m3": 27.401
+    },
+    "implementation_simplicity_up20_relative": {
+      "m1": 69.135,
+      "m2": 52.317,
+      "m3": 27.351
+    },
+    "ownership_failure_clarity_down20_relative": {
+      "m1": 69.344,
+      "m2": 52.833,
+      "m3": 27.318
+    },
+    "ownership_failure_clarity_up20_relative": {
+      "m1": 69.837,
+      "m2": 52.481,
+      "m3": 27.428
+    },
+    "build_distribution_simplicity_down20_relative": {
+      "m1": 69.642,
+      "m2": 52.284,
+      "m3": 26.381
+    },
+    "build_distribution_simplicity_up20_relative": {
+      "m1": 69.561,
+      "m2": 52.995,
+      "m3": 28.311
+    },
+    "testability_rollback_down20_relative": {
+      "m1": 69.342,
+      "m2": 52.617,
+      "m3": 27.617
+    },
+    "testability_rollback_up20_relative": {
+      "m1": 69.848,
+      "m2": 52.681,
+      "m3": 27.142
+    },
+    "maintenance_cost_down20_relative": {
+      "m1": 69.76,
+      "m2": 52.531,
+      "m3": 26.878
+    },
+    "maintenance_cost_up20_relative": {
+      "m1": 69.446,
+      "m2": 52.765,
+      "m3": 27.853
+    }
+  },
+  "weak_or_uncertain": [
+    {
+      "candidate": "m1",
+      "criterion": "implementation_simplicity",
+      "score": 2.3,
+      "confidence": 0.58,
+      "expected_from_probabilities": 2.31,
+      "min_probability": 0.0,
+      "max_probability": 0.5
+    },
+    {
+      "candidate": "m1",
+      "criterion": "maintenance_cost",
+      "score": 2.47,
+      "confidence": 0.54,
+      "expected_from_probabilities": 2.48,
+      "min_probability": 0.0,
+      "max_probability": 0.52
+    },
+    {
+      "candidate": "m2",
+      "criterion": "implementation_simplicity",
+      "score": 1.76,
+      "confidence": 0.61,
+      "expected_from_probabilities": 1.76,
+      "min_probability": 0.0,
+      "max_probability": 0.54
+    },
+    {
+      "candidate": "m2",
+      "criterion": "ownership_failure_clarity",
+      "score": 1.93,
+      "confidence": 0.68,
+      "expected_from_probabilities": 1.92,
+      "min_probability": 0.01,
+      "max_probability": 0.63
+    },
+    {
+      "candidate": "m2",
+      "criterion": "build_distribution_simplicity",
+      "score": 2.58,
+      "confidence": 0.61,
+      "expected_from_probabilities": 2.59,
+      "min_probability": 0.0,
+      "max_probability": 0.56
+    },
+    {
+      "candidate": "m2",
+      "criterion": "maintenance_cost",
+      "score": 2.34,
+      "confidence": 0.54,
+      "expected_from_probabilities": 2.34,
+      "min_probability": 0.0,
+      "max_probability": 0.47000000000000003
+    },
+    {
+      "candidate": "m3",
+      "criterion": "behavior_preservation",
+      "score": 0.1,
+      "confidence": 0.92,
+      "expected_from_probabilities": 0.09,
+      "min_probability": 0.0,
+      "max_probability": 0.93
+    },
+    {
+      "candidate": "m3",
+      "criterion": "implementation_simplicity",
+      "score": 1.07,
+      "confidence": 0.64,
+      "expected_from_probabilities": 1.07,
+      "min_probability": 0.02,
+      "max_probability": 0.65
+    },
+    {
+      "candidate": "m3",
+      "criterion": "ownership_failure_clarity",
+      "score": 1.15,
+      "confidence": 0.58,
+      "expected_from_probabilities": 1.14,
+      "min_probability": 0.01,
+      "max_probability": 0.55
+    },
+    {
+      "candidate": "m3",
+      "criterion": "build_distribution_simplicity",
+      "score": 2.38,
+      "confidence": 0.17,
+      "expected_from_probabilities": 2.38,
+      "min_probability": 0.09,
+      "max_probability": 0.33
+    },
+    {
+      "candidate": "m3",
+      "criterion": "testability_rollback",
+      "score": 0.62,
+      "confidence": 0.58,
+      "expected_from_probabilities": 0.63,
+      "min_probability": 0.0,
+      "max_probability": 0.51
+    },
+    {
+      "candidate": "m3",
+      "criterion": "maintenance_cost",
+      "score": 2.07,
+      "confidence": 0.03,
+      "expected_from_probabilities": 2.06,
+      "min_probability": 0.05,
+      "max_probability": 0.36
+    }
+  ],
+  "checks": [
+    {
+      "candidate": "m1",
+      "criterion": "behavior_preservation",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m1",
+      "criterion": "implementation_simplicity",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m1",
+      "criterion": "ownership_failure_clarity",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m1",
+      "criterion": "build_distribution_simplicity",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m1",
+      "criterion": "testability_rollback",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m1",
+      "criterion": "maintenance_cost",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m2",
+      "criterion": "behavior_preservation",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m2",
+      "criterion": "implementation_simplicity",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m2",
+      "criterion": "ownership_failure_clarity",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m2",
+      "criterion": "build_distribution_simplicity",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m2",
+      "criterion": "testability_rollback",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m2",
+      "criterion": "maintenance_cost",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m3",
+      "criterion": "behavior_preservation",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m3",
+      "criterion": "implementation_simplicity",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m3",
+      "criterion": "ownership_failure_clarity",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m3",
+      "criterion": "build_distribution_simplicity",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m3",
+      "criterion": "testability_rollback",
+      "score_matches_probabilities": true
+    },
+    {
+      "candidate": "m3",
+      "criterion": "maintenance_cost",
+      "score_matches_probabilities": true
+    }
+  ],
+  "quality": {
+    "fairness": {
+      "score": 2.62,
+      "confidence": 0.52
+    },
+    "completeness": {
+      "score": 2.25,
+      "confidence": 0.47
+    },
+    "overengineering": {
+      "score": 2.59,
+      "confidence": 0.48
+    }
+  },
+  "quality_note": "Round One quality questions used broad shared anchors; Round Two replaced them with criterion-specific quality anchors."
+}

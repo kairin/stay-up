@@ -1,0 +1,16 @@
+{
+  "round": 2,
+  "utc": "2026-09-21T23:07:16.494331+00:00",
+  "model": "jev-1.13.0",
+  "usage": {
+    "input_tokens": 38852,
+    "output_tokens": 412
+  },
+  "question_count": 21,
+  "endpoint": "https://api.typesafe.ai/v1/systemone",
+  "request_sha256": "4db61cb3f952522b4632551b047ba6337e0c314d5ccf7505a0cdd2a972f5a086",
+  "response_sha256": "81f7af4f2da9d2a073534093d087b735375bcdc335c8e20ed02bda2e0740b11d",
+  "key_present": true,
+  "round1_model_alias": "jev-latest resolved jev-1.13.0",
+  "round1_artifacts_immutable": true
+}

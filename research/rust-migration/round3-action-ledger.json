@@ -1,0 +1,96 @@
+{
+  "round": 3,
+  "actions": [
+    {
+      "id": "fairness-quality",
+      "weakness": "R3 fairness 2.17, confidence 0.10",
+      "minimal_action": "Keep common fields and criterion-specific anchors. Require human comparison before ranking.",
+      "acceptance_evidence": "Parent review of the full v3 matrix and tool dispositions.",
+      "owner_role": "architecture reviewer",
+      "decision_effect": "No fourth model round; reopen only with changed evidence or requirements.",
+      "residual_risk": "Semantic comparison can remain uneven."
+    },
+    {
+      "id": "m1-build",
+      "weakness": "M1 build and distribution 1.91",
+      "minimal_action": "Use one documented external Cargo build of the native launcher in approved AppData, then runtime-only repeated --bin builds. Cache and lock dependencies before offline acceptance.",
+      "acceptance_evidence": "Future locked offline build records with sibling outputs and approved paths.",
+      "owner_role": "runtime implementer",
+      "decision_effect": "Keep M1 provisional without installer or updater machinery.",
+      "residual_risk": "Same-release sibling wiring and cache choices can fail."
+    },
+    {
+      "id": "m1-testability",
+      "weakness": "M1 testability and rollback confidence 0.43",
+      "minimal_action": "Port one helper slice at a time and retain rollback to the previous accepted slice.",
+      "acceptance_evidence": "Native helper, monitor, launcher, and tool tests with dated rollback records.",
+      "owner_role": "runtime reviewer",
+      "decision_effect": "No broad rewrite.",
+      "residual_risk": "Native Win32 behavior remains unknown."
+    },
+    {
+      "id": "m1-maintenance",
+      "weakness": "M1 maintenance confidence 0.40",
+      "minimal_action": "Share power and monitor modules and keep tooling ports in a separate phase.",
+      "acceptance_evidence": "Rust tool ports or explicit retire/archive records.",
+      "owner_role": "tooling owner",
+      "decision_effect": "No new general framework.",
+      "residual_risk": "The endpoint still contains many tool ports."
+    },
+    {
+      "id": "m1-m2-ownership",
+      "weakness": "Shared ownership score 2.79, confidence 0.55",
+      "minimal_action": "Use the same parent-owned handles, monitor handle, helper handle, partial cleanup, Stop order, and UI-crash gap in both plans.",
+      "acceptance_evidence": "Future code review and lifecycle tests compare both paths.",
+      "owner_role": "runtime reviewer",
+      "decision_effect": "Do not use packaging to claim different ownership behavior.",
+      "residual_risk": "Equivalent plans can still differ in implementation details."
+    },
+    {
+      "id": "m2-build",
+      "weakness": "M2 build and distribution 1.82",
+      "minimal_action": "Decide the console-subsystem route and native bootstrap before selecting M2.",
+      "acceptance_evidence": "Direct UI, hidden modes, manual helper, and launcher checks.",
+      "owner_role": "Windows-runtime reviewer",
+      "decision_effect": "M2 remains credible but deferred.",
+      "residual_risk": "Direct invocation may differ."
+    },
+    {
+      "id": "m3-gate",
+      "weakness": "M3 behavior 0.11 and gate conflict",
+      "minimal_action": "Keep M3 conditional while external observation and current pane meaning remain required.",
+      "acceptance_evidence": "Product scope decision plus new cancellation, panic, and pane tests.",
+      "owner_role": "product owner",
+      "decision_effect": "Do not select M3 now.",
+      "residual_risk": "In-process cancellation and panic ownership remain open."
+    },
+    {
+      "id": "tooling-hermes",
+      "weakness": "Hermes implementation and ownership boundary unknown",
+      "minimal_action": "Port owned task-ranker sources to a small Rust tool crate proposal and inspect Hermes ownership before claiming a Python-free workflow.",
+      "acceptance_evidence": "Tool decision ledger and Hermes evidence.",
+      "owner_role": "tooling owner",
+      "decision_effect": "No claim that the whole developer workflow is Python-free.",
+      "residual_risk": "An external CLI may remain outside repository control."
+    },
+    {
+      "id": "stop-log",
+      "weakness": "Stop kills monitor before helper and does not guarantee STOPPED",
+      "minimal_action": "Preserve the order and test the actual log outcomes. Treat monitor output as process liveness only.",
+      "acceptance_evidence": "Future Stop, heartbeat, and cleanup records.",
+      "owner_role": "runtime reviewer",
+      "decision_effect": "Do not promise a final STOPPED record.",
+      "residual_risk": "Forced kill can skip child cleanup."
+    },
+    {
+      "id": "native-acceptance",
+      "weakness": "All native implementation and tool-port acceptance is unrun",
+      "minimal_action": "Run future helper, monitor, launcher, and tool tests only after implementation, with no new capture work.",
+      "acceptance_evidence": "Dated test records and final source hashes.",
+      "owner_role": "implementation reviewer",
+      "decision_effect": "Scores remain planning estimates only.",
+      "residual_risk": "Windows behavior may differ from the plan."
+    }
+  ],
+  "r3_raw_api_immutable": true
+}

@@ -1,0 +1,1072 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "round": 1,
+    "facts": {
+      "endpoint": "Python-free application and launcher",
+      "baseline": "The current Python helper and Python launcher baseline is a hold and rollback comparator, not a Python-free candidate.",
+      "current_contracts": [
+        "Preserve accepted visible panes and layout.",
+        "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+        "Do not change Windows policy, power settings, capture scope, or approved output locations."
+      ],
+      "known_source_facts": [
+        "src/main.rs starts two Python children and waits for a helper PID handshake.",
+        "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+        "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+        "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+        "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+      ],
+      "open_evidence": [
+        "Native Win32 FFI versus scoped windows-sys bindings.",
+        "Native helper console control handling and cleanup error reporting.",
+        "Native launcher first-build or prebuilt distribution.",
+        "M2 GUI subsystem versus helper console/control-handler behavior.",
+        "M3 loss of external process observation and changed cleanup semantics."
+      ]
+    },
+    "candidates": {
+      "M1": {
+        "name": "Separate native helper and monitor binaries",
+        "design": "Rust UI starts native keep-awake and monitor-helper binaries. A native launcher builds stay-watch plus both helpers. The process boundaries remain separate. Migration is staged from the current Python helpers."
+      },
+      "M2": {
+        "name": "One Rust binary with explicit modes",
+        "design": "One Rust runtime binary serves UI, helper, and monitor modes, still as three processes. A native launcher builds the same binary. The GUI subsystem setting, helper console behavior, Ctrl+C handling, and control-handler path require a decision."
+      },
+      "M3": {
+        "name": "One Rust process with internal modules",
+        "design": "One Rust process owns the UI, power request, and monitor modules. A native launcher starts it. It loses external process observation and changes process, pane, and cleanup semantics. This is conditional on accepting that scope change."
+      }
+    },
+    "weights": {
+      "behavior_preservation": 25,
+      "implementation_simplicity": 20,
+      "ownership_failure_clarity": 20,
+      "build_distribution_simplicity": 15,
+      "testability_rollback": 10,
+      "maintenance_cost": 10
+    },
+    "anchors": {
+      "behavior_preservation": [
+        "0: breaks one or more accepted visible, manual, heartbeat, Stop, path, or policy gates.",
+        "1: preserves only a small part of the known behavior and leaves major contract gaps.",
+        "2: preserves several known contracts but leaves material behavior or rollback gaps.",
+        "3: preserves the known contracts with bounded, testable gaps and a rollback path.",
+        "4: preserves all stated contracts with an explicit rollback path and no new unbounded behavior."
+      ],
+      "implementation_simplicity": [
+        "0: requires a broad redesign with new frameworks or many unrelated moving parts.",
+        "1: requires several new subsystems and difficult coordination across them.",
+        "2: requires a moderate number of focused changes with some new coordination.",
+        "3: requires focused changes with familiar components and bounded coordination.",
+        "4: requires the smallest coherent change set for the endpoint."
+      ],
+      "ownership_failure_clarity": [
+        "0: makes ownership ambiguous and leaves common failure paths without a clear owner.",
+        "1: clarifies few failure paths and introduces substantial lifecycle ambiguity.",
+        "2: gives partial ownership clarity but leaves material crash or PID risks.",
+        "3: gives clear ownership for ordinary failures with bounded hardening work.",
+        "4: gives clear ownership, failure boundaries, and cleanup responsibilities."
+      ],
+      "build_distribution_simplicity": [
+        "0: needs a fragile bootstrap, broad dependency set, or incompatible output paths.",
+        "1: has major bootstrap or dependency distribution risk.",
+        "2: has a workable build with several unresolved bootstrap or cache decisions.",
+        "3: uses the approved paths and a bounded build sequence with minor decisions left.",
+        "4: uses a simple reproducible build and distribution sequence under approved paths."
+      ],
+      "testability_rollback": [
+        "0: cannot isolate regressions or restore the accepted baseline.",
+        "1: needs broad new tests before any useful rollback is possible.",
+        "2: supports partial isolation and rollback with material untested areas.",
+        "3: supports staged tests, evidence, and rollback for known contracts.",
+        "4: supports small staged tests, direct comparison, and a clear rollback at each step."
+      ],
+      "maintenance_cost": [
+        "0: creates high long-term duplication or a new framework burden.",
+        "1: creates substantial maintenance burden across runtime and tooling.",
+        "2: has moderate ongoing burden and some duplicated contracts.",
+        "3: keeps maintenance bounded with limited duplication.",
+        "4: minimizes ongoing code, dependency, and contract maintenance."
+      ]
+    }
+  },
+  "questions": {
+    "m1_behavior_preservation": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M1 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "Separate native helper and monitor binaries",
+          "design": "Rust UI starts native keep-awake and monitor-helper binaries. A native launcher builds stay-watch plus both helpers. The process boundaries remain separate. Migration is staged from the current Python helpers."
+        },
+        "criterion": "behavior_preservation",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: breaks one or more accepted visible, manual, heartbeat, Stop, path, or policy gates.",
+        "1: preserves only a small part of the known behavior and leaves major contract gaps.",
+        "2: preserves several known contracts but leaves material behavior or rollback gaps.",
+        "3: preserves the known contracts with bounded, testable gaps and a rollback path.",
+        "4: preserves all stated contracts with an explicit rollback path and no new unbounded behavior."
+      ]
+    },
+    "m1_implementation_simplicity": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M1 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "Separate native helper and monitor binaries",
+          "design": "Rust UI starts native keep-awake and monitor-helper binaries. A native launcher builds stay-watch plus both helpers. The process boundaries remain separate. Migration is staged from the current Python helpers."
+        },
+        "criterion": "implementation_simplicity",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: requires a broad redesign with new frameworks or many unrelated moving parts.",
+        "1: requires several new subsystems and difficult coordination across them.",
+        "2: requires a moderate number of focused changes with some new coordination.",
+        "3: requires focused changes with familiar components and bounded coordination.",
+        "4: requires the smallest coherent change set for the endpoint."
+      ]
+    },
+    "m1_ownership_failure_clarity": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M1 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "Separate native helper and monitor binaries",
+          "design": "Rust UI starts native keep-awake and monitor-helper binaries. A native launcher builds stay-watch plus both helpers. The process boundaries remain separate. Migration is staged from the current Python helpers."
+        },
+        "criterion": "ownership_failure_clarity",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: makes ownership ambiguous and leaves common failure paths without a clear owner.",
+        "1: clarifies few failure paths and introduces substantial lifecycle ambiguity.",
+        "2: gives partial ownership clarity but leaves material crash or PID risks.",
+        "3: gives clear ownership for ordinary failures with bounded hardening work.",
+        "4: gives clear ownership, failure boundaries, and cleanup responsibilities."
+      ]
+    },
+    "m1_build_distribution_simplicity": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M1 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "Separate native helper and monitor binaries",
+          "design": "Rust UI starts native keep-awake and monitor-helper binaries. A native launcher builds stay-watch plus both helpers. The process boundaries remain separate. Migration is staged from the current Python helpers."
+        },
+        "criterion": "build_distribution_simplicity",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: needs a fragile bootstrap, broad dependency set, or incompatible output paths.",
+        "1: has major bootstrap or dependency distribution risk.",
+        "2: has a workable build with several unresolved bootstrap or cache decisions.",
+        "3: uses the approved paths and a bounded build sequence with minor decisions left.",
+        "4: uses a simple reproducible build and distribution sequence under approved paths."
+      ]
+    },
+    "m1_testability_rollback": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M1 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "Separate native helper and monitor binaries",
+          "design": "Rust UI starts native keep-awake and monitor-helper binaries. A native launcher builds stay-watch plus both helpers. The process boundaries remain separate. Migration is staged from the current Python helpers."
+        },
+        "criterion": "testability_rollback",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: cannot isolate regressions or restore the accepted baseline.",
+        "1: needs broad new tests before any useful rollback is possible.",
+        "2: supports partial isolation and rollback with material untested areas.",
+        "3: supports staged tests, evidence, and rollback for known contracts.",
+        "4: supports small staged tests, direct comparison, and a clear rollback at each step."
+      ]
+    },
+    "m1_maintenance_cost": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M1 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "Separate native helper and monitor binaries",
+          "design": "Rust UI starts native keep-awake and monitor-helper binaries. A native launcher builds stay-watch plus both helpers. The process boundaries remain separate. Migration is staged from the current Python helpers."
+        },
+        "criterion": "maintenance_cost",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: creates high long-term duplication or a new framework burden.",
+        "1: creates substantial maintenance burden across runtime and tooling.",
+        "2: has moderate ongoing burden and some duplicated contracts.",
+        "3: keeps maintenance bounded with limited duplication.",
+        "4: minimizes ongoing code, dependency, and contract maintenance."
+      ]
+    },
+    "m2_behavior_preservation": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M2 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "One Rust binary with explicit modes",
+          "design": "One Rust runtime binary serves UI, helper, and monitor modes, still as three processes. A native launcher builds the same binary. The GUI subsystem setting, helper console behavior, Ctrl+C handling, and control-handler path require a decision."
+        },
+        "criterion": "behavior_preservation",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: breaks one or more accepted visible, manual, heartbeat, Stop, path, or policy gates.",
+        "1: preserves only a small part of the known behavior and leaves major contract gaps.",
+        "2: preserves several known contracts but leaves material behavior or rollback gaps.",
+        "3: preserves the known contracts with bounded, testable gaps and a rollback path.",
+        "4: preserves all stated contracts with an explicit rollback path and no new unbounded behavior."
+      ]
+    },
+    "m2_implementation_simplicity": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M2 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "One Rust binary with explicit modes",
+          "design": "One Rust runtime binary serves UI, helper, and monitor modes, still as three processes. A native launcher builds the same binary. The GUI subsystem setting, helper console behavior, Ctrl+C handling, and control-handler path require a decision."
+        },
+        "criterion": "implementation_simplicity",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: requires a broad redesign with new frameworks or many unrelated moving parts.",
+        "1: requires several new subsystems and difficult coordination across them.",
+        "2: requires a moderate number of focused changes with some new coordination.",
+        "3: requires focused changes with familiar components and bounded coordination.",
+        "4: requires the smallest coherent change set for the endpoint."
+      ]
+    },
+    "m2_ownership_failure_clarity": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M2 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "One Rust binary with explicit modes",
+          "design": "One Rust runtime binary serves UI, helper, and monitor modes, still as three processes. A native launcher builds the same binary. The GUI subsystem setting, helper console behavior, Ctrl+C handling, and control-handler path require a decision."
+        },
+        "criterion": "ownership_failure_clarity",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: makes ownership ambiguous and leaves common failure paths without a clear owner.",
+        "1: clarifies few failure paths and introduces substantial lifecycle ambiguity.",
+        "2: gives partial ownership clarity but leaves material crash or PID risks.",
+        "3: gives clear ownership for ordinary failures with bounded hardening work.",
+        "4: gives clear ownership, failure boundaries, and cleanup responsibilities."
+      ]
+    },
+    "m2_build_distribution_simplicity": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M2 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "One Rust binary with explicit modes",
+          "design": "One Rust runtime binary serves UI, helper, and monitor modes, still as three processes. A native launcher builds the same binary. The GUI subsystem setting, helper console behavior, Ctrl+C handling, and control-handler path require a decision."
+        },
+        "criterion": "build_distribution_simplicity",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: needs a fragile bootstrap, broad dependency set, or incompatible output paths.",
+        "1: has major bootstrap or dependency distribution risk.",
+        "2: has a workable build with several unresolved bootstrap or cache decisions.",
+        "3: uses the approved paths and a bounded build sequence with minor decisions left.",
+        "4: uses a simple reproducible build and distribution sequence under approved paths."
+      ]
+    },
+    "m2_testability_rollback": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M2 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "One Rust binary with explicit modes",
+          "design": "One Rust runtime binary serves UI, helper, and monitor modes, still as three processes. A native launcher builds the same binary. The GUI subsystem setting, helper console behavior, Ctrl+C handling, and control-handler path require a decision."
+        },
+        "criterion": "testability_rollback",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: cannot isolate regressions or restore the accepted baseline.",
+        "1: needs broad new tests before any useful rollback is possible.",
+        "2: supports partial isolation and rollback with material untested areas.",
+        "3: supports staged tests, evidence, and rollback for known contracts.",
+        "4: supports small staged tests, direct comparison, and a clear rollback at each step."
+      ]
+    },
+    "m2_maintenance_cost": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M2 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "One Rust binary with explicit modes",
+          "design": "One Rust runtime binary serves UI, helper, and monitor modes, still as three processes. A native launcher builds the same binary. The GUI subsystem setting, helper console behavior, Ctrl+C handling, and control-handler path require a decision."
+        },
+        "criterion": "maintenance_cost",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: creates high long-term duplication or a new framework burden.",
+        "1: creates substantial maintenance burden across runtime and tooling.",
+        "2: has moderate ongoing burden and some duplicated contracts.",
+        "3: keeps maintenance bounded with limited duplication.",
+        "4: minimizes ongoing code, dependency, and contract maintenance."
+      ]
+    },
+    "m3_behavior_preservation": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M3 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "One Rust process with internal modules",
+          "design": "One Rust process owns the UI, power request, and monitor modules. A native launcher starts it. It loses external process observation and changes process, pane, and cleanup semantics. This is conditional on accepting that scope change."
+        },
+        "criterion": "behavior_preservation",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: breaks one or more accepted visible, manual, heartbeat, Stop, path, or policy gates.",
+        "1: preserves only a small part of the known behavior and leaves major contract gaps.",
+        "2: preserves several known contracts but leaves material behavior or rollback gaps.",
+        "3: preserves the known contracts with bounded, testable gaps and a rollback path.",
+        "4: preserves all stated contracts with an explicit rollback path and no new unbounded behavior."
+      ]
+    },
+    "m3_implementation_simplicity": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M3 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "One Rust process with internal modules",
+          "design": "One Rust process owns the UI, power request, and monitor modules. A native launcher starts it. It loses external process observation and changes process, pane, and cleanup semantics. This is conditional on accepting that scope change."
+        },
+        "criterion": "implementation_simplicity",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: requires a broad redesign with new frameworks or many unrelated moving parts.",
+        "1: requires several new subsystems and difficult coordination across them.",
+        "2: requires a moderate number of focused changes with some new coordination.",
+        "3: requires focused changes with familiar components and bounded coordination.",
+        "4: requires the smallest coherent change set for the endpoint."
+      ]
+    },
+    "m3_ownership_failure_clarity": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M3 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "One Rust process with internal modules",
+          "design": "One Rust process owns the UI, power request, and monitor modules. A native launcher starts it. It loses external process observation and changes process, pane, and cleanup semantics. This is conditional on accepting that scope change."
+        },
+        "criterion": "ownership_failure_clarity",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: makes ownership ambiguous and leaves common failure paths without a clear owner.",
+        "1: clarifies few failure paths and introduces substantial lifecycle ambiguity.",
+        "2: gives partial ownership clarity but leaves material crash or PID risks.",
+        "3: gives clear ownership for ordinary failures with bounded hardening work.",
+        "4: gives clear ownership, failure boundaries, and cleanup responsibilities."
+      ]
+    },
+    "m3_build_distribution_simplicity": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M3 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "One Rust process with internal modules",
+          "design": "One Rust process owns the UI, power request, and monitor modules. A native launcher starts it. It loses external process observation and changes process, pane, and cleanup semantics. This is conditional on accepting that scope change."
+        },
+        "criterion": "build_distribution_simplicity",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: needs a fragile bootstrap, broad dependency set, or incompatible output paths.",
+        "1: has major bootstrap or dependency distribution risk.",
+        "2: has a workable build with several unresolved bootstrap or cache decisions.",
+        "3: uses the approved paths and a bounded build sequence with minor decisions left.",
+        "4: uses a simple reproducible build and distribution sequence under approved paths."
+      ]
+    },
+    "m3_testability_rollback": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M3 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "One Rust process with internal modules",
+          "design": "One Rust process owns the UI, power request, and monitor modules. A native launcher starts it. It loses external process observation and changes process, pane, and cleanup semantics. This is conditional on accepting that scope change."
+        },
+        "criterion": "testability_rollback",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: cannot isolate regressions or restore the accepted baseline.",
+        "1: needs broad new tests before any useful rollback is possible.",
+        "2: supports partial isolation and rollback with material untested areas.",
+        "3: supports staged tests, evidence, and rollback for known contracts.",
+        "4: supports small staged tests, direct comparison, and a clear rollback at each step."
+      ]
+    },
+    "m3_maintenance_cost": {
+      "type": "score",
+      "instructions": {
+        "task": "Rate candidate M3 on the named criterion using the ordered levels. Do not compare it with another candidate and do not recommend an option.",
+        "candidate": {
+          "name": "One Rust process with internal modules",
+          "design": "One Rust process owns the UI, power request, and monitor modules. A native launcher starts it. It loses external process observation and changes process, pane, and cleanup semantics. This is conditional on accepting that scope change."
+        },
+        "criterion": "maintenance_cost",
+        "constraints": [
+          "Preserve accepted visible panes and layout.",
+          "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+          "Do not change Windows policy, power settings, capture scope, or approved output locations."
+        ],
+        "known_facts": [
+          "src/main.rs starts two Python children and waits for a helper PID handshake.",
+          "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+          "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+          "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+          "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+        ],
+        "open_evidence": [
+          "Native Win32 FFI versus scoped windows-sys bindings.",
+          "Native helper console control handling and cleanup error reporting.",
+          "Native launcher first-build or prebuilt distribution.",
+          "M2 GUI subsystem versus helper console/control-handler behavior.",
+          "M3 loss of external process observation and changed cleanup semantics."
+        ]
+      },
+      "criteria": [
+        "0: creates high long-term duplication or a new framework burden.",
+        "1: creates substantial maintenance burden across runtime and tooling.",
+        "2: has moderate ongoing burden and some duplicated contracts.",
+        "3: keeps maintenance bounded with limited duplication.",
+        "4: minimizes ongoing code, dependency, and contract maintenance."
+      ]
+    },
+    "rubric_fairness": {
+      "type": "score",
+      "instructions": {
+        "task": "Does this rubric distinguish the three candidates without giving a hidden advantage to a preferred architecture?",
+        "state_scope": "Review the fixed weights, ordered anchors, candidate descriptions, gates, exclusions, and open evidence.",
+        "weights": {
+          "behavior_preservation": 25,
+          "implementation_simplicity": 20,
+          "ownership_failure_clarity": 20,
+          "build_distribution_simplicity": 15,
+          "testability_rollback": 10,
+          "maintenance_cost": 10
+        },
+        "anchors": {
+          "behavior_preservation": [
+            "0: breaks one or more accepted visible, manual, heartbeat, Stop, path, or policy gates.",
+            "1: preserves only a small part of the known behavior and leaves major contract gaps.",
+            "2: preserves several known contracts but leaves material behavior or rollback gaps.",
+            "3: preserves the known contracts with bounded, testable gaps and a rollback path.",
+            "4: preserves all stated contracts with an explicit rollback path and no new unbounded behavior."
+          ],
+          "implementation_simplicity": [
+            "0: requires a broad redesign with new frameworks or many unrelated moving parts.",
+            "1: requires several new subsystems and difficult coordination across them.",
+            "2: requires a moderate number of focused changes with some new coordination.",
+            "3: requires focused changes with familiar components and bounded coordination.",
+            "4: requires the smallest coherent change set for the endpoint."
+          ],
+          "ownership_failure_clarity": [
+            "0: makes ownership ambiguous and leaves common failure paths without a clear owner.",
+            "1: clarifies few failure paths and introduces substantial lifecycle ambiguity.",
+            "2: gives partial ownership clarity but leaves material crash or PID risks.",
+            "3: gives clear ownership for ordinary failures with bounded hardening work.",
+            "4: gives clear ownership, failure boundaries, and cleanup responsibilities."
+          ],
+          "build_distribution_simplicity": [
+            "0: needs a fragile bootstrap, broad dependency set, or incompatible output paths.",
+            "1: has major bootstrap or dependency distribution risk.",
+            "2: has a workable build with several unresolved bootstrap or cache decisions.",
+            "3: uses the approved paths and a bounded build sequence with minor decisions left.",
+            "4: uses a simple reproducible build and distribution sequence under approved paths."
+          ],
+          "testability_rollback": [
+            "0: cannot isolate regressions or restore the accepted baseline.",
+            "1: needs broad new tests before any useful rollback is possible.",
+            "2: supports partial isolation and rollback with material untested areas.",
+            "3: supports staged tests, evidence, and rollback for known contracts.",
+            "4: supports small staged tests, direct comparison, and a clear rollback at each step."
+          ],
+          "maintenance_cost": [
+            "0: creates high long-term duplication or a new framework burden.",
+            "1: creates substantial maintenance burden across runtime and tooling.",
+            "2: has moderate ongoing burden and some duplicated contracts.",
+            "3: keeps maintenance bounded with limited duplication.",
+            "4: minimizes ongoing code, dependency, and contract maintenance."
+          ]
+        },
+        "candidates": {
+          "M1": {
+            "name": "Separate native helper and monitor binaries",
+            "design": "Rust UI starts native keep-awake and monitor-helper binaries. A native launcher builds stay-watch plus both helpers. The process boundaries remain separate. Migration is staged from the current Python helpers."
+          },
+          "M2": {
+            "name": "One Rust binary with explicit modes",
+            "design": "One Rust runtime binary serves UI, helper, and monitor modes, still as three processes. A native launcher builds the same binary. The GUI subsystem setting, helper console behavior, Ctrl+C handling, and control-handler path require a decision."
+          },
+          "M3": {
+            "name": "One Rust process with internal modules",
+            "design": "One Rust process owns the UI, power request, and monitor modules. A native launcher starts it. It loses external process observation and changes process, pane, and cleanup semantics. This is conditional on accepting that scope change."
+          }
+        },
+        "facts": {
+          "endpoint": "Python-free application and launcher",
+          "baseline": "The current Python helper and Python launcher baseline is a hold and rollback comparator, not a Python-free candidate.",
+          "current_contracts": [
+            "Preserve accepted visible panes and layout.",
+            "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+            "Do not change Windows policy, power settings, capture scope, or approved output locations."
+          ],
+          "known_source_facts": [
+            "src/main.rs starts two Python children and waits for a helper PID handshake.",
+            "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+            "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+            "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+            "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+          ],
+          "open_evidence": [
+            "Native Win32 FFI versus scoped windows-sys bindings.",
+            "Native helper console control handling and cleanup error reporting.",
+            "Native launcher first-build or prebuilt distribution.",
+            "M2 GUI subsystem versus helper console/control-handler behavior.",
+            "M3 loss of external process observation and changed cleanup semantics."
+          ]
+        }
+      },
+      "criteria": [
+        "0: materially unfair, incomplete, or rewards unnecessary machinery.",
+        "1: has major fairness, completeness, or scope defects.",
+        "2: usable but has material ambiguity or overengineering risk.",
+        "3: mostly fair, complete, and bounded with minor gaps.",
+        "4: fair, complete, and bounded for the stated endpoint."
+      ]
+    },
+    "rubric_completeness": {
+      "type": "score",
+      "instructions": {
+        "task": "Does the state contain the facts needed to judge all six criteria for every candidate?",
+        "state_scope": "Review the fixed weights, ordered anchors, candidate descriptions, gates, exclusions, and open evidence.",
+        "weights": {
+          "behavior_preservation": 25,
+          "implementation_simplicity": 20,
+          "ownership_failure_clarity": 20,
+          "build_distribution_simplicity": 15,
+          "testability_rollback": 10,
+          "maintenance_cost": 10
+        },
+        "anchors": {
+          "behavior_preservation": [
+            "0: breaks one or more accepted visible, manual, heartbeat, Stop, path, or policy gates.",
+            "1: preserves only a small part of the known behavior and leaves major contract gaps.",
+            "2: preserves several known contracts but leaves material behavior or rollback gaps.",
+            "3: preserves the known contracts with bounded, testable gaps and a rollback path.",
+            "4: preserves all stated contracts with an explicit rollback path and no new unbounded behavior."
+          ],
+          "implementation_simplicity": [
+            "0: requires a broad redesign with new frameworks or many unrelated moving parts.",
+            "1: requires several new subsystems and difficult coordination across them.",
+            "2: requires a moderate number of focused changes with some new coordination.",
+            "3: requires focused changes with familiar components and bounded coordination.",
+            "4: requires the smallest coherent change set for the endpoint."
+          ],
+          "ownership_failure_clarity": [
+            "0: makes ownership ambiguous and leaves common failure paths without a clear owner.",
+            "1: clarifies few failure paths and introduces substantial lifecycle ambiguity.",
+            "2: gives partial ownership clarity but leaves material crash or PID risks.",
+            "3: gives clear ownership for ordinary failures with bounded hardening work.",
+            "4: gives clear ownership, failure boundaries, and cleanup responsibilities."
+          ],
+          "build_distribution_simplicity": [
+            "0: needs a fragile bootstrap, broad dependency set, or incompatible output paths.",
+            "1: has major bootstrap or dependency distribution risk.",
+            "2: has a workable build with several unresolved bootstrap or cache decisions.",
+            "3: uses the approved paths and a bounded build sequence with minor decisions left.",
+            "4: uses a simple reproducible build and distribution sequence under approved paths."
+          ],
+          "testability_rollback": [
+            "0: cannot isolate regressions or restore the accepted baseline.",
+            "1: needs broad new tests before any useful rollback is possible.",
+            "2: supports partial isolation and rollback with material untested areas.",
+            "3: supports staged tests, evidence, and rollback for known contracts.",
+            "4: supports small staged tests, direct comparison, and a clear rollback at each step."
+          ],
+          "maintenance_cost": [
+            "0: creates high long-term duplication or a new framework burden.",
+            "1: creates substantial maintenance burden across runtime and tooling.",
+            "2: has moderate ongoing burden and some duplicated contracts.",
+            "3: keeps maintenance bounded with limited duplication.",
+            "4: minimizes ongoing code, dependency, and contract maintenance."
+          ]
+        },
+        "candidates": {
+          "M1": {
+            "name": "Separate native helper and monitor binaries",
+            "design": "Rust UI starts native keep-awake and monitor-helper binaries. A native launcher builds stay-watch plus both helpers. The process boundaries remain separate. Migration is staged from the current Python helpers."
+          },
+          "M2": {
+            "name": "One Rust binary with explicit modes",
+            "design": "One Rust runtime binary serves UI, helper, and monitor modes, still as three processes. A native launcher builds the same binary. The GUI subsystem setting, helper console behavior, Ctrl+C handling, and control-handler path require a decision."
+          },
+          "M3": {
+            "name": "One Rust process with internal modules",
+            "design": "One Rust process owns the UI, power request, and monitor modules. A native launcher starts it. It loses external process observation and changes process, pane, and cleanup semantics. This is conditional on accepting that scope change."
+          }
+        },
+        "facts": {
+          "endpoint": "Python-free application and launcher",
+          "baseline": "The current Python helper and Python launcher baseline is a hold and rollback comparator, not a Python-free candidate.",
+          "current_contracts": [
+            "Preserve accepted visible panes and layout.",
+            "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+            "Do not change Windows policy, power settings, capture scope, or approved output locations."
+          ],
+          "known_source_facts": [
+            "src/main.rs starts two Python children and waits for a helper PID handshake.",
+            "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+            "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+            "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+            "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+          ],
+          "open_evidence": [
+            "Native Win32 FFI versus scoped windows-sys bindings.",
+            "Native helper console control handling and cleanup error reporting.",
+            "Native launcher first-build or prebuilt distribution.",
+            "M2 GUI subsystem versus helper console/control-handler behavior.",
+            "M3 loss of external process observation and changed cleanup semantics."
+          ]
+        }
+      },
+      "criteria": [
+        "0: materially unfair, incomplete, or rewards unnecessary machinery.",
+        "1: has major fairness, completeness, or scope defects.",
+        "2: usable but has material ambiguity or overengineering risk.",
+        "3: mostly fair, complete, and bounded with minor gaps.",
+        "4: fair, complete, and bounded for the stated endpoint."
+      ]
+    },
+    "rubric_overengineering": {
+      "type": "score",
+      "instructions": {
+        "task": "Does the matrix avoid rewarding extra machinery that is not needed for the Python-free application and launcher endpoint?",
+        "state_scope": "Review the fixed weights, ordered anchors, candidate descriptions, gates, exclusions, and open evidence.",
+        "weights": {
+          "behavior_preservation": 25,
+          "implementation_simplicity": 20,
+          "ownership_failure_clarity": 20,
+          "build_distribution_simplicity": 15,
+          "testability_rollback": 10,
+          "maintenance_cost": 10
+        },
+        "anchors": {
+          "behavior_preservation": [
+            "0: breaks one or more accepted visible, manual, heartbeat, Stop, path, or policy gates.",
+            "1: preserves only a small part of the known behavior and leaves major contract gaps.",
+            "2: preserves several known contracts but leaves material behavior or rollback gaps.",
+            "3: preserves the known contracts with bounded, testable gaps and a rollback path.",
+            "4: preserves all stated contracts with an explicit rollback path and no new unbounded behavior."
+          ],
+          "implementation_simplicity": [
+            "0: requires a broad redesign with new frameworks or many unrelated moving parts.",
+            "1: requires several new subsystems and difficult coordination across them.",
+            "2: requires a moderate number of focused changes with some new coordination.",
+            "3: requires focused changes with familiar components and bounded coordination.",
+            "4: requires the smallest coherent change set for the endpoint."
+          ],
+          "ownership_failure_clarity": [
+            "0: makes ownership ambiguous and leaves common failure paths without a clear owner.",
+            "1: clarifies few failure paths and introduces substantial lifecycle ambiguity.",
+            "2: gives partial ownership clarity but leaves material crash or PID risks.",
+            "3: gives clear ownership for ordinary failures with bounded hardening work.",
+            "4: gives clear ownership, failure boundaries, and cleanup responsibilities."
+          ],
+          "build_distribution_simplicity": [
+            "0: needs a fragile bootstrap, broad dependency set, or incompatible output paths.",
+            "1: has major bootstrap or dependency distribution risk.",
+            "2: has a workable build with several unresolved bootstrap or cache decisions.",
+            "3: uses the approved paths and a bounded build sequence with minor decisions left.",
+            "4: uses a simple reproducible build and distribution sequence under approved paths."
+          ],
+          "testability_rollback": [
+            "0: cannot isolate regressions or restore the accepted baseline.",
+            "1: needs broad new tests before any useful rollback is possible.",
+            "2: supports partial isolation and rollback with material untested areas.",
+            "3: supports staged tests, evidence, and rollback for known contracts.",
+            "4: supports small staged tests, direct comparison, and a clear rollback at each step."
+          ],
+          "maintenance_cost": [
+            "0: creates high long-term duplication or a new framework burden.",
+            "1: creates substantial maintenance burden across runtime and tooling.",
+            "2: has moderate ongoing burden and some duplicated contracts.",
+            "3: keeps maintenance bounded with limited duplication.",
+            "4: minimizes ongoing code, dependency, and contract maintenance."
+          ]
+        },
+        "candidates": {
+          "M1": {
+            "name": "Separate native helper and monitor binaries",
+            "design": "Rust UI starts native keep-awake and monitor-helper binaries. A native launcher builds stay-watch plus both helpers. The process boundaries remain separate. Migration is staged from the current Python helpers."
+          },
+          "M2": {
+            "name": "One Rust binary with explicit modes",
+            "design": "One Rust runtime binary serves UI, helper, and monitor modes, still as three processes. A native launcher builds the same binary. The GUI subsystem setting, helper console behavior, Ctrl+C handling, and control-handler path require a decision."
+          },
+          "M3": {
+            "name": "One Rust process with internal modules",
+            "design": "One Rust process owns the UI, power request, and monitor modules. A native launcher starts it. It loses external process observation and changes process, pane, and cleanup semantics. This is conditional on accepting that scope change."
+          }
+        },
+        "facts": {
+          "endpoint": "Python-free application and launcher",
+          "baseline": "The current Python helper and Python launcher baseline is a hold and rollback comparator, not a Python-free candidate.",
+          "current_contracts": [
+            "Preserve accepted visible panes and layout.",
+            "Preserve direct helper behavior, manual Ctrl+C expectations, heartbeat text and interval, canonical logs path, timed Stop, process identity, window identity, approved AppData output paths, and sorted launcher JSON.",
+            "Do not change Windows policy, power settings, capture scope, or approved output locations."
+          ],
+          "known_source_facts": [
+            "src/main.rs starts two Python children and waits for a helper PID handshake.",
+            "src/ui.rs forces Child.kill and Child.wait on ordinary Stop; UI death does not automatically terminate children.",
+            "launch.py validates the fixed checkout, builds the exact stay-watch executable, checks its image and owned status window, and serializes launch work with a hashed mutex.",
+            "scripts/keep-awake.py uses PowerCreateRequest, SYSTEM and DISPLAY requests, reverse cleanup, and CloseHandle.",
+            "scripts/monitor-helper.py opens SYNCHRONIZE, writes local-time ISO lines, polls the helper PID, and records STOPPED or ERROR."
+          ],
+          "open_evidence": [
+            "Native Win32 FFI versus scoped windows-sys bindings.",
+            "Native helper console control handling and cleanup error reporting.",
+            "Native launcher first-build or prebuilt distribution.",
+            "M2 GUI subsystem versus helper console/control-handler behavior.",
+            "M3 loss of external process observation and changed cleanup semantics."
+          ]
+        }
+      },
+      "criteria": [
+        "0: materially unfair, incomplete, or rewards unnecessary machinery.",
+        "1: has major fairness, completeness, or scope defects.",
+        "2: usable but has material ambiguity or overengineering risk.",
+        "3: mostly fair, complete, and bounded with minor gaps.",
+        "4: fair, complete, and bounded for the stated endpoint."
+      ]
+    }
+  }
+}

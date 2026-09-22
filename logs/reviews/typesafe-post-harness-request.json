@@ -1,0 +1,91 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "resulting_tree": {
+      "root_files": [
+        "AGENTS.md",
+        "Cargo.toml",
+        "Cargo.lock",
+        "README.md",
+        "launch.py"
+      ],
+      "directories": [
+        "docs",
+        "local",
+        "logs",
+        "research",
+        "scripts",
+        "src"
+      ],
+      "scripts": [
+        "keep-awake.py",
+        "monitor-helper.py",
+        "verify_output_panes.py",
+        "rust-install-check",
+        "task-ranker"
+      ],
+      "logs": [
+        "keep-awake.monitor.log",
+        "archive/root/<five former root logs>",
+        "reviews/<evidence>"
+      ],
+      "local": [
+        "non-log generated evidence, caches, local dependencies"
+      ],
+      "src": [
+        "lib.rs",
+        "main.rs",
+        "output.rs",
+        "ui.rs"
+      ]
+    },
+    "layout_document": "# Repository layout\n\nUse one owned directory for each purpose.\nUse lowercase hyphen names for owned directories. Keep framework, vendor, and generated cache names when their format requires them.\n\n| Path | Purpose |\n| --- | --- |\n| `launch.py` | Supported root command that builds and starts the application. |\n| `scripts/` | Application helpers, tests, probes, and task-ranker scripts. |\n| `logs/` | The active log, archived logs, and review evidence. |\n| `local/` | Generated non-log evidence, caches, and local dependencies. |\n| `Cargo.toml`, `Cargo.lock`, `src/` | The Rust Cargo package and its source. |\n| `docs/` | Project instructions, plans, and recorded results. |\n| `research/` | The unchanged third-party source snapshot. |\n\nUse `python .\\launch.py` from the repository root. Use the paths in `scripts/`\nfor helper and verification commands. Historical records can show former paths.\nThey describe their original runs. Current commands use the canonical paths.\n",
+    "identity": {
+      "cargo_package": "stay-watch",
+      "cargo_library": "stay_watch",
+      "cargo_binary": "stay-watch",
+      "launch_manifest": "Cargo.toml",
+      "launch_build_selector": "--bin stay-watch",
+      "cargo_target": "%LOCALAPPDATA%/Rust/target/stay-up"
+    },
+    "evidence": {
+      "launcher_tests": "24 passed",
+      "rust_tests": "18 passed",
+      "task_ranker_tests": "30 passed before final crate move and unchanged afterward",
+      "second_cwd_launch": "started and cleaned up",
+      "rust_fixture": "build script and execution markers passed in fresh AppData target",
+      "live_pane_harness": "timed and Stop sessions passed; timed branch deferred-while-selected; no capture resources used",
+      "feasibility_limit": "terminal eligibility assertion failed because no eligible terminal was present; no capture resources used",
+      "ste_lint": "all changed prose files below 2.5 per 100 words in one pass"
+    }
+  },
+  "questions": {
+    "maintainability": {
+      "type": "score",
+      "instructions": "Score the maintainability of the resulting repository layout, its current path consumers, and its documented naming rule.",
+      "criteria": [
+        "0: Mixed purposes or stale consumers remain.",
+        "1: The layout is usable but has a clear maintainability gap.",
+        "2: Each purpose has one clear home and current consumers use the documented paths."
+      ]
+    },
+    "evidence_completeness": {
+      "type": "score",
+      "instructions": "Score whether the final evidence distinguishes passed checks, the corrected live result, the terminal eligibility limit, and untested behavior.",
+      "criteria": [
+        "0: Evidence hides failures or claims unsupported behavior.",
+        "1: Evidence records the main results but leaves a clear classification gap.",
+        "2: Evidence records results, limits, commands, and open behavior without unsupported claims."
+      ]
+    },
+    "ste_wording": {
+      "type": "score",
+      "instructions": "Score the full repository-layout document for clear ASD-STE100-style technical wording and one term per concept.",
+      "criteria": [
+        "0: The wording is ambiguous or makes unsupported claims.",
+        "1: The wording is mostly clear but has minor style or naming issues.",
+        "2: The wording is concise, direct, consistent, and states limits clearly."
+      ]
+    }
+  }
+}
